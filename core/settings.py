@@ -31,7 +31,16 @@ INSTALLED_APPS = [
     # thrid party packages
     'tailwind',
     'theme',
-    'django_browser_reload'
+    'django_browser_reload',
+    'crispy_forms',
+    "crispy_bootstrap4",
+
+    
+    
+    # all auth apps
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
 
 ]
 
@@ -43,6 +52,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
+    
+    # Add the account middleware:
+    "allauth.account.middleware.AccountMiddleware",
     "django_browser_reload.middleware.BrowserReloadMiddleware",
 
 ]
@@ -52,7 +65,7 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [ BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -60,6 +73,11 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                
+                
+                # `allauth` needs this from django
+                'django.template.context_processors.request',
+
             ],
         },
     },
@@ -128,3 +146,30 @@ INTERNAL_IPS = [
 ]
 
 
+
+# django all auth configs
+
+AUTHENTICATION_BACKENDS = [
+
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by email
+    'allauth.account.auth_backends.AuthenticationBackend',
+
+]
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED= True
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS=10 
+ACCOUNT_LOGIN_ATTEMPTS_LIMIT=5
+ACCOUNT_EMAIL_VERIFICATION="optional"
+ACCOUNT_REDIRECT_URL=''
+ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT=86400
+ACCOUNT_UNIQUE_EMAIL=True
+ACCOUNT_EMAIL_CONFORMATION=180
+ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
+
+
+# crispy form config
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
+CRISPY_TEMPLATE_PACK = "bootstrap4"
