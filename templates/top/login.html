@@ -1,6 +1,6 @@
-{% extends "top/base_site.html" %}
+{% extends "admin/base_site.html" %}
 {% load i18n static %}
-{% load widget_tweaks %}
+
 {% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static "admin/css/login.css" %}">
 {{ form.media }}
 {% endblock %}
@@ -43,21 +43,17 @@
 </p>
 {% endif %}
 
-<form action="." method="post" id="login-form">{% csrf_token %}
-  
-
+<form action="{{ app_path }}" method="post" id="login-form">{% csrf_token %}
   <div class="form-row">
-    {{ form.login.errors }}
-    {{ form.login.label_tag }} 
-    {% render_field form.login id="id_password" %}
-   
+    {{ form.username.errors }}
+    {{ form.username.label_tag }} {{ form.username }}
   </div>
   <div class="form-row">
     {{ form.password.errors }}
     {{ form.password.label_tag }} {{ form.password }}
     <input type="hidden" name="next" value="{{ next }}">
   </div>
-
+  {% url 'admin_password_reset' as password_reset_url %}
   {% if password_reset_url %}
   <div class="password-reset-link">
     <a href="{{ password_reset_url }}">{% translate 'Forgotten your password or username?' %}</a>

@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     'django_browser_reload',
     'crispy_forms',
     "crispy_bootstrap4",
-
+    'widget_tweaks',
     
     
     # all auth apps
@@ -158,7 +158,7 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 
 ]
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_EMAIL_REQUIRED= True
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS=10 
 ACCOUNT_LOGIN_ATTEMPTS_LIMIT=5
