@@ -33,13 +33,21 @@ INSTALLED_APPS = [
     'theme',
     'django_browser_reload',
     'crispy_forms',
-    "crispy_bootstrap4",
+     "crispy_bootstrap5",
     'widget_tweaks',
     
     
     # all auth apps
     'allauth',
     'allauth.account',
+    
+     # Configure the django-otp package.
+    'django_otp',
+    'django_otp.plugins.otp_totp',
+    'django_otp.plugins.otp_static',
+    
+    
+    'allauth_2fa',
     'allauth.socialaccount',
 
 ]
@@ -56,6 +64,14 @@ MIDDLEWARE = [
     
     # Add the account middleware:
     "allauth.account.middleware.AccountMiddleware",
+    # Configure the django-otp package. Note this must be after the
+    # AuthenticationMiddleware.
+    'django_otp.middleware.OTPMiddleware',
+
+    # Reset login flow middleware. If this middleware is included, the login
+    # flow is reset if another page is loaded between login and successfully
+    # entering two-factor credentials.
+    'allauth_2fa.middleware.AllauthTwoFactorMiddleware',
     "django_browser_reload.middleware.BrowserReloadMiddleware",
 
 ]
@@ -158,18 +174,45 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 
 ]
-ACCOUNT_AUTHENTICATION_METHOD = 'username'
+
+
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED= True
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS=10 
 ACCOUNT_LOGIN_ATTEMPTS_LIMIT=5
 ACCOUNT_EMAIL_VERIFICATION="optional"
-ACCOUNT_REDIRECT_URL=''
 ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT=86400
 ACCOUNT_UNIQUE_EMAIL=True
 ACCOUNT_EMAIL_CONFORMATION=180
+ACCOUNT_REDIRECT_URL='/'
 ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
 
 
+
+# Set the allauth adapter to be the 2FA adapter.
+ACCOUNT_ADAPTER = 'allauth_2fa.adapter.OTPAdapter'
+
+
+# Email server configuration
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'tinsingjobs2k@gmail.com'
+EMAIL_HOST_PASSWORD = 'vavkndyvafegycua'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+
+
+# django auth config
+LOGIN_REDIRECT_URL = "/"
+
+
 # crispy form config
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
-CRISPY_TEMPLATE_PACK = "bootstrap4"
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+
+
+
+# Configure your default site. See
+# https://docs.djangoproject.com/en/dev/ref/settings/#sites.
+SITE_ID = 1
