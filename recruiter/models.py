@@ -39,7 +39,7 @@ class NMLSPROCESSINGFEE(BaseModelMixin):
     
 class FBICRIMALBACKGROUNDCHECKINFO(BaseModelMixin):
     user = models.ForeignKey(User,blank=True,null=True,on_delete=models.CASCADE)
-    document = models.ImageField(upload_to="/media/documents/")
+    document = models.ImageField(upload_to="media/documents/")
     reason_for_background_check = models.TextField()
     crimal_history= models.TextField()
     
@@ -96,8 +96,8 @@ class MLO(models.Model):
 
 	# for million of dollars
 	break_point  =   models.FloatField(blank = True,null=True)
-	growth_share =   models.CharField(max_length = 10,choice =GROWTH_SHARE)
-	hyper_growth_share =   models.CharField(max_length = 10,choice =HYPER_GROWTH_SHARE)
+	# growth_share =   models.CharField(max_length = 10,choice =GROWTH_SHARE)
+	# hyper_growth_share =   models.CharField(max_length = 10,choice =HYPER_GROWTH_SHARE)
 
 
 
