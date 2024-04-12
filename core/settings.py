@@ -152,9 +152,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-# STATIC_URL = 'static/'
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')  # Replace BASE_DIR with your project's base directory
+# STATIC_URL = '/static/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')  # Replace BASE_DIR with your project's base directory
+STATICFILES_DIRS = [
+    BASE_DIR / 'static'
+]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Replace BASE_DIR with your project's base directory
@@ -202,7 +205,11 @@ ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
 
 # Set the allauth adapter to be the 2FA adapter.
 ACCOUNT_ADAPTER = 'allauth_2fa.adapter.OTPAdapter'
-
+ACCOUNT_FORMS = {
+    'signup': 'utils.forms.AHFSignupForm'
+  
+  
+}
 
 # Email server configuration
 EMAIL_HOST = 'smtp.gmail.com'

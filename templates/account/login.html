@@ -1,8 +1,10 @@
 {% extends "top/base_site.html" %}
 {% load i18n static %}
 {% load widget_tweaks %}
-{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static "admin/css/login.css" %}">
-{{ form.media }}
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static "admin/css/login.css" %}">
+    {{ form.media }}
 {% endblock %}
 
 {% block bodyclass %}{{ block.super }} login{% endblock %}
@@ -49,13 +51,19 @@
   <div class="form-row">
     {{ form.login.errors }}
     {{ form.login.label_tag }} 
-    {% render_field form.login id="id_password" %}
+    {% render_field form.login id="id_email" %}
    
   </div>
   <div class="form-row">
     {{ form.password.errors }}
     {{ form.password.label_tag }} {{ form.password }}
-    <input type="hidden" name="next" value="{{ next }}">
+    <div style="width:100px;background-color:rgb(60, 31, 31);">
+     
+     
+      <input type="hidden" name="next" value="{{ next }}">
+   
+    </div>
+ 
   </div>
 
   {% if password_reset_url %}
@@ -95,4 +103,6 @@
  
 </div>
 </div>
+
+<script src="{% static 'password-toggle.js' %}"></script>
 {% endblock %}
