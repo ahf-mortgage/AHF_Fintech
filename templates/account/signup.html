@@ -46,11 +46,12 @@
 </p>
 {% endif %}
 
-<form action="." method="post" id="login-form">{% csrf_token %}
-
+<form action="." method="post" id="login-form">
+  {% csrf_token %}
+   
   {{form|crispy}}
 
-
+  <p class="text-danger mb-0" id="error"></p>
   {% if password_reset_url %}
   <div class="password-reset-link">
     <a href="{{ password_reset_url }}">{% translate 'Forgotten your password or username?' %}</a>
@@ -64,24 +65,16 @@
 <script>
   $(document).ready(function() {
     $('#id_password2').on('keyup', function() {
-        var form = $("form");
-        var url = form.attr('action');
-        var formData = form.serialize();
-
-        $.ajax({
-            url: "{% url 'account_signup' %}",
-            method: 'POST',
-            data: formData,
-            success: function(response) {
-                // Handle success response
-                console.log("response " ,response)
-            },
-            error: function(response) {
-                // Handle error response
-                $("#error_1_id_password2").contents = "password mis match"
-                console.log("error " ,response)
-            }
-        });
+      var password = $('#id_password')
+      var password2 = $('#id_password2')
+      if(password.val() != password2.val()) {
+        $("#error").text("Password mismatch");
+      }
+      else {
+        $("#error").text("");
+      }
+     
+ 
     });
 });
 </script>
