@@ -1,6 +1,6 @@
 #!/bin/bash
 cd /home/ubuntu/AHF_Fintech/AHF_Fintech
-sudo cp -r static /var/www/html/static/
+sudo cp -r static /var/www/html/
 source venv/bin/activate 
 export PYTHONPATH=/home/ubuntu/AHF_Fintech/AHF_Fintech
 
