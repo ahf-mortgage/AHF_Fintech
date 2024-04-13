@@ -15,14 +15,13 @@ class Loan(models.Model):
 
 
 class Company(models.Model):
- 	name = models.CharField(max_length = 1000,blank=True,null=True)
- 	cap = models.FloatField()
- 	company_commission = models.FloatField()
- 	number_of_loans = models.IntegerField(blank = True,null = True)
- 	total = models.FloatField()
-
- 	def __str__(self):
- 		return self.name
+    name = models.CharField(max_length = 1000,blank=True,null=True)
+    cap = models.FloatField()
+    company_commission = models.FloatField()
+    number_of_loans = models.IntegerField(blank = True,null = True)
+    total = models.FloatField()
+    def __str__(self):
+        return self.name
 
  
 

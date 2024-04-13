@@ -8,6 +8,7 @@ def calculate_commission_above_million(loan_id,mlo_id):
 	mlo = None
 	gci = 0
 	comp = 0
+	split = 0.8
 
 	try:
 		loan = Loan.objects.get(id = loan_id)
@@ -18,12 +19,13 @@ def calculate_commission_above_million(loan_id,mlo_id):
 	mlo = get_object_or_404(MLO,id = mlo_id)
 	comp = mlo.comp
 
+
 	if comp and loan:
 		gci = loan.amount * comp
-		mlo.MLO_commision += (0.8) * gci
-		comp.COMPANY_commission += (0.2) * gci
+		mlo.MLO_commision += (split) * gci
+		comp.COMPANY_commission += (1-split) * gci
 
-		
+
 	return mlo,company
 
 
@@ -34,6 +36,7 @@ def calculate_commission(loan_id,mlo_id,company_id):
 	company = None
 	gci = 0
 	comp = 0
+	split = 0.8
 
 	try:
 		loan = Loan.objects.get(id = loan_id)
@@ -45,8 +48,9 @@ def calculate_commission(loan_id,mlo_id,company_id):
 	company = get_object_or_404(Company,id = company_id )
 	comp = mlo.comp
 	gci = loan.amount * comp
+
 	if company.total < company.cap:
-		company.COMPANY_commission += 0.2 * gci
+		company.COMPANY_commission += (1 - split) * gci
 	else:
 		mlo.MLO_commision += gci
 	return mlo
@@ -91,3 +95,18 @@ def calculate_commission(loan_id,mlo_id,company_id):
 # 		company_get = 0
 # 		mlo_get = 100% * gci
 
+
+
+# branch example
+# from column L to O need to be tabulated in web
+# variables 
+# m3 = $L$23
+# L23 = 02
+# 02 = 1000000(input variables)
+# loan_amount(l23) = 02
+
+# k8 = sheet1(b32)
+# sheet(b32) = Revenue Share Capped'!J11
+# Revenue Share Capped'!J11 = =H11/2
+# H11 = G8*G11
+# G8 = =G9/20%

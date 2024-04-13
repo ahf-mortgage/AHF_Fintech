@@ -50,6 +50,7 @@
 
   {{form|crispy}}
 
+
   {% if password_reset_url %}
   <div class="password-reset-link">
     <a href="{{ password_reset_url }}">{% translate 'Forgotten your password or username?' %}</a>
@@ -60,6 +61,30 @@
   </div>
 </form>
 <script src="{% static 'password-toggle.js' %}"></script>
+<script>
+  $(document).ready(function() {
+    $('#id_password2').on('keyup', function() {
+        var form = $("form");
+        var url = form.attr('action');
+        var formData = form.serialize();
+
+        $.ajax({
+            url: "{% url 'account_signup' %}",
+            method: 'POST',
+            data: formData,
+            success: function(response) {
+                // Handle success response
+                console.log("response " ,response)
+            },
+            error: function(response) {
+                // Handle error response
+                $("#error_1_id_password2").contents = "password mis match"
+                console.log("error " ,response)
+            }
+        });
+    });
+});
+</script>
 </div>
 {% endblock %}
 
