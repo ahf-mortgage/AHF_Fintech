@@ -2,7 +2,7 @@ from django.contrib import admin
 from django import forms
 from django.contrib import admin
 from django.db import models
-from .models import MLO,Loan,Company
+from .models import *
 
 
 class CompanyForm(forms.ModelForm):
@@ -38,3 +38,13 @@ class MLOAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Loan)
+
+admin.site.register(Bps)
+
+admin.site.register(LoanBreakPoint)
+admin.site.register(CompPlan)
+
+admin.site.register(AHF)
+admin.site.register(Branch)
+
+

@@ -4,7 +4,48 @@ from utils.base import BaseModelMixin
 from django.contrib.auth.models import User
 
 
+class CompPlan(models.Model):
+    Flat_Fee = models.FloatField()
+    Percentage = models.FloatField()
+    Minimum_Compensation = models.FloatField()
+    Maximum_Compensation = models.FloatField()
+    
+    def __str__(self) -> str:
+        return f"{self.Percentage}"
+    
+    
+class Bps(models.Model):
+    bps = models.FloatField()
+    
+    def __str__(self):
+        return f"{self.bps}"
+    
+    
+class LoanBreakPoint(models.Model):
+    loan_break_point = models.FloatField()
 
+    def __str__(self):
+        return f"{self.loan_break_point}"
+    
+    
+class AHF(models.Model):
+    commission = models.FloatField()
+
+    def __str__(self):
+        return f"{self.commission}"
+    
+    
+class Branch(models.Model):
+    commission = models.FloatField()
+
+    def __str__(self):
+        return f"{self.commission}"
+    
+    
+    
+    
+    
+    
 class Loan(models.Model):
 	user = models.ForeignKey(User,blank= True,null=True,on_delete= models.CASCADE)
 	amount = models.FloatField()
