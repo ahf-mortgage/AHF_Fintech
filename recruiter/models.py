@@ -36,7 +36,7 @@ class AHF(models.Model):
     
     
 class Branch(models.Model):
-    commission = models.FloatField()
+    commission = models.DecimalField(max_digits=10,decimal_places=2)
 
     def __str__(self):
         return f"{self.commission}"

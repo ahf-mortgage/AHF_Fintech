@@ -37,6 +37,14 @@ class MLOAdmin(admin.ModelAdmin):
     form = MLOForm
 
 
+# branch_commission= Branch.objects.all().first().commission
+# @admin.register(AHF)
+# class AHFAdmin(admin.ModelAdmin):
+#     list_display = ['commission']
+ 
+    # prepopulated_fields = {'commission':(1 - branch_commission,)},
+    
+
 admin.site.register(Loan)
 
 admin.site.register(Bps)
@@ -44,7 +52,11 @@ admin.site.register(Bps)
 admin.site.register(LoanBreakPoint)
 admin.site.register(CompPlan)
 
-admin.site.register(AHF)
+# admin.site.register(AHF)
 admin.site.register(Branch)
+
+
+# calcuate ahf commission from branch commission by using formulae 1 - branch_commission
+
 
 

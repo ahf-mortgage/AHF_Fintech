@@ -162,57 +162,7 @@
              </tr>
 
    
-             <tr class="border-b" id="row_D12">
-            
-               <td class="text-center whitespace-nowrap px-6 py-4" id="D12">
-    
-                {% if  225 < bps %}
-                  225
-                {% else %}
-                    0
-                {% endif %}
-              </td>
-               <td class="text-center whitespace-nowrap px-6 py-4" id="E12">Cell</td>
-               <td class="text-center whitespace-nowrap px-6 py-4" id="F12">Cell</td>
-               <td class="text-center whitespace-nowrap px-6 py-4" id="G12">Cell</td>
-             
-             </tr>
-
-             <tr class="border-b ">
-            
-              <td class="text-center whitespace-nowrap px-6 py-4" id="D13">
-               
-
-               {% if  250 < bps %}
-               250
-             {% else %}
-                   0
-               {% endif %}
-             
-             </td>
-              <td class="text-center whitespace-nowrap px-6 py-4" id="E13">Cell</td>
-              <td class="text-center whitespace-nowrap px-6 py-4" id="F13">Cell</td>
-              <td class="text-center whitespace-nowrap px-6 py-4" id="G13" >Cell</td>
-            
-            </tr>
-
-            <tr class="border-b ">
-            
-              <td class="text-center whitespace-nowrap px-6 py-4" id="D14">
-               
-                {% if  200 < bps %}
-                  200
-                {% else %}
-                      0
-                {% endif %}
-             
-             </td>
-              <td class="text-center whitespace-nowrap px-6 py-4" id="E14">Cell</td>
-              <td class="text-center whitespace-nowrap px-6 py-4"  id="F14">Cell</td>
-              <td class="text-center whitespace-nowrap px-6 py-4"  id="G14">Cell</td>
-            
-            </tr>
-
+         
 
             
            </tbody>
@@ -270,82 +220,47 @@
     }
 
 
-    const D12 =  document.getElementById('D12').innerHTML
-    const E12 = document.getElementById('E12')
-    if( Number.parseFloat(D12) > 0) {
-      E12.innerHTML =` $\  ${Math.round(Number.parseFloat(E5) / Number.parseFloat(D12) * 10000)}`
-    } else {
-      const row_D12 =  document.getElementById('row_D12')
-      
-      <!-- row_D12.remove() -->
-    }
-
-
-    const D13 =  document.getElementById('D13').innerHTML
-    const E13 = document.getElementById('E13')
-    if( Number.parseFloat(D13) > 0) {
-      E13.innerHTML =` $\  ${Math.round(Number.parseFloat(E5) / Number.parseFloat(D13) * 10000)}`
-    } else {
-      E13.innerHTML =0
-    }
-
-
-
-    const D14 =  document.getElementById('D14').innerHTML
-    const E14 = document.getElementById('E14')
-    if( Number.parseFloat(D14) > 0) {
-      E14.innerHTML =` $\  ${Math.round(Number.parseFloat(E5) / Number.parseFloat(D14) * 10000)}`
-    } else {
-      E14.innerHTML =0
-    }
 
 
     const ahf_commission_amount = Number.parseFloat("{{ahf_commission_amount}}")
     const F7 = document.getElementById("F7")
-    F7.innerText = `${D7 * ahf_commission_amount}`
+    F7.innerText = `${Math.round(D7 * ahf_commission_amount)}`
 
 
     const F8 = document.getElementById("F8")
-    F8.innerText = `${D8 * ahf_commission_amount}`
+    F8.innerText = `${Math.round(D8 * ahf_commission_amount)}`
 
     const F9 = document.getElementById("F9")
-    F9.innerText = `${D9 * ahf_commission_amount}`
+    F9.innerText = `${Math.round(D9 * ahf_commission_amount)}`
 
 
     const F10 = document.getElementById("F10")
-    F10.innerText = `${D10 * ahf_commission_amount}`
+    F10.innerText = `${Math.round(D10 * ahf_commission_amount)}`
 
     const F11 = document.getElementById("F11")
-    F11.innerText = `${D11 * ahf_commission_amount}`
+    F11.innerText = `${Math.round(D11 * ahf_commission_amount)}`
 
 
-    const F12 = document.getElementById("F12")
-    F12.innerText = `${D12 * ahf_commission_amount}`
-   
-    const F13 = document.getElementById("F13")
-    F13.innerText = `${D13 * ahf_commission_amount}`
 
 
-    const F14 = document.getElementById("F14")
-    F14.innerText = `${D14 * ahf_commission_amount}`
 
 
 
     // branch logic
     const branch_commission_amount = Number.parseFloat("{{branch_commission_amount}}")
     const G7 = document.getElementById("G7")
-    G7.innerText = `${D7 * branch_commission_amount}`
+    G7.innerText = `${Math.round(D7 * branch_commission_amount)}`
 
 
     const G8 = document.getElementById("G8")
-    G8.innerText = `${D8 * branch_commission_amount}`
+    G8.innerText = `${Math.round(D8 * branch_commission_amount)}`
 
     const G9 = document.getElementById("G9")
-    G9.innerText = `${D9 * branch_commission_amount}`
+    G9.innerText = `${ Math.round(D9 * branch_commission_amount)}`
 
 
     const G10 = document.getElementById("G10")
-    G10.innerText = `${D10 * branch_commission_amount}`
+    G10.innerText = `${Math.round(D10 * branch_commission_amount)}`
 
     const G11 = document.getElementById("G11")
     G11.innerText = `${Math.round(D11 * branch_commission_amount)}`
@@ -354,14 +269,7 @@
     const G12 = document.getElementById("G12")
     G12.innerText = `${D12 *branch_commission_amount}`
    
-    const G13 = document.getElementById("G13")
-    G13.innerText = `${D13 * branch_commission_amount}`
 
-
-    const G14 = document.getElementById("G14")
-    console.log("Hello world");
-    G14.innerText = `${D14 * branch_commission_amount}`
-   
 
 
 
