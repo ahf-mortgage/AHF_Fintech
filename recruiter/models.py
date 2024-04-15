@@ -9,6 +9,7 @@ class CompPlan(models.Model):
     Percentage = models.FloatField()
     Minimum_Compensation = models.FloatField()
     Maximum_Compensation = models.FloatField()
+    MAX_GCI  = models.FloatField(blank=True,null=True)
     
     def __str__(self) -> str:
         return f"{self.Percentage}"

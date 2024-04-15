@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from recruiter.models import Bps,LoanBreakPoint,CompPlan,AHF,Branch
 import math
+from  django.shortcuts import redirect
 
 
 @login_required
@@ -11,20 +12,30 @@ def home(request):
     comp_plan        = CompPlan.objects.all().first()
     ahf              = AHF.objects.all().first() 
     branch           = Branch.objects.all().first() 
-    gci               = bps.bps * loan_break_point.loan_break_point/10000 + comp_plan.Flat_Fee
+    # gci               = bps.bps * loan_break_point.loan_break_point/10000 + comp_plan.Flat_Fee
+    gci               = (comp_plan.Percentage * 100) * loan_break_point.loan_break_point/10000 + comp_plan.Flat_Fee
+    
+    
     # ahf_commission    =    gci * ahf.commission # the percentage of ahf (30%)
     # amount ahf must get from gci = gci * 30 
     # they are two diffrent variables
     
-    
+
+
     branch_commission = gci * float(branch.commission)
     ahf_commission = gci * (1 - float(branch.commission))
     ahf_amount =  100 - branch.commission * 100
+    min_loan = 100000 
     # print( 100 - branch.commission * 100)
     interval_bps = [num for num in range(50,275,25)]
+    loan_below_limits = [num for num in range(int(loan_break_point.loan_break_point),min_loan - min_loan,-min_loan)]
 
-    
+    gci=   (comp_plan.Percentage * 100) * loan_break_point.loan_break_point / 10000 + comp_plan.Flat_Fee
+    print("DEBUG  ",gci)
+    # gci =$E$21*   D23/10000+$B$3 for lower loan limit
     context = {
+        'loan_below_limits':loan_below_limits,
+        'comp_plan_for_lower_limit':comp_plan,
         'ahf_amount': math.ceil(ahf_amount) if ahf_amount > 0 else None,
         'interval_bps':interval_bps,
         'branch_amount': math.ceil(branch.commission * 100) if branch.commission > 0 else None,
@@ -37,5 +48,36 @@ def home(request):
         'branch_commission': math.ceil(branch_commission) if branch_commission > 0 else None,
         'branch_commission_amount':branch.commission if branch.commission > 0 else None
 
+    }
+    return render(request,"home/index2.html",context)
+
+
+def change_branch_amount(request):
+    branch = Branch.objects.all().first()
+   
+    if request.method == "POST":
+        branch_amount = request.POST.get("branch_amount")
+        branch_amount = int(branch_amount) / 100
+        branch.commission = branch_amount
+        branch.save()
+        return redirect("/")
+    
+    context = {
+        
+    }
+    return render(request,"home/index2.html",context)
+
+
+
+def loan_break_point(request):
+    loan_break_point = LoanBreakPoint.objects.all().first()
+    if request.method == "POST":
+        loan_break= request.POST.get("loan_break_point")
+        loan_break_point.loan_break_point = int(loan_break)
+        loan_break_point.save()
+        return redirect("/")
+    
+    context = {
+        
     }
     return render(request,"home/index2.html",context)
