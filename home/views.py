@@ -16,23 +16,27 @@ def home(request):
     gci               = (comp_plan.Percentage * 100) * loan_break_point.loan_break_point/10000 + comp_plan.Flat_Fee
     
     
-    # ahf_commission    =    gci * ahf.commission # the percentage of ahf (30%)
-    # amount ahf must get from gci = gci * 30 
-    # they are two diffrent variables
     
-
-
     branch_commission = gci * float(branch.commission)
     ahf_commission = gci * (1 - float(branch.commission))
     ahf_amount =  100 - branch.commission * 100
+    
+    
+    
     min_loan = 100000 
-    # print( 100 - branch.commission * 100)
     interval_bps = [num for num in range(50,275,25)]
     loan_below_limits = [num for num in range(int(loan_break_point.loan_break_point),min_loan - min_loan,-min_loan)]
+    
+    
 
-    gci=   (comp_plan.Percentage * 100) * loan_break_point.loan_break_point / 10000 + comp_plan.Flat_Fee
-    print("DEBUG  ",gci)
-    # gci =$E$21*   D23/10000+$B$3 for lower loan limit
+    gci = (comp_plan.Percentage * 100) * loan_break_point.loan_break_point / 10000 + comp_plan.Flat_Fee
+    if gci > comp_plan.MAX_GCI:
+        gci = comp_plan.MAX_GCI
+    FLAT_AM0UNT = gci - (gci/1000) * ((loan_below_limits[len(loan_below_limits) - 1] or 0) * 0.1/10000) 
+    
+    
+    
+  
     context = {
         'loan_below_limits':loan_below_limits,
         'comp_plan_for_lower_limit':comp_plan,
@@ -42,7 +46,7 @@ def home(request):
         'bps':bps.bps if bps.bps > 0 else None,
         'loan_break_point': math.ceil(loan_break_point.loan_break_point) ,# if loan_break_point >0 else None,
         'comp_plan':comp_plan.Flat_Fee if comp_plan.Flat_Fee > 0 else None,
-        'gci':math.ceil(gci) if gci > 0 else None,
+        'gci': math.ceil(gci),
         'ahf_commission': math.ceil(ahf_commission) if ahf_commission > 0 else None,
         'ahf_commission_amount':  1 - float(branch.commission) if branch.commission > 0 else None ,#ahf_amount, # ahf.commission,
         'branch_commission': math.ceil(branch_commission) if branch_commission > 0 else None,
@@ -52,6 +56,8 @@ def home(request):
     return render(request,"home/index2.html",context)
 
 
+
+# toggle a branch amout 
 def change_branch_amount(request):
     branch = Branch.objects.all().first()
    
@@ -60,6 +66,41 @@ def change_branch_amount(request):
         branch_amount = int(branch_amount) / 100
         branch.commission = branch_amount
         branch.save()
+        return redirect("/")
+    
+    context = {
+        
+    }
+    return render(request,"home/index2.html",context)
+
+
+# toggle a comp plan gci max
+def change_comp_plan_max_gci(request):
+    comp_plan = CompPlan.objects.all().first()
+   
+    if request.method == "POST":
+        max_gci = request.POST.get('max_gci',None)
+        comp_plan.MAX_GCI = max_gci
+        comp_plan.save()
+       
+        return redirect("/")
+    
+    context = {
+        
+    }
+    return render(request,"home/index2.html",context)
+
+
+
+
+# toggle a comp plan
+def change_comp_plan(request):
+    comp_plan_obj = CompPlan.objects.all().first()
+    if request.method == "POST":
+        comp_plan = request.POST.get("comp_plan")
+        print("comp plan ",comp_plan)
+        comp_plan_obj.Percentage = comp_plan
+        comp_plan_obj.save()
         return redirect("/")
     
     context = {

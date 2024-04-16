@@ -14,6 +14,9 @@ class CompPlan(models.Model):
     def __str__(self) -> str:
         return f"{self.Percentage}"
     
+    # def save(self):
+    #     return 
+    
     
 class Bps(models.Model):
     bps = models.FloatField()

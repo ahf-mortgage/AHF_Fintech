@@ -1,470 +1,573 @@
 {% load humanize %}
 <!doctype html>
 <html>
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body>
   <h1 class="text-3xl font-bold underline">
-  
-<div class="flex flex-col overflow-x-auto">
-   <div class="sm:-mx-6 lg:-mx-8">
-     <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-       <div class="overflow-x-auto">
-         <div style="display:flex;flex-direction:row; justify-content:center;">
-             
-               <h6 class="mb-2 mt-0 text-base font-medium leading-tight text-primary">
-                  Loan amount breakpoint
-                
-                  <br>
-                  <br>
-                  <form action="{% url 'loan_break_point' %}" method="post">
-                    {% csrf_token %}
 
-                    <div class="relative mb-3" data-twe-input-wrapper-init>
-                      <input
-                        type="Number" name="loan_break_point" id="loan_break_point" 
-                        class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
-                        id="exampleFormControlInputText"
-                        placeholder=""
-                        required
-                        
-                        />
-                      <label
-                        for="exampleFormControlInputText"
-                        class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[0.9rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-400 dark:peer-focus:text-primary"
-                        >
-                      {{loan_break_point|intcomma}}
-                     
-                      </label>
-                   
-                    </div>
-                    <input 
-                    type="submit"
-                    value="submit"
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                    >
-                    
-                  </form>
+    <div class="flex flex-col overflow-x-auto">
 
 
-                  <form action="{% url 'change_branch_amount' %}" method="post">
-                    {% csrf_token %}
-                    <input type="text"   
-                    name="branch_amount" id="branch_amount" 
-                     value="{{branch_amount}}"/>
-                    <input type="submit" value="Submit">
-                </form>
-                </h6>
-         </div>
-         <nav
-  class="relative flex w-full flex-wrap items-center justify-around bg-zinc-50 py-2 shadow-dark-mild dark:bg-neutral-700 lg:py-4">
-  <div class="flex w-full flex-wrap items-center justify-between px-3">
-    <span class="ms-2 text-xl text-black dark:text-white">
-      <h6 class="mb-2 mt-0 text-base font-medium leading-tight text-primary">
-         Above ${{loan_break_point|intcomma}}
-       </h6>
-      
-    </span>
-    <div class="ms-5 flex w-[30%] items-center justify-between">
-      <h6 class="mb-2 mt-0 text-base font-medium leading-tight text-primary">
-         Single Loan Branch Commission
-       </h6>
-    </div>
-  </div>
-</nav>
-         <table
-           class="min-w-full text-start text-sm font-light text-surface dark:text-white">
-           <thead
-             class="border-b border-neutral-200 font-medium dark:border-white/10">
+      <div class="sm:-mx-6 lg:-mx-8">
 
 
-             <tr>
-               <th scope="col" class="px-6 py-4">
-                  Flat fee
-               </th>
-               <th scope="col" class="px-6 py-4">
-                  GCI
-                  <br>
-                  ${{gci|intcomma}}
-               </th>
-               <th scope="col" class="px-6 py-4">
-                  AHF
-                  <br>
+
+        <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+
+          <div class="overflow-x-auto">
+            <div class="flex flex-col">
+              <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+                  <div class="overflow-hidden">
+                    <table class="text-left text-sm font-light text-surface dark:text-white" style="width: 50%;">
+                      <thead
+                        class="border-b border-neutral-200 bg-white font-medium dark:border-white/10 dark:bg-body-dark">
+                        <tr>
+                          <th scope="col" class="px-6 py-4">Whole sale comp plan</th>
+                          <th scope="col" class="px-6 py-4"></th>
+
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <!-- gci - (gci/1000) * (10% of loan_amount/10000) -->
+                        <!-- flat_fee = $E$32-$E$21*D32/10000 -->
+                        <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
+                          <td class="whitespace-nowrap px-6 py-4 font-medium">Flat Fee</td>
+                          <td class="whitespace-nowrap px-6 py-4">{{comp_plan_for_lower_limit.Flat_Fee}}</td>
+
+                        </tr>
+
+                        <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
+                          <td class="whitespace-nowrap px-6 py-4 font-medium">Percentage (0.000% -
+                            {{comp_plan_for_lower_limit.Percentage}}%)</td>
+                          <td class="whitespace-nowrap px-6 py-4">{{comp_plan_for_lower_limit.Percentage}}</td>
+
+                        </tr>
+
+                        <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
+                          <td class="whitespace-nowrap px-6 py-4 font-medium">Minimum Compensation ($0 -
+                            ${{gci|intcomma}})</td>
+                          <td class="whitespace-nowrap px-6 py-4">{{comp_plan_for_lower_limit.Minimum_Compensation}}
+                          </td>
+
+                        </tr>
+
+
+                        <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
+                          <td class="whitespace-nowrap px-6 py-4 font-medium">Maximum Compensation (Min. Comp - $40,000)
+                          </td>
+                          <td class="whitespace-nowrap px-6 py-4">{{comp_plan_for_lower_limit.Maximum_Compensation}}
+                          </td>
+                        </tr>
+
+
+                        <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
+                          <td class="whitespace-nowrap px-6 py-4 font-medium">Max</td>
+
+
+                          <td class="whitespace-nowrap px-6 py-4">
+                            <form action="{% url 'change_comp_plan_max_gci' %}" method="post" style="display: flex;">
+                              {% csrf_token %}
+                              <div class="relative mb-3" data-twe-input-wrapper-init>
+                                <input type="text"
+                                  class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
+                                  id="max_gci" name="max_gci" placeholder="MAX GCI" />
+                                <label for="exampleFormControlInput1"
+                                  class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[0.9rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-400 dark:peer-focus:text-primary">
+                                  {{comp_plan_for_lower_limit.MAX_GCI|intcomma}}
+                                </label>
+                              </div>
+                              <input type="submit" value="change"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-1 rounded">
+                            </form>
+
+                          </td>
+
+                        </tr>
+
+                        <!-- for Comp Percentage -->
+
+                        <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
+                          <td class="whitespace-nowrap px-6 py-4 font-medium">Comp Percentage</td>
+
+
+                          <td class="whitespace-nowrap px-6 py-4">
+                            <!-- for comp plan -->
+                            <form action="{% url 'change_comp_plan' %}" method="post" style="display: flex; flex-direction:row;justify-content:space-around;">
+                              {% csrf_token %}
+
+                              <div class="relative mb-3" data-twe-input-wrapper-init>
+                                <input type="text" name="comp_plan" id="comp_plan"
+                                  value="{{comp_plan_for_lower_limit.Percentage}}%"
+                                  class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
+                                  id="exampleFormControlInputText" placeholder="" required />
+                                <label for="exampleFormControlInputText"
+                                  class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[0.9rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-400 dark:peer-focus:text-primary">
+                                  {{comp_plan_for_lower_limit.Percentage}}%
+
+                                </label>
+
+                              </div>
+                              <input type="submit" value="submit"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded">
+                            </form>
+
+
+                          </td>
+
+                        </tr>
+
+
+
+                        <!-- for loan break point -->
+                        <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
+                          <td class="whitespace-nowrap px-6 py-4 font-medium">Loan break point</td>
+                          <td class="whitespace-nowrap px-6 py-4">
+                            <form action="{% url 'loan_break_point' %}" method="post" style="display: flex; flex-direction:row;justify-content:space-around;">
+                              {% csrf_token %}
+                              <div class="relative mb-3" data-twe-input-wrapper-init>
+                                <input type="Number" name="loan_break_point" id="loan_break_point"
+                                  class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
+                                  id="exampleFormControlInputText" placeholder="" required />
+                                <label for="exampleFormControlInputText"
+                                  class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[0.9rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-400 dark:peer-focus:text-primary">
+                                  {{loan_break_point|intcomma}}
+
+                                </label>
+
+                              </div>
+                              <input type="submit" value="submit"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded">
+                            </form>
+                          </td>
+
+                        </tr>
+
+
+                        <!-- for split -->
+                        <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
+                          <td class="whitespace-nowrap px-6 py-4 font-medium">Split</td>
+                          <td class="whitespace-nowrap px-6 py-4">
+                            <form action="{% url 'change_branch_amount' %}" method="post" style="display: flex; flex-direction:row;justify-content:space-around;">
+                              {% csrf_token %}
+
+                              <div class="relative mb-3" data-twe-input-wrapper-init>
+                                <input type="text" name="branch_amount" id="branch_amount" value="{{branch_amount}}"
+                                  class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
+                                  id="exampleFormControlInputText" placeholder="" required />
+                                <label for="exampleFormControlInputText"
+                                  class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[0.9rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-400 dark:peer-focus:text-primary">
+                                  {{branch_amount|intcomma}}
+
+                                </label>
+
+                              </div>
+                              <input type="submit" value="submit"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded">
+                            </form>
+                          </td>
+
+                        </tr>
+
+
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div style="display: flex;flex-direction:row;justify-content:space-around;">
+
+
+
+            </div>
+
+            <div>
+
+            </div>
+
+          </div>
+
+
+        </div>
+        <nav
+          class="relative flex w-full flex-wrap items-center justify-around bg-zinc-50 py-2 shadow-dark-mild dark:bg-neutral-700 lg:py-4">
+          <div class="flex w-full flex-wrap items-center justify-between px-3">
+            <span class="ms-2 text-xl text-black dark:text-white">
+              <h6 class="mb-2 mt-0 text-base font-medium leading-tight text-primary">
+                Above ${{loan_break_point|intcomma}}
+              </h6>
+
+            </span>
+            <div class="ms-5 flex w-[30%] items-center justify-between">
+              <h6 class="mb-2 mt-0 text-base font-medium leading-tight text-primary">
+                Single Loan Branch Commission
+              </h6>
+            </div>
+          </div>
+        </nav>
+        <table class="min-w-full text-start text-sm font-light text-surface dark:text-white">
+          <thead class="border-b border-neutral-200 font-medium dark:border-white/10">
+
+
+            <tr>
+              <th scope="col" class="px-6 py-4">
+                Flat fee
+              </th>
+              <th scope="col" class="px-6 py-4">
+                GCI
+                <br>
+
+                ${{gci|intcomma}}
+              </th>
+              <th scope="col" class="px-3 py-2">
+                <p class="font-small" style="font-weight: 300;font-size:0.8rem;">AHF</p>
+                <br>
+                <p style="font-weight: 300;font-size:0.8rem;">
                   ${{ahf_commission|intcomma}}
-               </th>
-               <th scope="col" class="px-6 py-4">
-                  Branch
-                  <br>
-                  ${{branch_commission|intcomma}}
-               </th>
-        
-             </tr>
-        
-             <tr>
-              
-               <th scope="col" class="px-6 py-4">Bps</th>
-               <th scope="col" class="px-6 py-4">Loan amount</th>
-               <th scope="col" class="px-6 py-4">{{ahf_amount}}%</th>
-              
-               <th scope="col" class="px-6 py-4">{{branch_amount}}%</th>
-             </tr>
-           </thead>
-           <tbody>
-             <tr class="border-b border-neutral-200 dark:border-white/10">
-            
-               <td class="text-center whitespace-nowrap px-6 py-4" id="D7">
-                  {% if 50 < bps %}
-                      50
-                  {% else %}
-                       0
-                  {% endif %}
-
-               </td>
-               <td class="text-center whitespace-nowrap px-6 py-4" id="E6">
-                {% if bps > 0 %}
-     
-                {% else %}
-                  0
-                {% endif %}
-               </td>
-               <td class="text-center whitespace-nowrap px-6 py-4" id="F7">cell</td>
-               <td class="text-center whitespace-nowrap px-6 py-4" id="G7">xxxx</td>
-           
-             </tr>
-             <tr class="border-b border-neutral-200 dark:border-white/10">
-      
-               <td class="text-center whitespace-nowrap px-6 py-4" id="D8">
-                {% if 100 < bps %}
-                    100
-                {% else %}
-                     0
-                {% endif %}
-              </td>
-               <td class="text-center whitespace-nowrap px-6 py-4" id="E8">cell</td>
-               <td class="text-center whitespace-nowrap px-6 py-4" id="F8">Cell</td>
-               <td class="text-center whitespace-nowrap px-6 py-4" id="G8">Cell</td>
-             
-             </tr>
-             <tr class="border-b ">
-            
-               <td class="text-center whitespace-nowrap px-6 py-4" id="D9">
+                </p>
                
+              </th>
+              <th scope="col" class="px-6 py-4">
+                Branch
+                <br>
+                ${{branch_commission|intcomma}}
+              </th>
 
-                {% if  125 < bps %}
-                      125
+            </tr>
+
+            <tr>
+
+              <th scope="col" class="px-6 py-4">Bps</th>
+              <th scope="col" class="px-6 py-4">Loan amount</th>
+              <th scope="col" class="px-6 py-4">{{ahf_amount}}%</th>
+
+              <th scope="col" class="px-6 py-4">{{branch_amount}}%</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b border-neutral-200 dark:border-white/10">
+
+              <td class="text-center whitespace-nowrap px-6 py-4" id="D7">
+                {% if 50 < bps %} 50 {% else %} 0 {% endif %} </td>
+              <td class="text-center whitespace-nowrap px-6 py-4" id="E6">
+                {% if bps > 0 %}
+
                 {% else %}
-                    0
+                0
                 {% endif %}
-              
               </td>
-               <td class="text-center whitespace-nowrap px-6 py-4" id="E9">xxxx33</td>
-               <td class="text-center whitespace-nowrap px-6 py-4"  id="F9">Cell</td>
-               <td class="text-center whitespace-nowrap px-6 py-4"  id="G9">Cell</td>
-             
-             </tr>
+              <td class="text-center whitespace-nowrap px-6 py-4" id="F7">cell</td>
+              <td class="text-center whitespace-nowrap px-6 py-4" id="G7">xxxx</td>
+
+            </tr>
+            <tr class="border-b border-neutral-200 dark:border-white/10">
+
+              <td class="text-center whitespace-nowrap px-6 py-4" id="D8">
+                {% if 100 < bps %} 100 {% else %} 0 {% endif %} </td>
+              <td class="text-center whitespace-nowrap px-6 py-4" id="E8">cell</td>
+              <td class="text-center whitespace-nowrap px-6 py-4" id="F8">Cell</td>
+              <td class="text-center whitespace-nowrap px-6 py-4" id="G8">Cell</td>
+
+            </tr>
+            <tr class="border-b ">
+
+              <td class="text-center whitespace-nowrap px-6 py-4" id="D9">
 
 
-             <tr class="border-b border-neutral-200 dark:border-white/10">
-            
-               <td class="text-center whitespace-nowrap px-6 py-4" id="D10">
-                
+                {% if 125 < bps %} 125 {% else %} 0 {% endif %} </td>
+              <td class="text-center whitespace-nowrap px-6 py-4" id="E9">xxxx33</td>
+              <td class="text-center whitespace-nowrap px-6 py-4" id="F9">Cell</td>
+              <td class="text-center whitespace-nowrap px-6 py-4" id="G9">Cell</td>
 
-                {% if  150 < bps %}
-                     150
-                {% else %}
-                      0
-                 {% endif %}
-              
-              </td>
-               <td class="text-center whitespace-nowrap px-6 py-4" id="E10">555</td>
-               <td class="text-center whitespace-nowrap px-6 py-4"  id="F10">Cell</td>
-               <td class="text-center whitespace-nowrap px-6 py-4" id="G10">Cell</td>
-           
-             </tr>
-             <tr class="border-b border-neutral-200 dark:border-white/10">
-      
-               <td class="text-center whitespace-nowrap px-6 py-4" id="D11">
-                
+            </tr>
 
-                {% if  175 < bps %}
-                      175
-                {% else %}
-                      0
-                  {% endif %}
-                
-              </td>
-               <td class="text-center whitespace-nowrap px-6 py-4" id="E11"></td>
-               <td class="text-center whitespace-nowrap px-6 py-4"  id="F11">Cell</td>
-               <td class="text-center whitespace-nowrap px-6 py-4"  id="G11">Cell</td>
-             
-             </tr>
 
-             <tr class="border-b border-neutral-200 dark:border-white/10">
-      
-                <td class="text-center whitespace-nowrap px-6 py-4" id="D12">
-                 
- 
-                 {% if  200 < bps %}
-                       200
-                 {% else %}
-                       0
-                   {% endif %}
-                 
-               </td>
-                <td class="text-center whitespace-nowrap px-6 py-4" id="E12"></td>
-                <td class="text-center whitespace-nowrap px-6 py-4"  id="F12">Cell</td>
-                <td class="text-center whitespace-nowrap px-6 py-4"  id="G12">Cell</td>
-              
-              </tr>
+            <tr class="border-b border-neutral-200 dark:border-white/10">
+
+              <td class="text-center whitespace-nowrap px-6 py-4" id="D10">
+
+
+                {% if 150 < bps %} 150 {% else %} 0 {% endif %} </td>
+              <td class="text-center whitespace-nowrap px-6 py-4" id="E10">555</td>
+              <td class="text-center whitespace-nowrap px-6 py-4" id="F10">Cell</td>
+              <td class="text-center whitespace-nowrap px-6 py-4" id="G10">Cell</td>
+
+            </tr>
+            <tr class="border-b border-neutral-200 dark:border-white/10">
+
+              <td class="text-center whitespace-nowrap px-6 py-4" id="D11">
+
+
+                {% if 175 < bps %} 175 {% else %} 0 {% endif %} </td>
+              <td class="text-center whitespace-nowrap px-6 py-4" id="E11"></td>
+              <td class="text-center whitespace-nowrap px-6 py-4" id="F11">Cell</td>
+              <td class="text-center whitespace-nowrap px-6 py-4" id="G11">Cell</td>
+
+            </tr>
+
+            <tr class="border-b border-neutral-200 dark:border-white/10">
+
+              <td class="text-center whitespace-nowrap px-6 py-4" id="D12">
+
+
+                {% if 200 < bps %} 200 {% else %} 0 {% endif %} </td>
+              <td class="text-center whitespace-nowrap px-6 py-4" id="E12"></td>
+              <td class="text-center whitespace-nowrap px-6 py-4" id="F12">Cell</td>
+              <td class="text-center whitespace-nowrap px-6 py-4" id="G12">Cell</td>
+
+            </tr>
 
 
 
-             <tr class="border-b border-neutral-200 dark:border-white/10">
-                <td class="text-center whitespace-nowrap px-6 py-4" id="D13">
-                 {% if  225 < bps %}
-                       225
-                 {% else %}
-                       0
-                   {% endif %}
-               </td>
-                <td class="text-center whitespace-nowrap px-6 py-4" id="E13"></td>
-                <td class="text-center whitespace-nowrap px-6 py-4"  id="F13">Cell</td>
-                <td class="text-center whitespace-nowrap px-6 py-4"  id="G13">Cell</td>
-              </tr>
+            <tr class="border-b border-neutral-200 dark:border-white/10">
+              <td class="text-center whitespace-nowrap px-6 py-4" id="D13">
+                {% if 225 < bps %} 225 {% else %} 0 {% endif %} </td>
+              <td class="text-center whitespace-nowrap px-6 py-4" id="E13"></td>
+              <td class="text-center whitespace-nowrap px-6 py-4" id="F13">Cell</td>
+              <td class="text-center whitespace-nowrap px-6 py-4" id="G13">Cell</td>
+            </tr>
 
-              <tr class="border-b border-neutral-200 dark:border-white/10">
-                <td class="text-center whitespace-nowrap px-6 py-4" id="D14">
-                 {% if  250 < bps %}
-                       250
-                 {% else %}
-                       0
-                   {% endif %}
-               </td>
-                <td class="text-center whitespace-nowrap px-6 py-4" id="E14"></td>
-                <td class="text-center whitespace-nowrap px-6 py-4"  id="F14">Cell</td>
-                <td class="text-center whitespace-nowrap px-6 py-4"  id="G14">Cell</td>
-              </tr>
+            <tr class="border-b border-neutral-200 dark:border-white/10">
+              <td class="text-center whitespace-nowrap px-6 py-4" id="D14">
+                {% if 250 < bps %} 250 {% else %} 0 {% endif %} </td>
+              <td class="text-center whitespace-nowrap px-6 py-4" id="E14"></td>
+              <td class="text-center whitespace-nowrap px-6 py-4" id="F14">Cell</td>
+              <td class="text-center whitespace-nowrap px-6 py-4" id="G14">Cell</td>
+            </tr>
 
 
-   
-         
 
-            
-           </tbody>
-         </table>
-       </div>
 
-       <div class="flex flex-col" style="width: 80%;justify-content:space-between;">
+
+
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flex flex-col" style="width: 80%;justify-content:space-between;">
         <div class="overflow-x-auto sm:-mx-6 lg:-mx-8" style="margin-left: auto;">
           <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
             <div class="overflow-hidden">
-              <table
-                class="min-w-full text-left text-sm font-light text-surface dark:text-white">
-                <thead
-                  class="border-b border-neutral-200 font-medium dark:border-white/10">
+              <table class="min-w-full text-left text-sm font-light text-surface dark:text-white">
+                <thead class="border-b border-neutral-200 font-medium dark:border-white/10">
                   <tr>
-              
+
                     <th scope="col" class="px-6 py-4"></th>
-                    <th scope="col" class="px-6 py-4">AHF</th>
+                    <th scope="col" class="px-6 py-4" style="font-weight: 300;font-size:0.8rem;">AHF</th>
                     <th scope="col" class="px-6 py-4">Branch</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr class="border-b border-neutral-200 dark:border-white/10">
-          
+
                     <td class="whitespace-nowrap px-6 py-4">Split</td>
                     <td class="whitespace-nowrap px-6 py-4">{{ahf_amount}}%</td>
-                  
-                    <td class="whitespace-nowrap px-6 py-4">
 
-                       {{branch_amount}} %
+                    <td class="whitespace-nowrap px-6 py-4">
+                      <p class="font-bold">
+                        {{branch_amount}}%
+                      </p>
+                    
                     </td>
-            
+
                   </tr>
-                
-              
+
+
                 </tbody>
               </table>
             </div>
           </div>
 
-          
+
         </div>
 
 
         <span class="ms-2 text-xl text-black dark:text-white" style="display: flex;justify-content:space-between;">
 
-            <!-- header of at and below table  -->
-            <h6 class="mb-2 mt-0 text-base font-medium leading-tight text-primary">
-               At and below ${{loan_break_point|intcomma}}
-             </h6>
+          <!-- header of at and below table  -->
+          <h6 class="mb-2 mt-0 text-base font-medium leading-tight text-primary">
+            At and below ${{loan_break_point|intcomma}}
+          </h6>
 
-                <!-- header of at and below table  -->
-            <h6 class="mb-2 mt-0 text-base font-medium leading-tight text-primary">
-                Single Loan Branch Commission
-            </h6>
-
-             
-          </span>
-
-          <!-- table of at and below -->
-          <table
-          class="min-w-full text-start text-sm font-light text-surface dark:text-white">
-          <thead
-            class="border-b border-neutral-200 font-medium dark:border-white/10">
+          <!-- header of at and below table  -->
+          <h6 class="mb-2 mt-0 text-base font-medium leading-tight text-primary">
+            Single Loan Branch Commission
+          </h6>
 
 
-           
+        </span>
+
+        <!-- table of at and below -->
+        <table class="min-w-full text-start text-sm font-light text-surface dark:text-white">
+          <thead class="border-b border-neutral-200 font-medium dark:border-white/10">
+
+
+
             <tr>
-             
+
               <th scope="col" class="px-6 py-4">Loan amount</th>
-              <th scope="col" class="px-6 py-4">GCI</th> 
-              <th scope="col" class="px-6 py-4">
-                AHF
+              <th scope="col" class="px-6 py-4">GCI
                 <br>
-                {{ahf_amount}}%
-            </th>
-             
-            <th scope="col" class="px-6 py-4">
+                {{gci|intcomma}}
+              </th>
+              <th scope="col" class="px-6 py-4">
+                <p style="font-weight: 300;font-size:0.8rem;">
+                  AHF
+                </p>
+                
+                <br>
+                <p style="font-weight: 300;font-size:0.8rem;">
+                  {{ahf_amount}}%
+                </p>
+            
+              </th>
+
+              <th scope="col" class="px-6 py-4">
                 Branch
                 <br>
                 {{branch_amount}}%
-            </th>
+              </th>
             </tr>
           </thead>
           <tbody>
 
             {% for num in loan_below_limits %}
-                <tr class="border-b border-neutral-200 dark:border-white/10">
+            <tr class="border-b border-neutral-200 dark:border-white/10">
 
-                <td class="text-center whitespace-nowrap px-6 py-4" id="G2_{{num}}">
-                    {{num|intcomma}}
-                </td>
+              <td class="text-center whitespace-nowrap px-6 py-4" id="G2_{{num}}">
+                {{num|intcomma}}
+              </td>
 
-                <td class="text-center whitespace-nowrap px-6 py-4" id="D2_{{num}}">
-                    placeholder for gci
-               </td>
+              <td class="text-center whitespace-nowrap px-6 py-4" id="D2_{{num}}">
+                placeholder for gci
+              </td>
 
-               <td class="text-center whitespace-nowrap px-6 py-4" id="F2_{{num}}">
+              <td class="text-center whitespace-nowrap px-6 py-4" id="F2_{{num}}">
                 placeholder for ahf
               </td>
 
               <td class="text-center whitespace-nowrap px-6 py-4" id="H2_{{num}}">
                 placeholder for branch
               </td>
-           </td>
-                </tr>
+              </td>
+            </tr>
             {% endfor %}
-            
+
 
           </tbody>
         </table>
 
 
-        
+
       </div>
 
-      
-     </div>
-   </div>
- </div>
+
+    </div>
+    </div>
+    </div>
   </h1>
 
   <script>
 
     // for loan above limit
-      // bps
-    const D7 =  document.getElementById('D7').innerHTML
+    // bps
+    const D7 = document.getElementById('D7').innerHTML
     const E5 = "{{gci}}"
     const E6 = document.getElementById('E6')
-    if( Number.parseFloat(D7) > 0) {
-      E6.innerHTML =` $\ ${(Number.parseFloat(E5) / Number.parseFloat(D7) * 10000).toLocaleString()}`
+    if (Number.parseFloat(D7) > 0) {
+      E6.innerHTML = ` $\ ${(Number.parseFloat(E5) / Number.parseFloat(D7) * 10000).toLocaleString()}`
     } else {
-      E6.innerHTML =0
+      E6.innerHTML = 0
     }
 
-      // bps
-    const D8 =  document.getElementById('D8').innerHTML
+    // bps
+    const D8 = document.getElementById('D8').innerHTML
     const E8 = document.getElementById('E8')
-    if( Number.parseFloat(D8) > 0) {
-      E8.innerHTML =` $\ ${(Number.parseFloat(E5) / Number.parseFloat(D8) * 10000).toLocaleString()}`
+    if (Number.parseFloat(D8) > 0) {
+      E8.innerHTML = ` $\ ${(Number.parseFloat(E5) / Number.parseFloat(D8) * 10000).toLocaleString()}`
     } else {
-      E8.innerHTML =0
+      E8.innerHTML = 0
     }
 
-      // bps
-    const D9 =  document.getElementById('D9').innerHTML
+    // bps
+    const D9 = document.getElementById('D9').innerHTML
     const E9 = document.getElementById('E9')
-    if( Number.parseFloat(D9) > 0) {
-      E9.innerHTML =` $\ ${(Number.parseFloat(E5) / Number.parseFloat(D9) * 10000).toLocaleString()}`
+    if (Number.parseFloat(D9) > 0) {
+      E9.innerHTML = ` $\ ${(Number.parseFloat(E5) / Number.parseFloat(D9) * 10000).toLocaleString()}`
     } else {
-      E9.innerHTML =0
+      E9.innerHTML = 0
     }
 
-      // bps
-    const D10 =  document.getElementById('D10').innerHTML
+    // bps
+    const D10 = document.getElementById('D10').innerHTML
     const E10 = document.getElementById('E10')
-    if( Number.parseFloat(D10) > 0) {
-      E10.innerHTML =` $\  ${(Math.round(Number.parseFloat(E5) / Number.parseFloat(D10) * 10000)).toLocaleString()}`
+    if (Number.parseFloat(D10) > 0) {
+      E10.innerHTML = ` $\  ${(Math.round(Number.parseFloat(E5) / Number.parseFloat(D10) * 10000)).toLocaleString()}`
     } else {
-      E10.innerHTML =0
+      E10.innerHTML = 0
     }
 
-      // bps
-    const D11 =  document.getElementById('D11').innerHTML
+    // bps
+    const D11 = document.getElementById('D11').innerHTML
 
 
     // loan amount
     const E11 = document.getElementById('E11')
-    if( Number.parseFloat(D11) > 0) {
-        // loan amount
-      E11.innerHTML =` $\  ${(Math.round(Number.parseFloat(E5) / Number.parseFloat(D11) * 10000)).toLocaleString()}`
+    if (Number.parseFloat(D11) > 0) {
+      // loan amount
+      E11.innerHTML = ` $\  ${(Math.round(Number.parseFloat(E5) / Number.parseFloat(D11) * 10000)).toLocaleString()}`
     } else {
-        // loan amount
-      E11.innerHTML =0
-    }
-
-
-      // bps
-    const D12 =  document.getElementById('D12').innerHTML
-    // loan amount
-    const E12 = document.getElementById('E12')
-    if( Number.parseFloat(D12) > 0) {
-    // loan amount
-      E12.innerHTML =` $\  ${(Math.round(Number.parseFloat(E5) / Number.parseFloat(D12) * 10000)).toLocaleString()}`
-    } else {
-    // loan amount
-      E12.innerHTML =0
+      // loan amount
+      E11.innerHTML = 0
     }
 
 
     // bps
-    const D13 =  document.getElementById('D13').innerHTML
+    const D12 = document.getElementById('D12').innerHTML
+    // loan amount
+    const E12 = document.getElementById('E12')
+    if (Number.parseFloat(D12) > 0) {
+      // loan amount
+      E12.innerHTML = ` $\  ${(Math.round(Number.parseFloat(E5) / Number.parseFloat(D12) * 10000)).toLocaleString()}`
+    } else {
+      // loan amount
+      E12.innerHTML = 0
+    }
+
+
+    // bps
+    const D13 = document.getElementById('D13').innerHTML
     // loan amount
     const E13 = document.getElementById('E13')
-    if( Number.parseFloat(D13) > 0) {
-    // loan amount
-      E13.innerHTML =` $\  ${(Math.round(Number.parseFloat(E5) / Number.parseFloat(D13) * 10000)).toLocaleString()}`
+    if (Number.parseFloat(D13) > 0) {
+      // loan amount
+      E13.innerHTML = ` $\  ${(Math.round(Number.parseFloat(E5) / Number.parseFloat(D13) * 10000)).toLocaleString()}`
     } else {
-    // loan amount
-      E13.innerHTML =0
+      // loan amount
+      E13.innerHTML = 0
     }
 
 
 
-      // bps
-    const D14 =  document.getElementById('D14').innerHTML
-      // loan amount
-    const E14 = document.getElementById('E14')
-    if( Number.parseFloat(D14) > 0) {
-     // loan amount
-      E14.innerHTML =` $\  ${(Math.round(Number.parseFloat(E5) / Number.parseFloat(D14) * 10000)).toLocaleString()}`
-    } else {
+    // bps
+    const D14 = document.getElementById('D14').innerHTML
     // loan amount
-      E14.innerHTML =0
+    const E14 = document.getElementById('E14')
+    if (Number.parseFloat(D14) > 0) {
+      // loan amount
+      E14.innerHTML = ` $\  ${(Math.round(Number.parseFloat(E5) / Number.parseFloat(D14) * 10000)).toLocaleString()}`
+    } else {
+      // loan amount
+      E14.innerHTML = 0
     }
 
 
@@ -493,11 +596,11 @@
     // AHF
     const F12 = document.getElementById("F12")
     F12.innerText = `${Math.round(D12 * ahf_commission_amount)}`
-      // AHF
+    // AHF
     const F13 = document.getElementById("F13")
     F13.innerText = `${Math.round(D13 * ahf_commission_amount)}`
 
-      // AHF
+    // AHF
     const F14 = document.getElementById("F14")
     F14.innerText = `${Math.round(D14 * ahf_commission_amount)}`
 
@@ -520,7 +623,7 @@
 
     // Branch
     const G9 = document.getElementById("G9")
-    G9.innerText = `${ Math.round(D9 * branch_commission_amount)}`
+    G9.innerText = `${Math.round(D9 * branch_commission_amount)}`
 
     // Branch
     const G10 = document.getElementById("G10")
@@ -532,56 +635,59 @@
 
     // Branch
     const G12 = document.getElementById("G12")
-    G12.innerText = `${D12 *branch_commission_amount}`
+    G12.innerText = `${D12 * branch_commission_amount}`
 
     // Branch
     const G13 = document.getElementById("G13")
-    G13.innerText = `${D13 *branch_commission_amount}`
+    G13.innerText = `${D13 * branch_commission_amount}`
 
     // Branch
     const G14 = document.getElementById("G14")
-    G14.innerText = `${D14 *branch_commission_amount}`
+    G14.innerText = `${D14 * branch_commission_amount}`
 
     // for loan below limit
     // gci=   (comp_plan.Percentage * 100) * loan_break_point.loan_break_point / 10000 + comp_plan.Flat_Fee
     // max = $B$7
     //=IF($E$21*D23/10000+$B$3 < $B$7,$E$21*D23/10000+$B$3,$B$7)
-    
-    const loan_below_limits_raw =  "{{loan_below_limits}}"
+
+    const loan_below_limits_raw = "{{loan_below_limits}}"
     const MAX_GCI = Number.parseFloat("{{comp_plan_for_lower_limit.MAX_GCI}}")
 
     const loan_below_limits = JSON.parse(loan_below_limits_raw);
     const comp_plan_percentage = Number.parseFloat("{{comp_plan_for_lower_limit.Percentage}}")
-     for(let num of loan_below_limits) {
-        const D2 = document.getElementById(`D2_${num}`)
-        const F2 = document.getElementById(`F2_${num}`)
-        const H2 = document.getElementById(`H2_${num}`)
-        let branch_share = 0
-        let ahf_share   = 0
-   
-        const gci_result = (comp_plan_percentage * 100) * num / 10000 + Number.parseFloat("{{comp_plan_for_lower_limit.Flat_Fee}}")
-        const branch_amount= (Number.parseFloat("{{branch_amount}}") / 100 )//Number.parseFloat("{{branch_commission_amount}}")
-        const ahf_amount= 1- (Number.parseFloat("{{branch_amount}}") / 100 )
-        
-        if(gci_result < MAX_GCI ) {
-          D2.innerText = (gci_result).toLocaleString()
-          branch_share = (gci_result *  branch_amount)
-          ahf_share = (gci_result * ahf_amount)
-        }
-        else {
-          D2.innerText = MAX_GCI.toLocaleString()
-          branch_share = MAX_GCI  * branch_amount
-          ahf_share = MAX_GCI * ahf_amount
-        }
-        F2.innerText  = ahf_share.toLocaleString()
-        H2.innerText  = branch_share.toLocaleString()
 
 
 
-     }
 
-   </script>
+    for (let num of loan_below_limits) {
+      const D2 = document.getElementById(`D2_${num}`)
+      const F2 = document.getElementById(`F2_${num}`)
+      const H2 = document.getElementById(`H2_${num}`)
+      let branch_share = 0
+      let ahf_share = 0
+
+      const gci_result = (comp_plan_percentage * 100) * num / 10000 + Number.parseFloat("{{comp_plan_for_lower_limit.Flat_Fee}}")
+      const branch_amount = (Number.parseFloat("{{branch_amount}}") / 100)//Number.parseFloat("{{branch_commission_amount}}")
+      const ahf_amount = 1 - (Number.parseFloat("{{branch_amount}}") / 100)
+
+      if (gci_result < MAX_GCI) {
+        D2.innerText = (gci_result).toLocaleString()
+        branch_share = (gci_result * branch_amount)
+        ahf_share = (gci_result * ahf_amount)
+      }
+      else {
+        D2.innerText = MAX_GCI.toLocaleString()
+        branch_share = MAX_GCI * branch_amount
+        ahf_share = MAX_GCI * ahf_amount
+      }
+      F2.innerText = ahf_share.toLocaleString()
+      H2.innerHTML = `<p class='font-bold'> ${branch_share.toLocaleString()} </p>`
+
+
+
+    }
+
+  </script>
 </body>
+
 </html>
-
-
