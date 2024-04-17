@@ -41,7 +41,7 @@ def home(request):
     
     
     
-  
+    # print(e,"DEBUG Percentage")
     context = {
         'loan_below_limits':loan_below_limits,
         'comp_plan_for_lower_limit':comp_plan,
@@ -152,19 +152,15 @@ def comp_plan_change_view(request):
         loan_break= request.POST.get("loan_break_point")
         branch_amount = request.POST.get("branch_amount")
         
-        if max_gci  or comp_plan:
+        if True:
             comp_plan_obj.MAX_GCI = max_gci
             comp_plan_obj.Percentage = comp_plan
-            comp_plan_obj.save()
-            return redirect("/")
-        if loan_break:
             loan_break_point.loan_break_point = int(loan_break)
-            loan_break_point.save()
-            return redirect("/")
-        if branch_amount:
             branch_amount = int(branch_amount) / 100
             branch.commission = branch_amount
             branch.save()
+            loan_break_point.save()
+            comp_plan_obj.save()
             return redirect("/")
             
         else:
