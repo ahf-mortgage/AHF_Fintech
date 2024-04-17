@@ -44,7 +44,7 @@
                             <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
                                 <td class="whitespace-nowrap px-6 py-4 font-medium">Max</td>
                                 <td class="whitespace-nowrap px-6 py-4">
-                                    <form action="{% url 'change_comp_plan_max_gci' %}" method="post" 
+                                    <form action="{% url 'comp_plan_change_view' %}" method="post" 
                                     style="display: flex;justify-content:center;">
                                         {% csrf_token %}
                                         <div class="relative mb-3" data-twe-input-wrapper-init>
@@ -60,11 +60,8 @@
                                                 {{comp_plan_for_lower_limit.MAX_GCI|intcomma}}
                                             </label>
                                         </div>
-                                        <input  type="submit" 
-                                                value="change"
-                                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded"
-                                                s>
-                                    </form>
+                                       
+                                  
 
                                 </td>
 
@@ -76,9 +73,7 @@
 
                                 <td class="whitespace-nowrap px-6 py-4">
                                     <!-- for comp plan -->
-                                    <form action="{% url 'change_comp_plan' %}" method="post"
-                                        style="display: flex; flex-direction:row;justify-content:space-around;">
-                                        {% csrf_token %}
+                                   
                                         <div class="relative mb-3" data-twe-input-wrapper-init>
                                             <input type="Number" name="comp_plan" id="comp_plan"
                                                 value="{{comp_plan_for_lower_limit.Percentage}}%"
@@ -89,9 +84,8 @@
                                                 {{comp_plan_for_lower_limit.Percentage}}%
                                             </label>
                                         </div>
-                                        <input type="submit" value="submit"
-                                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded">
-                                    </form>
+                                       
+                                
                                 </td>
                             </tr>
 
@@ -102,9 +96,7 @@
                             <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
                                 <td class="whitespace-nowrap px-6 py-4 font-medium">Loan break point</td>
                                 <td class="whitespace-nowrap px-6 py-4">
-                                    <form action="{% url 'loan_break_point' %}" method="post"
-                                        style="display: flex; flex-direction:row;justify-content:space-around;">
-                                        {% csrf_token %}
+                                   
                                         <div class="relative mb-3" data-twe-input-wrapper-init>
                                             <input type="Number" name="loan_break_point" id="loan_break_point"
                                                 class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
@@ -114,9 +106,7 @@
                                                 {{loan_break_point|intcomma}}
                                             </label>
                                         </div>
-                                        <input type="submit" value="submit"
-                                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded">
-                                    </form>
+                           
                                 </td>
 
                             </tr>
@@ -127,9 +117,7 @@
                             <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
                                 <td class="whitespace-nowrap px-6 py-4 font-medium">Split</td>
                                 <td class="whitespace-nowrap px-6 py-4">
-                                    <form action="{% url 'change_branch_amount' %}" method="post"
-                                        style="display: flex; flex-direction:row;justify-content:space-around;">
-                                        {% csrf_token %}
+                                   
 
                                         <div class="relative mb-3" data-twe-input-wrapper-init>
                                             <input type="text" name="branch_amount" id="branch_amount"

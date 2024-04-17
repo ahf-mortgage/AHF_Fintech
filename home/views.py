@@ -119,6 +119,9 @@ def change_comp_plan(request):
 
 def loan_break_point(request):
     loan_break_point = LoanBreakPoint.objects.all().first()
+    
+
+
     if request.method == "POST":
         loan_break= request.POST.get("loan_break_point")
         loan_break_point.loan_break_point = int(loan_break)
@@ -132,11 +135,45 @@ def loan_break_point(request):
 
 
 def comp_plan_change_view(request):
+    """
+        This function handle comp plane changes
+
+    """
+    
+    
+    print("post request reached here")
+    loan_break_point = LoanBreakPoint.objects.all().first()
+    comp_plan_obj = CompPlan.objects.all().first()
+    branch = Branch.objects.all().first()
+
     if request.method == "POST":
+        max_gci = request.POST.get('max_gci',None)
+        comp_plan = request.POST.get("comp_plan")
         loan_break= request.POST.get("loan_break_point")
-        loan_break_point.loan_break_point = int(loan_break)
-        loan_break_point.save()
-        return redirect("/")
+        branch_amount = request.POST.get("branch_amount")
+        
+        if max_gci  or comp_plan:
+            comp_plan_obj.MAX_GCI = max_gci
+            comp_plan_obj.Percentage = comp_plan
+            comp_plan_obj.save()
+            return redirect("/")
+        if loan_break:
+            loan_break_point.loan_break_point = int(loan_break)
+            loan_break_point.save()
+            return redirect("/")
+        if branch_amount:
+            branch_amount = int(branch_amount) / 100
+            branch.commission = branch_amount
+            branch.save()
+            return redirect("/")
+            
+        else:
+            return redirect("/")
+            
+                
+
+
+      
     
     context = {
         
