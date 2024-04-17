@@ -7,12 +7,14 @@ from  django.shortcuts import redirect
 
 @login_required
 def home(request):
+    """
+        This function display comp plan,loan above limit and loan below limit
+    """
     bps              = Bps.objects.all().first()
     loan_break_point = LoanBreakPoint.objects.all().first()
     comp_plan        = CompPlan.objects.all().first()
     ahf              = AHF.objects.all().first() 
     branch           = Branch.objects.all().first() 
-    # gci               = bps.bps * loan_break_point.loan_break_point/10000 + comp_plan.Flat_Fee
     gci               = (comp_plan.Percentage * 100) * loan_break_point.loan_break_point/10000 + comp_plan.Flat_Fee
     
     
@@ -35,6 +37,9 @@ def home(request):
     FLAT_AM0UNT = gci - (gci/1000) * ((loan_below_limits[len(loan_below_limits) - 1] or 0) * 0.1/10000) 
     
     
+    print(interval_bps , "  interval bps")
+    
+    
     
   
     context = {
@@ -54,6 +59,8 @@ def home(request):
 
     }
     return render(request,"home/index2.html",context)
+
+
 
 
 
@@ -112,6 +119,19 @@ def change_comp_plan(request):
 
 def loan_break_point(request):
     loan_break_point = LoanBreakPoint.objects.all().first()
+    if request.method == "POST":
+        loan_break= request.POST.get("loan_break_point")
+        loan_break_point.loan_break_point = int(loan_break)
+        loan_break_point.save()
+        return redirect("/")
+    
+    context = {
+        
+    }
+    return render(request,"home/index2.html",context)
+
+
+def comp_plan_change_view(request):
     if request.method == "POST":
         loan_break= request.POST.get("loan_break_point")
         loan_break_point.loan_break_point = int(loan_break)

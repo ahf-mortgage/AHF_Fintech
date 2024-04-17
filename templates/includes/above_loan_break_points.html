@@ -3,9 +3,9 @@
 <nav
     class="relative flex w-full flex-wrap items-center justify-around bg-zinc-50 py-2 shadow-dark-mild dark:bg-neutral-700 lg:py-4">
     <div class="flex w-full flex-wrap items-center justify-between px-3">
-        <span style="margin: 50px;" class="ms-2 text-xl text-black dark:text-white">
+        <span class="ms-2 text-xl text-black dark:text-white"  style="display: flex;justify-content:space-between;margin: 50px;">
 
-            <h6 style="margin: 50xp;" class="mr-3 mb-2 mt-0 text-base font-medium leading-tight text-primary">
+            <h6 class="mr-3 mb-2 mt-0 text-base font-medium leading-tight text-primary">
                 Above ${{loan_break_point|intcomma}}
             </h6>
 
@@ -56,7 +56,11 @@
             <th scope="col" class="px-6 py-4">{{branch_amount}}%</th>
         </tr>
     </thead>
+
+
     <tbody>
+
+  
         <tr class="border-b border-neutral-200 dark:border-white/10">
 
             <td class="text-center whitespace-nowrap px-6 py-4" id="D7">

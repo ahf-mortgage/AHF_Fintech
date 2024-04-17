@@ -1,7 +1,13 @@
 
 from django.contrib import admin
 from django.urls import path
-from .views import home,change_branch_amount,loan_break_point,change_comp_plan,change_comp_plan_max_gci
+from .views import (
+    home,
+    change_branch_amount,
+    loan_break_point,
+    change_comp_plan,
+    change_comp_plan_max_gci,
+    comp_plan_change_view,)
 
 
 
@@ -10,6 +16,7 @@ urlpatterns = [
     path('change_branch_amount/',change_branch_amount,name="change_branch_amount"),
     path('change_comp_plan/',change_comp_plan,name="change_comp_plan"),
     path('loan_break_point/',loan_break_point,name="loan_break_point"),
+    path('comp_plan_change_view/',comp_plan_change_view,name="comp_plan_change_view"),
     path('change_comp_plan_max_gci/',change_comp_plan_max_gci,name = "change_comp_plan_max_gci")
     
 ]

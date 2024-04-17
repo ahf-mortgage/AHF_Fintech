@@ -1,39 +1,3 @@
-{% load humanize %}
-{% load static %}
-
-
-<!doctype html>
-<html>
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-
-<body>
-
-    <div class="flex flex-col overflow-x-auto">
-      <div class="sm:-mx-6 lg:-mx-8">
-        <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8" style="display: flex;">
-          <div style="height:50%;">
-
-          </div>
-          <!-- comp plan table -->
-          {% include 'includes/comp_plan_table.html' %}
-        </div>
-
-        {% include 'includes/above_loan_break_points.html' %}
-      
-      </div>
-
-      {% include 'includes/comission_split.html' %}
-
-    </div>
-    </div>
-    </div>
- 
-<script>
 
 
 // for loan above limit
@@ -217,7 +181,6 @@ const comp_plan_percentage = Number.parseFloat("{{comp_plan_for_lower_limit.Perc
 
 
 
-// Table data for loan below loan limit
 for (let num of loan_below_limits) {
   const D2 = document.getElementById(`D2_${num}`)
   const F2 = document.getElementById(`F2_${num}`)
@@ -244,8 +207,3 @@ for (let num of loan_below_limits) {
 
 }
 
-
-</script>
-</body>
-
-</html>
