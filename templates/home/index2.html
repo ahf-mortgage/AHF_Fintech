@@ -9,348 +9,19 @@
 </head>
 
 <body>
-  <h1 class="text-3xl font-bold underline">
 
     <div class="flex flex-col overflow-x-auto">
-
-
       <div class="sm:-mx-6 lg:-mx-8">
-
-
-
-        <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-
-          <div class="overflow-x-auto">
-            <div class="flex flex-col">
-              <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-                  <div class="overflow-hidden">
-                    <table class="text-left text-sm font-light text-surface dark:text-white" style="width: 50%;">
-                      <thead
-                        class="border-b border-neutral-200 bg-white font-medium dark:border-white/10 dark:bg-body-dark">
-                        <tr>
-                          <th scope="col" class="px-6 py-4">Whole sale comp plan</th>
-                          <th scope="col" class="px-6 py-4"></th>
-
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <!-- gci - (gci/1000) * (10% of loan_amount/10000) -->
-                        <!-- flat_fee = $E$32-$E$21*D32/10000 -->
-                        <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
-                          <td class="whitespace-nowrap px-6 py-4 font-medium">Flat Fee</td>
-                          <td class="whitespace-nowrap px-6 py-4">{{comp_plan_for_lower_limit.Flat_Fee}}</td>
-
-                        </tr>
-
-                        <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
-                          <td class="whitespace-nowrap px-6 py-4 font-medium">Percentage (0.000% -
-                            {{comp_plan_for_lower_limit.Percentage}}%)</td>
-                          <td class="whitespace-nowrap px-6 py-4">{{comp_plan_for_lower_limit.Percentage}}</td>
-
-                        </tr>
-
-                        <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
-                          <td class="whitespace-nowrap px-6 py-4 font-medium">Minimum Compensation ($0 -
-                            ${{gci|intcomma}})</td>
-                          <td class="whitespace-nowrap px-6 py-4">{{comp_plan_for_lower_limit.Minimum_Compensation}}
-                          </td>
-
-                        </tr>
-
-
-                        <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
-                          <td class="whitespace-nowrap px-6 py-4 font-medium">Maximum Compensation (Min. Comp - $40,000)
-                          </td>
-                          <td class="whitespace-nowrap px-6 py-4">{{comp_plan_for_lower_limit.Maximum_Compensation}}
-                          </td>
-                        </tr>
-
-
-                        <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
-                          <td class="whitespace-nowrap px-6 py-4 font-medium">Max</td>
-
-
-                          <td class="whitespace-nowrap px-6 py-4">
-                            <form action="{% url 'change_comp_plan_max_gci' %}" method="post" style="display: flex;">
-                              {% csrf_token %}
-                              <div class="relative mb-3" data-twe-input-wrapper-init>
-                                <input type="text"
-                                  class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
-                                  id="max_gci" name="max_gci" placeholder="MAX GCI" />
-                                <label for="exampleFormControlInput1"
-                                  class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[0.9rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-400 dark:peer-focus:text-primary">
-                                  {{comp_plan_for_lower_limit.MAX_GCI|intcomma}}
-                                </label>
-                              </div>
-                              <input type="submit" value="change"
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-1 rounded">
-                            </form>
-
-                          </td>
-
-                        </tr>
-
-                        <!-- for Comp Percentage -->
-
-                        <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
-                          <td class="whitespace-nowrap px-6 py-4 font-medium">Comp Percentage</td>
-
-
-                          <td class="whitespace-nowrap px-6 py-4">
-                            <!-- for comp plan -->
-                            <form action="{% url 'change_comp_plan' %}" method="post" style="display: flex; flex-direction:row;justify-content:space-around;">
-                              {% csrf_token %}
-
-                              <div class="relative mb-3" data-twe-input-wrapper-init>
-                                <input type="text" name="comp_plan" id="comp_plan"
-                                  value="{{comp_plan_for_lower_limit.Percentage}}%"
-                                  class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
-                                  id="exampleFormControlInputText" placeholder="" required />
-                                <label for="exampleFormControlInputText"
-                                  class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[0.9rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-400 dark:peer-focus:text-primary">
-                                  {{comp_plan_for_lower_limit.Percentage}}%
-
-                                </label>
-
-                              </div>
-                              <input type="submit" value="submit"
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded">
-                            </form>
-
-
-                          </td>
-
-                        </tr>
-
-
-
-                        <!-- for loan break point -->
-                        <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
-                          <td class="whitespace-nowrap px-6 py-4 font-medium">Loan break point</td>
-                          <td class="whitespace-nowrap px-6 py-4">
-                            <form action="{% url 'loan_break_point' %}" method="post" style="display: flex; flex-direction:row;justify-content:space-around;">
-                              {% csrf_token %}
-                              <div class="relative mb-3" data-twe-input-wrapper-init>
-                                <input type="Number" name="loan_break_point" id="loan_break_point"
-                                  class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
-                                  id="exampleFormControlInputText" placeholder="" required />
-                                <label for="exampleFormControlInputText"
-                                  class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[0.9rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-400 dark:peer-focus:text-primary">
-                                  {{loan_break_point|intcomma}}
-
-                                </label>
-
-                              </div>
-                              <input type="submit" value="submit"
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded">
-                            </form>
-                          </td>
-
-                        </tr>
-
-
-                        <!-- for split -->
-                        <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
-                          <td class="whitespace-nowrap px-6 py-4 font-medium">Split</td>
-                          <td class="whitespace-nowrap px-6 py-4">
-                            <form action="{% url 'change_branch_amount' %}" method="post" style="display: flex; flex-direction:row;justify-content:space-around;">
-                              {% csrf_token %}
-
-                              <div class="relative mb-3" data-twe-input-wrapper-init>
-                                <input type="text" name="branch_amount" id="branch_amount" value="{{branch_amount}}"
-                                  class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
-                                  id="exampleFormControlInputText" placeholder="" required />
-                                <label for="exampleFormControlInputText"
-                                  class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[0.9rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-400 dark:peer-focus:text-primary">
-                                  {{branch_amount|intcomma}}
-
-                                </label>
-
-                              </div>
-                              <input type="submit" value="submit"
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded">
-                            </form>
-                          </td>
-
-                        </tr>
-
-
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-
-            <div style="display: flex;flex-direction:row;justify-content:space-around;">
-
-
-
-            </div>
-
-            <div>
-
-            </div>
+        <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8" style="display: flex;">
+          <div style="height:50%;">
 
           </div>
-
-
+          <!-- comp plan table -->
+          {% include 'includes/comp_plan_table.html' %}
         </div>
-        <nav
-          class="relative flex w-full flex-wrap items-center justify-around bg-zinc-50 py-2 shadow-dark-mild dark:bg-neutral-700 lg:py-4">
-          <div class="flex w-full flex-wrap items-center justify-between px-3">
-            <span class="ms-2 text-xl text-black dark:text-white">
-              <h6 class="mb-2 mt-0 text-base font-medium leading-tight text-primary">
-                Above ${{loan_break_point|intcomma}}
-              </h6>
 
-            </span>
-            <div class="ms-5 flex w-[30%] items-center justify-between">
-              <h6 class="mb-2 mt-0 text-base font-medium leading-tight text-primary">
-                Single Loan Branch Commission
-              </h6>
-            </div>
-          </div>
-        </nav>
-        <table class="min-w-full text-start text-sm font-light text-surface dark:text-white">
-          <thead class="border-b border-neutral-200 font-medium dark:border-white/10">
-
-
-            <tr>
-              <th scope="col" class="px-6 py-4">
-                Flat fee
-              </th>
-              <th scope="col" class="px-6 py-4">
-                GCI
-                <br>
-
-                ${{gci|intcomma}}
-              </th>
-              <th scope="col" class="px-3 py-2">
-                <p class="font-small" style="font-weight: 300;font-size:0.8rem;">AHF</p>
-                <br>
-                <p style="font-weight: 300;font-size:0.8rem;">
-                  ${{ahf_commission|intcomma}}
-                </p>
-               
-              </th>
-              <th scope="col" class="px-6 py-4">
-                Branch
-                <br>
-                ${{branch_commission|intcomma}}
-              </th>
-
-            </tr>
-
-            <tr>
-
-              <th scope="col" class="px-6 py-4">Bps</th>
-              <th scope="col" class="px-6 py-4">Loan amount</th>
-              <th scope="col" class="px-6 py-4">{{ahf_amount}}%</th>
-
-              <th scope="col" class="px-6 py-4">{{branch_amount}}%</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="border-b border-neutral-200 dark:border-white/10">
-
-              <td class="text-center whitespace-nowrap px-6 py-4" id="D7">
-                {% if 50 < bps %} 50 {% else %} 0 {% endif %} </td>
-              <td class="text-center whitespace-nowrap px-6 py-4" id="E6">
-                {% if bps > 0 %}
-
-                {% else %}
-                0
-                {% endif %}
-              </td>
-              <td class="text-center whitespace-nowrap px-6 py-4" id="F7">cell</td>
-              <td class="text-center whitespace-nowrap px-6 py-4" id="G7">xxxx</td>
-
-            </tr>
-            <tr class="border-b border-neutral-200 dark:border-white/10">
-
-              <td class="text-center whitespace-nowrap px-6 py-4" id="D8">
-                {% if 100 < bps %} 100 {% else %} 0 {% endif %} </td>
-              <td class="text-center whitespace-nowrap px-6 py-4" id="E8">cell</td>
-              <td class="text-center whitespace-nowrap px-6 py-4" id="F8">Cell</td>
-              <td class="text-center whitespace-nowrap px-6 py-4" id="G8">Cell</td>
-
-            </tr>
-            <tr class="border-b ">
-
-              <td class="text-center whitespace-nowrap px-6 py-4" id="D9">
-
-
-                {% if 125 < bps %} 125 {% else %} 0 {% endif %} </td>
-              <td class="text-center whitespace-nowrap px-6 py-4" id="E9">xxxx33</td>
-              <td class="text-center whitespace-nowrap px-6 py-4" id="F9">Cell</td>
-              <td class="text-center whitespace-nowrap px-6 py-4" id="G9">Cell</td>
-
-            </tr>
-
-
-            <tr class="border-b border-neutral-200 dark:border-white/10">
-
-              <td class="text-center whitespace-nowrap px-6 py-4" id="D10">
-
-
-                {% if 150 < bps %} 150 {% else %} 0 {% endif %} </td>
-              <td class="text-center whitespace-nowrap px-6 py-4" id="E10">555</td>
-              <td class="text-center whitespace-nowrap px-6 py-4" id="F10">Cell</td>
-              <td class="text-center whitespace-nowrap px-6 py-4" id="G10">Cell</td>
-
-            </tr>
-            <tr class="border-b border-neutral-200 dark:border-white/10">
-
-              <td class="text-center whitespace-nowrap px-6 py-4" id="D11">
-
-
-                {% if 175 < bps %} 175 {% else %} 0 {% endif %} </td>
-              <td class="text-center whitespace-nowrap px-6 py-4" id="E11"></td>
-              <td class="text-center whitespace-nowrap px-6 py-4" id="F11">Cell</td>
-              <td class="text-center whitespace-nowrap px-6 py-4" id="G11">Cell</td>
-
-            </tr>
-
-            <tr class="border-b border-neutral-200 dark:border-white/10">
-
-              <td class="text-center whitespace-nowrap px-6 py-4" id="D12">
-
-
-                {% if 200 < bps %} 200 {% else %} 0 {% endif %} </td>
-              <td class="text-center whitespace-nowrap px-6 py-4" id="E12"></td>
-              <td class="text-center whitespace-nowrap px-6 py-4" id="F12">Cell</td>
-              <td class="text-center whitespace-nowrap px-6 py-4" id="G12">Cell</td>
-
-            </tr>
-
-
-
-            <tr class="border-b border-neutral-200 dark:border-white/10">
-              <td class="text-center whitespace-nowrap px-6 py-4" id="D13">
-                {% if 225 < bps %} 225 {% else %} 0 {% endif %} </td>
-              <td class="text-center whitespace-nowrap px-6 py-4" id="E13"></td>
-              <td class="text-center whitespace-nowrap px-6 py-4" id="F13">Cell</td>
-              <td class="text-center whitespace-nowrap px-6 py-4" id="G13">Cell</td>
-            </tr>
-
-            <tr class="border-b border-neutral-200 dark:border-white/10">
-              <td class="text-center whitespace-nowrap px-6 py-4" id="D14">
-                {% if 250 < bps %} 250 {% else %} 0 {% endif %} </td>
-              <td class="text-center whitespace-nowrap px-6 py-4" id="E14"></td>
-              <td class="text-center whitespace-nowrap px-6 py-4" id="F14">Cell</td>
-              <td class="text-center whitespace-nowrap px-6 py-4" id="G14">Cell</td>
-            </tr>
-
-
-
-
-
-
-          </tbody>
-        </table>
+        {% include 'includes/above_loan_break_points.html' %}
+      
       </div>
 
       <div class="flex flex-col" style="width: 80%;justify-content:space-between;">
@@ -376,12 +47,9 @@
                       <p class="font-bold">
                         {{branch_amount}}%
                       </p>
-                    
                     </td>
 
                   </tr>
-
-
                 </tbody>
               </table>
             </div>
@@ -423,12 +91,12 @@
                 <p style="font-weight: 300;font-size:0.8rem;">
                   AHF
                 </p>
-                
+
                 <br>
                 <p style="font-weight: 300;font-size:0.8rem;">
                   {{ahf_amount}}%
                 </p>
-            
+
               </th>
 
               <th scope="col" class="px-6 py-4">
@@ -474,7 +142,7 @@
     </div>
     </div>
     </div>
-  </h1>
+ 
 
   <script>
 
@@ -682,8 +350,6 @@
       }
       F2.innerText = ahf_share.toLocaleString()
       H2.innerHTML = `<p class='font-bold'> ${branch_share.toLocaleString()} </p>`
-
-
 
     }
 

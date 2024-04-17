@@ -1,0 +1,152 @@
+{% load humanize %}
+
+<nav
+    class="relative flex w-full flex-wrap items-center justify-around bg-zinc-50 py-2 shadow-dark-mild dark:bg-neutral-700 lg:py-4">
+    <div class="flex w-full flex-wrap items-center justify-between px-3">
+        <span style="margin: 50px;" class="ms-2 text-xl text-black dark:text-white">
+
+            <h6 style="margin: 50xp;" class="mr-3 mb-2 mt-0 text-base font-medium leading-tight text-primary">
+                Above ${{loan_break_point|intcomma}}
+            </h6>
+
+        </span>
+        <div class="ms-5 flex w-[30%] items-center justify-between">
+            <h6 class="mb-2 mt-0 text-base font-medium leading-tight text-primary">
+                Single Loan Branch Commission
+            </h6>
+        </div>
+    </div>
+</nav>
+<table class="min-w-full text-start text-sm font-light text-surface dark:text-white">
+    <thead class="border-b border-neutral-200 font-medium dark:border-white/10">
+
+
+        <tr>
+            <th scope="col" class="px-6 py-4">
+                Flat fee
+            </th>
+            <th scope="col" class="px-6 py-4">
+                GCI
+                <br>
+
+                ${{gci|intcomma}}
+            </th>
+            <th scope="col" class="px-3 py-2">
+                <p class="font-small" style="font-weight: 300;font-size:0.8rem;">AHF</p>
+                <br>
+                <p style="font-weight: 300;font-size:0.8rem;">
+                    ${{ahf_commission|intcomma}}
+                </p>
+
+            </th>
+            <th scope="col" class="px-6 py-4">
+                Branch
+                <br>
+                ${{branch_commission|intcomma}}
+            </th>
+
+        </tr>
+
+        <tr>
+
+            <th scope="col" class="px-6 py-4">Bps</th>
+            <th scope="col" class="px-6 py-4">Loan amount</th>
+            <th scope="col" class="px-6 py-4">{{ahf_amount}}%</th>
+
+            <th scope="col" class="px-6 py-4">{{branch_amount}}%</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="border-b border-neutral-200 dark:border-white/10">
+
+            <td class="text-center whitespace-nowrap px-6 py-4" id="D7">
+                {% if 50 < bps %} 50 {% else %} 0 {% endif %} </td>
+            <td class="text-center whitespace-nowrap px-6 py-4" id="E6">
+                {% if bps > 0 %}
+
+                {% else %}
+                0
+                {% endif %}
+            </td>
+            <td class="text-center whitespace-nowrap px-6 py-4" id="F7">cell</td>
+            <td class="text-center whitespace-nowrap px-6 py-4" id="G7">xxxx</td>
+
+        </tr>
+        <tr class="border-b border-neutral-200 dark:border-white/10">
+
+            <td class="text-center whitespace-nowrap px-6 py-4" id="D8">
+                {% if 100 < bps %} 100 {% else %} 0 {% endif %} </td>
+            <td class="text-center whitespace-nowrap px-6 py-4" id="E8">cell</td>
+            <td class="text-center whitespace-nowrap px-6 py-4" id="F8">Cell</td>
+            <td class="text-center whitespace-nowrap px-6 py-4" id="G8">Cell</td>
+
+        </tr>
+        <tr class="border-b ">
+
+            <td class="text-center whitespace-nowrap px-6 py-4" id="D9">
+
+
+                {% if 125 < bps %} 125 {% else %} 0 {% endif %} </td>
+            <td class="text-center whitespace-nowrap px-6 py-4" id="E9">xxxx33</td>
+            <td class="text-center whitespace-nowrap px-6 py-4" id="F9">Cell</td>
+            <td class="text-center whitespace-nowrap px-6 py-4" id="G9">Cell</td>
+
+        </tr>
+
+
+        <tr class="border-b border-neutral-200 dark:border-white/10">
+
+            <td class="text-center whitespace-nowrap px-6 py-4" id="D10">
+
+
+                {% if 150 < bps %} 150 {% else %} 0 {% endif %} </td>
+            <td class="text-center whitespace-nowrap px-6 py-4" id="E10">555</td>
+            <td class="text-center whitespace-nowrap px-6 py-4" id="F10">Cell</td>
+            <td class="text-center whitespace-nowrap px-6 py-4" id="G10">Cell</td>
+
+        </tr>
+        <tr class="border-b border-neutral-200 dark:border-white/10">
+
+            <td class="text-center whitespace-nowrap px-6 py-4" id="D11">
+
+
+                {% if 175 < bps %} 175 {% else %} 0 {% endif %} </td>
+            <td class="text-center whitespace-nowrap px-6 py-4" id="E11"></td>
+            <td class="text-center whitespace-nowrap px-6 py-4" id="F11">Cell</td>
+            <td class="text-center whitespace-nowrap px-6 py-4" id="G11">Cell</td>
+
+        </tr>
+
+        <tr class="border-b border-neutral-200 dark:border-white/10">
+
+            <td class="text-center whitespace-nowrap px-6 py-4" id="D12">
+
+
+                {% if 200 < bps %} 200 {% else %} 0 {% endif %} </td>
+            <td class="text-center whitespace-nowrap px-6 py-4" id="E12"></td>
+            <td class="text-center whitespace-nowrap px-6 py-4" id="F12">Cell</td>
+            <td class="text-center whitespace-nowrap px-6 py-4" id="G12">Cell</td>
+
+        </tr>
+
+
+
+        <tr class="border-b border-neutral-200 dark:border-white/10">
+            <td class="text-center whitespace-nowrap px-6 py-4" id="D13">
+                {% if 225 < bps %} 225 {% else %} 0 {% endif %} </td>
+            <td class="text-center whitespace-nowrap px-6 py-4" id="E13"></td>
+            <td class="text-center whitespace-nowrap px-6 py-4" id="F13">Cell</td>
+            <td class="text-center whitespace-nowrap px-6 py-4" id="G13">Cell</td>
+        </tr>
+
+        <tr class="border-b border-neutral-200 dark:border-white/10">
+            <td class="text-center whitespace-nowrap px-6 py-4" id="D14">
+                {% if 250 < bps %} 250 {% else %} 0 {% endif %} </td>
+            <td class="text-center whitespace-nowrap px-6 py-4" id="E14"></td>
+            <td class="text-center whitespace-nowrap px-6 py-4" id="F14">Cell</td>
+            <td class="text-center whitespace-nowrap px-6 py-4" id="G14">Cell</td>
+        </tr>
+
+
+    </tbody>
+</table>
