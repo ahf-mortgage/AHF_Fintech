@@ -1,0 +1,75 @@
+{% load humanize %}
+<span class="ms-2 text-xl text-black dark:text-white" style="display: flex;justify-content:space-between;">
+
+    <!-- header of at and below table  -->
+    <h6 class="mb-2 mt-0 text-base font-medium leading-tight text-primary">
+        At and below ${{loan_break_point|intcomma}}
+    </h6>
+
+    <!-- header of at and below table  -->
+    <h6 class="mb-2 mt-0 text-base font-medium leading-tight text-primary">
+        Single Loan Branch Commission
+    </h6>
+
+
+</span>
+
+<!-- table of at and below -->
+<table class="min-w-full text-start text-sm font-light text-surface dark:text-white">
+    <thead class="border-b border-neutral-200 font-medium dark:border-white/10">
+
+
+
+        <tr>
+
+            <th scope="col" class="px-6 py-4">Loan amount</th>
+            <th scope="col" class="px-6 py-4">GCI
+                <br>
+                {{gci|intcomma}}
+            </th>
+            <th scope="col" class="px-6 py-4">
+                <p style="font-weight: 300;font-size:0.8rem;">
+                    AHF
+                </p>
+
+                <br>
+                <p style="font-weight: 300;font-size:0.8rem;">
+                    {{ahf_amount}}%
+                </p>
+
+            </th>
+
+            <th scope="col" class="px-6 py-4">
+                Branch
+                <br>
+                {{branch_amount}}%
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+        {% for num in loan_below_limits %}
+        <tr class="border-b border-neutral-200 dark:border-white/10">
+
+            <td class="text-center whitespace-nowrap px-6 py-4" id="G2_{{num}}">
+                {{num|intcomma}}
+            </td>
+
+            <td class="text-center whitespace-nowrap px-6 py-4" id="D2_{{num}}">
+                placeholder for gci
+            </td>
+
+            <td class="text-center whitespace-nowrap px-6 py-4" id="F2_{{num}}">
+                placeholder for ahf
+            </td>
+
+            <td class="text-center whitespace-nowrap px-6 py-4" id="H2_{{num}}">
+                placeholder for branch
+            </td>
+            </td>
+        </tr>
+        {% endfor %}
+
+
+    </tbody>
+</table>
