@@ -5,7 +5,7 @@ import math
 from  django.shortcuts import redirect
 
 
-@login_required
+# @login_required
 def home(request):
     """
         This function display comp plan,loan above limit and loan below limit
@@ -36,12 +36,7 @@ def home(request):
         gci = comp_plan.MAX_GCI
     FLAT_AM0UNT = gci - (gci/1000) * ((loan_below_limits[len(loan_below_limits) - 1] or 0) * 0.1/10000) 
     
-    
-    print(interval_bps , "  interval bps")
-    
-    
-    
-    # print(e,"DEBUG Percentage")
+ 
     context = {
         'loan_below_limits':loan_below_limits,
         'comp_plan_for_lower_limit':comp_plan,
@@ -141,7 +136,6 @@ def comp_plan_change_view(request):
     """
     
     
-    print("post request reached here")
     loan_break_point = LoanBreakPoint.objects.all().first()
     comp_plan_obj = CompPlan.objects.all().first()
     branch = Branch.objects.all().first()
@@ -154,7 +148,7 @@ def comp_plan_change_view(request):
         
         if True:
             comp_plan_obj.MAX_GCI = max_gci
-            comp_plan_obj.Percentage = comp_plan
+            comp_plan_obj.Percentage = float(comp_plan)
             loan_break_point.loan_break_point = int(loan_break)
             branch_amount = int(branch_amount) / 100
             branch.commission = branch_amount
