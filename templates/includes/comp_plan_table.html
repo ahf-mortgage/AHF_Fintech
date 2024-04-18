@@ -181,6 +181,16 @@
 </div>
 
 
+<script>
+    const loan_break_point = document.getElementById("loan_break_point")
+    const btn_save = document.getElementById("btn-save")
+    loan_break_point.addEventListener("keydown",function() {
+        btn_save.classList.add("bg-gray-500")
+        btn_save.classList.add("text-white")
+    })
 
+
+ 
+</script>
 
 <script src="{% static 'comp_plan_table.js'%}"></script>
