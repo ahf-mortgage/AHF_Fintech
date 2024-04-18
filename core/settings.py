@@ -15,7 +15,12 @@ SECRET_KEY = 'django-insecure-xapy24exjy5!26b1d+7$v5wkh+44&(3rk^tfd=cbj#_$+dfb31
 DEBUG = True
 
 ALLOWED_HOSTS = ["54.151.110.104","127.0.0.1","18.144.126.117", "www.ahf.mortgage"]
-CSRF_TRUSTED_ORIGINS = ['http://54.151.110.104:8000','http://18.144.126.117:8000', 'http://www.ahf.mortgage']
+CSRF_TRUSTED_ORIGINS = [
+    'http://54.151.110.104:8000',
+    'http://18.144.126.117:8000', 
+    'http://www.ahf.mortgage',
+    'https://www.ahf.mortgage/'
+    ]
 
 # Application definition
 
