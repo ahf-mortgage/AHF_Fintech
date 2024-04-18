@@ -28,7 +28,7 @@
                 {{gci|intcomma}}
             </th>
             <th scope="col" class="px-6 py-4">
-                <p style="font-weight: 300;font-size:0.8rem;">
+                <p>
                     AHF
                 </p>
 
@@ -48,14 +48,16 @@
     </thead>
     <tbody>
 
+       
+
         {% for num in loan_below_limits %}
         <tr class="border-b border-neutral-200 dark:border-white/10">
 
-            <td class="text-center whitespace-nowrap px-6 py-4" id="G2_{{num}}">
+            <td class="text-center whitespace-nowrap px-6 py-4 font-bold" id="G2_{{num}}">
                 {{num|intcomma}}
             </td>
 
-            <td class="text-center whitespace-nowrap px-6 py-4" id="D2_{{num}}">
+            <td class="text-center whitespace-nowrap px-6 py-4 font-bold" id="D2_{{num}}">
                 placeholder for gci
             </td>
 
