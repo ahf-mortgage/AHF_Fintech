@@ -45,6 +45,7 @@ def home(request):
         'comp_plan_for_lower_limit':comp_plan,
         'ahf_amount': math.ceil(ahf_amount) if ahf_amount > 0 else None,
         'rows':rows,
+        'rows_counter':row_counter,
         'branch_amount': math.ceil(branch.commission * 100) if branch.commission > 0 else None,
         'bps':bps.bps if bps.bps > 0 else None,
         'loan_break_point': math.ceil(loan_break_point.loan_break_point) ,# if loan_break_point >0 else None,
