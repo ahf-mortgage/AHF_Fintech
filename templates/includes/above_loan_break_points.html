@@ -1,9 +1,11 @@
 {% load humanize %}
 
 <nav
-    class="relative flex w-full flex-wrap items-center justify-around bg-zinc-50 py-2 shadow-dark-mild dark:bg-neutral-700 lg:py-4">
-    <div class="flex w-full flex-wrap items-center justify-between px-3">
-        <span class="ms-2 text-xl text-black dark:text-white"  style="display: flex;justify-content:space-between;margin: 50px;">
+    class="relative flex w-full flex-wrap items-center justify-between bg-zinc-50 py-2 shadow-dark-mild dark:bg-neutral-700 lg:py-4">
+    <div class="flex w-full flex-wrap  justify-around px-3">
+
+
+        <span class="ms-2 text-xl text-black dark:text-white">
 
             <h6 class="mr-3 mb-2 mt-0 text-base font-medium leading-tight text-primary">
                 Above ${{loan_break_point|intcomma}}
@@ -11,11 +13,16 @@
             </h6>
 
         </span>
-        <div class="ms-5 flex w-[30%] items-center justify-between">
+
+
+        <div style="margin-left:500px;">
             <h6 class="mb-2 mt-0 text-base font-medium leading-tight text-primary">
-                Single Loan Branch Commission
+                Single Loan Branch Commission 1
             </h6>
         </div>
+
+
+
     </div>
 </nav>
 
