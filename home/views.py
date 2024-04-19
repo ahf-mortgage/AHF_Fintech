@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from recruiter.models import Bps,LoanBreakPoint,CompPlan,AHF,Branch
 import math
 from  django.shortcuts import redirect
-from utils.calc_res import calculate_annual_ahf_income,calculate_gross_ahf_income
+from utils.calc_res import (calculate_annual_ahf_income,calculate_gross_ahf_income, gross_ahf_income,branch_gross_income)
 
 
 # @login_required
@@ -42,14 +42,20 @@ def home(request):
     annual_ahf_cap =  calculate_annual_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
     
     grocss_ahf_income = calculate_gross_ahf_income(loan_break_point,comp_plan,float(branch.commission))
-    print("branch commission ",branch.commission)
+    grocss_income = gross_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
+   
+    branch_gross = branch_gross_income(loan_break_point,comp_plan,float(branch.commission))
+    
+
     
  
     
     # annual_ahf_cap data
     ahf_annual_cap_data = {
         'annual_ahf_cap':math.ceil(annual_ahf_cap),
-        'grocss_ahf_income':math.ceil(grocss_ahf_income)
+        'grocss_ahf_income':math.ceil(grocss_ahf_income),
+        'grocss_income': math.ceil(grocss_income),
+        'branch_gross_income':math.ceil(branch_gross)
         
     }
   
@@ -180,12 +186,7 @@ def comp_plan_change_view(request):
             
         else:
             return redirect("/")
-            
-                
-
-
-      
-    
+  
     context = {
         
     }
