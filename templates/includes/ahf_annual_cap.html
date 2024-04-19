@@ -1,0 +1,115 @@
+{% load humanize %}
+{% load static %}
+
+<div class="flex flex-col">
+  <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+    <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8 text-center">
+      <div class="overflow-hidden">
+        <table
+          class="min-w-full border border-neutral-200 text-center text-sm font-light text-surface dark:border-white/10 dark:text-white">
+          <thead class="border-b border-neutral-200 font-medium dark:border-white/10 text-center"
+            style="display:flex;flex-direction:column;justify-content:space-around;">
+            <tr class="flex justify-center">
+
+              <th scope="col" class="px-6 py-4">AHF Annual Cap</th>
+            </tr>
+
+          </thead>
+          <tbody>
+
+            <tr class="flex justify-center">
+              <th scope="col" class="px-6 py-4">Gross Income</th>
+            </tr>
+
+
+            <tr class="flex justify-center">
+              <td scope="col" class="px-6 py-4">
+                <p class="font-bold">
+                  AHF
+                </p>
+
+              </td>
+              <td scope="col" class="px-6 py-4 font-bold">Branch</td>
+
+            </tr>
+
+            <tr class="flex justify-center">
+              <td scope="col" class="px-6 py-4">
+                <p>
+                  ${{ahf_annual_cap_data.annual_ahf_cap|intcomma}}
+                  capped
+                </p>
+
+
+              </td>
+              <td scope="col" class="px-6 py-4 font-bold">
+
+                <p>
+                  ${{ahf_annual_cap_data.grocss_ahf_income|intcomma}}
+                
+                </p>
+              </td>
+
+            </tr>
+
+
+
+            <tr class="flex justify-center">
+              <td scope="col" class="px-6 py-4">
+                <p>
+                  30%
+                </p>
+
+              </td>
+              <td scope="col" class="px-6 py-4 font-bold">
+
+                <p>
+                  70%
+                </p>
+              </td>
+
+            </tr>
+
+
+            <tr class="flex justify-center">
+              <td scope="col" class="px-6 py-4">
+                <p class="font-bold">
+                  Loans per year
+                </p>
+
+              </td>
+              <td scope="col" class="px-6 py-4 font-bold">
+
+                <p>
+                  21
+                </p>
+              </td>
+
+            </tr>
+
+
+
+            <tr class="flex justify-center">
+              <td scope="col" class="px-6 py-4">
+
+
+                <p class="font-bold">
+                  Loans per month
+                </p>
+
+              </td>
+              <td scope="col" class="px-6 py-4 font-bold">
+
+                <p>
+                  1.75
+                </p>
+              </td>
+
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

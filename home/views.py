@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from recruiter.models import Bps,LoanBreakPoint,CompPlan,AHF,Branch
 import math
 from  django.shortcuts import redirect
+from utils.calc_res import calculate_annual_ahf_income,calculate_gross_ahf_income
 
 
 # @login_required
@@ -28,8 +29,6 @@ def home(request):
     min_loan = 100000 
     rows = [50] +  [num for num in range(100,275,25)]
     row_counter = [i-7 for i in range(7,7+ len(rows))]
-    print(row_counter ," row_counter")
-    print("DEBUG rows ",rows)
     loan_below_limits = [num for num in range(int(loan_break_point.loan_break_point),min_loan - min_loan,-min_loan)]
     
     
@@ -39,7 +38,23 @@ def home(request):
         gci = comp_plan.MAX_GCI
     FLAT_AM0UNT = gci - (gci/1000) * ((loan_below_limits[len(loan_below_limits) - 1] or 0) * 0.1/10000) 
     
+     #F7 * J9 -> E21 * D23 /10000 + comp_flat_fee * J9(constant loan/peryear)
+    annual_ahf_cap =  calculate_annual_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
+    
+    grocss_ahf_income = calculate_gross_ahf_income(loan_break_point,comp_plan,float(branch.commission))
+    print("branch commission ",branch.commission)
+    
  
+    
+    # annual_ahf_cap data
+    ahf_annual_cap_data = {
+        'annual_ahf_cap':math.ceil(annual_ahf_cap),
+        'grocss_ahf_income':math.ceil(grocss_ahf_income)
+        
+    }
+  
+  
+  
     context = {
         'loan_below_limits':loan_below_limits,
         'comp_plan_for_lower_limit':comp_plan,
@@ -54,7 +69,9 @@ def home(request):
         'ahf_commission': math.ceil(ahf_commission) if ahf_commission > 0 else None,
         'ahf_commission_amount':  1 - float(branch.commission) if branch.commission > 0 else None ,#ahf_amount, # ahf.commission,
         'branch_commission': math.ceil(branch_commission) if branch_commission > 0 else None,
-        'branch_commission_amount':branch.commission if branch.commission > 0 else None
+        'branch_commission_amount':branch.commission if branch.commission > 0 else None,
+        
+        'ahf_annual_cap_data':ahf_annual_cap_data,
 
     }
     return render(request,"home/index2.html",context)

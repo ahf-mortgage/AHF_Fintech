@@ -16,11 +16,21 @@
     <div class="flex flex-col overflow-x-auto">
       <div class="sm:-mx-6 lg:-mx-8">
         <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8" style="display: flex;">
-          <div style="height:50%;">
+          <div>
 
           </div>
           <!-- comp plan table -->
-          {% include 'includes/comp_plan_table.html' %}
+          <div id="container" class="flex items-center">
+            {% include 'includes/comp_plan_table.html' %}
+
+            <div style="display: flex;justify-content:space-around;">
+              {% include 'includes/ahf_annual_cap.html' %}
+          
+  
+            </div>
+          
+          </div>
+        
         </div>
 
         {% include 'includes/above_loan_break_points.html' %}
