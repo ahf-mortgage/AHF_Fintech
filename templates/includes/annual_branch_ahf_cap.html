@@ -1,148 +1,137 @@
 {% load humanize %}
-
-
-
+{% load safe_divide %}
 
 <table class="min-w-full text-start text-sm font-light text-surface dark:text-white">
-    <thead class="border-b border-neutral-200 dark:border-white/10">
+  <thead class="border-b border-neutral-200 dark:border-white/10">
+    <tr>
+      <th scope="col" class="px-6 py-4">
+        Annual cap
+      </th>
+      <th scope="col" class="px-6 py-4">
+
+      </th>
+      <th scope="col" class="font-light">
+        GCI
+      </th>
+
+      <th scope="col" class="px-6 py-4">
+        AHF
+      </th>
+      <th scope="col" class="px-6 py-4">
+        Branch
+      </th>
+    </tr>
+
+    <tr>
+      <th scope="col" class="px-6 py-4">
+        Loans per year
+      </th>
+      <th scope="col" class="px-6 py-4">
+        per Month
+      </th>
+      <th scope="col" class="font-light">
+        {{ahf_amount}}%
+      </th>
+      <th scope="col" class="px-6 py-4">
+        {{branch_amount}}%
+      </th>
+
+    </tr>
+
+  </thead>
 
 
-        <tr>
-            <th scope="col" class="px-6 py-4">
-                Flat fee
-            </th>
-            <th scope="col" class="px-6 py-4">
-                GCI
-                <br>
-
-                ${{gci|intcomma}}
-            </th>
-            <th scope="col" class="font-light">
-                AHF
-                <br>
-
-                ${{ahf_commission|intcomma}}
-
-
-
-
-            </th>
-            <th scope="col" class="px-6 py-4">
-                Branch
-                <br>
-                ${{branch_commission|intcomma}}
-            </th>
-
-        </tr>
-
-        <tr>
-
-            <th scope="col" class="px-6 py-4">Bps</th>
-            <th scope="col" class="px-6 py-4">Loan amount</th>
-            <th scope="col" class="font-light">{{ahf_amount}}%</th>
-
-            <th scope="col" class="px-6 py-4">{{branch_amount}}%</th>
-        </tr>
-    </thead>
-
-
-    <tbody>
-        <tr class="border-b border-neutral-200 dark:border-white/10">
-
-            <td class="text-center whitespace-nowrap px-6 py-4  font-bold" id="D7">
-                {% if 50 < bps %} 50 {% else %} 0 {% endif %} <td
-                    class="text-center whitespace-nowrap px-6 py-4  font-bold" id="E6">
-
-            </td>
-            <td class="text-center whitespace-nowrap px-6 py-4" id="F7">cell</td>
-            <td class="text-center whitespace-nowrap px-6 py-4  font-bold" id="G7"></td>
-
-        </tr>
+  <tbody>
 
 
 
-        <tr class="border-b border-neutral-200 dark:border-white/10">
-
-            <td class="text-center whitespace-nowrap px-6 py-4  font-bold" id="D8">
-                {% if 100 < bps %} 100 {% else %} 0 {% endif %} </td>
-            <td class="text-center whitespace-nowrap px-6 py-4 font-bold" id="E8">cell</td>
-            <td class="text-center whitespace-nowrap px-6 py-4" id="F8">Cell</td>
-            <td class="text-center whitespace-nowrap px-6 py-4  font-bold" id="G8">Cell</td>
-
-        </tr>
 
 
 
-        <tr class="border-b border-neutral-200 dark:border-white/10">
+    {% for num in ahf_annual_cap_data.annual_ahf_to_gci_result %}
 
-            <td class="text-center whitespace-nowrap px-6 py-4 font-bold" id="D9">
+    <tr class="border-b border-neutral-200 dark:border-white/10">
 
+      <td class="text-center whitespace-nowrap px-6 py-4 font-bold">
 
-                {% if 125 < bps %} 125 {% else %} 0 {% endif %} </td>
-            <td class="text-center whitespace-nowrap px-6 py-4 font-bold" id="E9">33</td>
-            <td class="text-center whitespace-nowrap px-6 py-4" id="F9">Cell</td>
-            <td class="text-center whitespace-nowrap px-6 py-4 font-bold" id="G9">Cell</td>
+        {{num}}
+      </td>
 
-        </tr>
+      <td class="text-center whitespace-nowrap px-6 py-4 font-bold">
+        {{ num|safe_divide }}
 
+      </td>
 
-        <tr class="border-b border-neutral-200 dark:border-white/10 ">
+      <td class="text-center whitespace-nowrap px-6 py-4" id="D2_{{num}}">
+        a
+      </td>
 
-            <td class="text-center whitespace-nowrap px-6 py-4 font-bold" id="D10">
+      <td class="text-center whitespace-nowrap px-6 py-4" id="L2_{{num}}">
+        $0
+      </td>
 
+      <td class="text-center whitespace-nowrap px-6 py-4" id="K2_{{num}}">
+        $0
+      </td>
 
-                {% if 150 < bps %} 150 {% else %} 0 {% endif %} </td>
-            <td class="text-center whitespace-nowrap px-6 py-4 font-bold" id="E10">555</td>
-            <td class="text-center whitespace-nowrap px-6 py-4" id="F10">Cell</td>
-            <td class="text-center whitespace-nowrap px-6 py-4  font-bold" id="G10">Cell</td>
+      {% endfor %}
 
-        </tr>
-
-
-        <tr class="border-b border-neutral-200 dark:border-white/10">
-
-            <td class="text-center whitespace-nowrap px-6 py-4 font-bold" id="D11">
-
-
-                {% if 175 < bps %} 175 {% else %} 0 {% endif %} </td>
-            <td class="text-center whitespace-nowrap px-6 py-4 font-bold" id="E11"></td>
-            <td class="text-center whitespace-nowrap px-6 py-4" id="F11">Cell</td>
-            <td class="text-center whitespace-nowrap px-6 py-4  font-bold" id="G11">Cell</td>
-
-        </tr>
-
-        <tr class="border-b border-neutral-200 dark:border-white/10">
-
-            <td class="text-center whitespace-nowrap px-6 py-4 font-bold" id="D12">
+    </tr>
 
 
-                {% if 200 < bps %} 200 {% else %} 0 {% endif %} </td>
-            <td class="text-center whitespace-nowrap px-6 py-4 font-bold" id="E12"></td>
-            <td class="text-center whitespace-nowrap px-6 py-4" id="F12">Cell</td>
-            <td class="text-center whitespace-nowrap px-6 py-4 font-bold" id="G12">Cell</td>
-
-        </tr>
-
-
-
-        <tr class="border-b border-neutral-200 dark:border-white/10">
-            <td class="text-center whitespace-nowrap px-6 py-4  font-bold" id="D13">
-                {% if 225 < bps %} 225 {% else %} 0 {% endif %} </td>
-            <td class="text-center whitespace-nowrap px-6 py-4 font-bold" id="E13"></td>
-            <td class="text-center whitespace-nowrap px-6 py-4" id="F13">Cell</td>
-            <td class="text-center whitespace-nowrap px-6 py-4  font-bold" id="G13">Cell</td>
-        </tr>
-
-        <tr class="border-b border-neutral-200 dark:border-white/10 ">
-            <td class="text-center whitespace-nowrap px-6 py-4  font-bold" id="D14">
-                {% if 250 < bps %} 250 {% else %} 0 {% endif %} </td>
-            <td class="text-center whitespace-nowrap px-6 py-4 font-bold" id="E14"></td>
-            <td class="text-center whitespace-nowrap px-6 py-4" id="F14">Cell</td>
-            <td class="text-center whitespace-nowrap px-6 py-4  font-bold" id="G14">Cell</td>
-        </tr>
-
-    </tbody>
-
-
-
+  </tbody>
 </table>
+
+
+<script>
+
+  function zipArrays(arr1, arr2) {
+    const zipped = [];
+    for (let i = 0; i < Math.min(arr1.length, arr2.length); i++) {
+      zipped.push([arr1[i], arr2[i]]);
+    }
+    return zipped;
+  }
+
+
+
+  const gci = Number.parseFloat("{{gci}}")
+  let annual_ahf_to_gci_result = "{{ahf_annual_cap_data.annual_ahf_to_gci_result}}"
+  const plan_percentage = Number.parseFloat("{{comp_plan_for_lower_limit.Percentage}}")
+  const E23 = Number.parseFloat("{{E23}}")
+
+
+  const below_limits_raw = "{{loan_below_limits}}"
+  const below_limits = JSON.parse(below_limits_raw);
+
+
+
+  annual_ahf_to_gci_result = JSON.parse(annual_ahf_to_gci_result);
+
+  for (let [gci, num] of zipArrays(below_limits, annual_ahf_to_gci_result)) {
+    const D2 = document.getElementById(`D2_${num}`)
+    const gci_result = (plan_percentage * 100) * gci / 10000 + Number.parseFloat("{{comp_plan_for_lower_limit.Flat_Fee}}")
+    const result = E23 - gci_result
+    D2.innerText = `${result.toLocaleString()}`
+
+  }
+
+
+  for (let [gci, num] of zipArrays(below_limits, annual_ahf_to_gci_result)) {
+    const L2 = document.getElementById(`L2_${num}`)
+    const gci_result = (plan_percentage * 100) * gci / 10000 + Number.parseFloat("{{comp_plan_for_lower_limit.Flat_Fee}}")
+    const result = E23 - gci_result
+    L2.innerText = `$${(result * Number.parseFloat("{{ahf_amount}}")/100 ).toLocaleString()}`
+
+  }
+
+
+  for (let [gci, num] of zipArrays(below_limits, annual_ahf_to_gci_result)) {
+    const K2 = document.getElementById(`K2_${num}`)
+    const gci_result = (plan_percentage * 100) * gci / 10000 + Number.parseFloat("{{comp_plan_for_lower_limit.Flat_Fee}}")
+    const result = E23 - gci_result
+    K2.innerText = `$${(result * Number.parseFloat("{{branch_amount}}")/100 ).toLocaleString()}`
+
+  }
+
+</script>

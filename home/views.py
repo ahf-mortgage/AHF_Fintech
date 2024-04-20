@@ -3,10 +3,16 @@ from django.contrib.auth.decorators import login_required
 from recruiter.models import Bps,LoanBreakPoint,CompPlan,AHF,Branch
 import math
 from  django.shortcuts import redirect
-from utils.calc_res import (calculate_annual_ahf_income,calculate_gross_ahf_income, gross_ahf_income,branch_gross_income)
+from utils.calc_res import (
+                    calculate_annual_ahf_income,
+                    calculate_gross_ahf_income,
+                    gross_ahf_income,
+                    branch_gross_income,
+                    get_gci_result
+    )
 
 
-# @login_required
+
 def home(request):
     """
         This function display comp plan,loan above limit and loan below limit
@@ -48,20 +54,25 @@ def home(request):
     
 
     
- 
+    E23 = (275 * loan_break_point.loan_break_point )/ 10000 + comp_plan.Flat_Fee 
+   
+    nums_loans = [math.ceil(get_gci_result(comp_plan, num) * float((1-branch.commission))) for num in loan_below_limits]
+   
+
+    annual_ahf_to_gci_result = [int(annual_ahf_cap)// num for num in  nums_loans]
     
-    # annual_ahf_cap data
+    
     ahf_annual_cap_data = {
         'annual_ahf_cap':math.ceil(annual_ahf_cap),
         'grocss_ahf_income':math.ceil(grocss_ahf_income),
         'grocss_income': math.ceil(grocss_income),
-        'branch_gross_income':math.ceil(branch_gross)
+        'branch_gross_income':math.ceil(branch_gross),
+        'annual_ahf_to_gci_result':annual_ahf_to_gci_result
         
     }
   
-  
-  
     context = {
+        'E23':E23,
         'loan_below_limits':loan_below_limits,
         'comp_plan_for_lower_limit':comp_plan,
         'ahf_amount': math.ceil(ahf_amount) if ahf_amount > 0 else None,

@@ -34,3 +34,8 @@ def gross_ahf_income(loan_break_amount,comp_plan,ahf_comission_amount):
 def branch_gross_income(loan_break_amount,comp_plan,commission):
      #275 *  loan_amount_break. loan_amount_break/10000 + comp_plan.Flat_FEE  * M9
     return ((275 * loan_break_amount.loan_break_point )/ 10000 + comp_plan.Flat_Fee )  * 48
+
+
+
+def get_gci_result(comp_plan,num):
+    return comp_plan.Percentage * 100 * num /10000 + comp_plan.Flat_Fee
