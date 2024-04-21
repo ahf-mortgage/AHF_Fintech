@@ -70,7 +70,7 @@ def home(request):
     context = {
         'E23':E23,
         'loan_below_limits':loan_below_limits,
-        'loan_per_year':loan_break_point.loan_per_year,
+        'loan_per_year':int(loan_break_point.loan_per_year),
         'comp_plan_for_lower_limit':comp_plan,
         'ahf_amount': math.ceil(ahf_amount) if ahf_amount > 0 else None,
         'rows':rows,
