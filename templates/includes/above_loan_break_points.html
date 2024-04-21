@@ -1,40 +1,30 @@
 {% load humanize %}
 
-<nav class="relative flex w-full flex-wrap bg-zinc-50 py-2 shadow-dark-mild dark:bg-neutral-700 lg:py-4">
-    <div class="flex w-full flex-wrap  justify-between px-3">
+<p class="mb-0 mt-0 text-base font-light leading-relaxed bg-gray-500">
+    Loan amount breakpoint ${{loan_break_point}}
+  </p>
 
+  <div class="flex justify-between">
+    <p class="mb-0 mt-0 text-base leading-relaxed font-bold">
+        Above ${{loan_break_point}}
+      </p>
+      <p class="mb-0 mt-0 text-base leading-relaxed font-bold">
+        branch commission
+      </p>
 
-        <span style="margin-left: 50px;" class="ms-2 text-xl text-black dark:text-white">
-
-            <h6 class="mr-3 mb-2 mt-0 text-base font-medium leading-tight text-primary">
-                Above ${{loan_break_point|intcomma}}
-
-            </h6>
-
-        </span>
-
-
-        <div style="margin-left:500px;">
-            <h6 class="mb-2 mt-0 text-base font-medium leading-tight text-primary max-w-[calc(100%-3em)]">
-                Single Loan Branch Commission
-            </h6>
-        </div>
+  </div>
 
 
 
-    </div>
-</nav>
-
-
-<table class="min-w-full text-start text-sm font-light text-surface dark:text-white">
+<table class="text-start text-sm font-light text-surface dark:text-white w-full h-3 ">
     <thead class="border-b border-neutral-200 dark:border-white/10">
 
 
         <tr>
-            <th scope="col" class="px-6 py-4">
+            <th scope="col">
                 Flat fee
             </th>
-            <th scope="col" class="px-6 py-4">
+            <th scope="col">
                 GCI
                 <br>
 
@@ -50,7 +40,7 @@
 
 
             </th>
-            <th scope="col" class="px-6 py-4">
+            <th  class="px-3 py-2" colspan="5">
                 Branch
                 <br>
                 ${{branch_commission|intcomma}}
@@ -60,11 +50,11 @@
 
         <tr>
 
-            <th scope="col" class="px-6 py-4">Bps</th>
-            <th scope="col" class="px-6 py-4">Loan amount</th>
+            <th scope="col">Bps</th>
+            <th scope="col">Loan amount</th>
             <th scope="col" class="font-light">{{ahf_amount}}%</th>
 
-            <th scope="col" class="px-6 py-4">{{branch_amount}}%</th>
+            <th scope="col">{{branch_amount}}%</th>
         </tr>
     </thead>
 
@@ -72,13 +62,13 @@
     <tbody>
         <tr class="border-b border-neutral-200 dark:border-white/10">
 
-            <td class="text-center whitespace-nowrap px-6 py-4  font-bold" id="D7">
+            <td class="text-center whitespace-nowrap font-bold" id="D7">
                 {% if 50 < bps %} 50 {% else %} 0 {% endif %} <td
-                    class="text-center whitespace-nowrap px-6 py-4  font-bold" id="E6">
+                    class="text-center whitespace-nowrap font-bold" id="E6">
 
             </td>
-            <td class="text-center whitespace-nowrap px-6 py-4" id="F7">cell</td>
-            <td class="text-center whitespace-nowrap px-6 py-4  font-bold" id="G7"></td>
+            <td class="text-center whitespace-nowrap" id="F7">cell</td>
+            <td class="text-center whitespace-nowrap font-bold" id="G7"></td>
 
         </tr>
 
@@ -88,9 +78,9 @@
 
             <td class="text-center whitespace-nowrap px-6 py-4  font-bold" id="D8">
                 {% if 100 < bps %} 100 {% else %} 0 {% endif %} </td>
-            <td class="text-center whitespace-nowrap px-6 py-4 font-bold" id="E8">cell</td>
-            <td class="text-center whitespace-nowrap px-6 py-4" id="F8">Cell</td>
-            <td class="text-center whitespace-nowrap px-6 py-4  font-bold" id="G8">Cell</td>
+            <td class="text-center whitespace-nowrap  font-bold" id="E8">cell</td>
+            <td class="text-center whitespace-nowrap" id="F8">Cell</td>
+            <td class="text-center whitespace-nowrap font-bold" id="G8">Cell</td>
 
         </tr>
 
@@ -98,7 +88,7 @@
 
         <tr class="border-b border-neutral-200 dark:border-white/10">
 
-            <td class="text-center whitespace-nowrap px-6 py-4 font-bold" id="D9">
+            <td class="text-center whitespace-nowrap font-bold" id="D9">
 
 
                 {% if 125 < bps %} 125 {% else %} 0 {% endif %} </td>

@@ -1,4 +1,227 @@
- <tr class="border-b border-neutral-200 dark:border-white/10">
+<div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+  <div class="inline-block  py-2 sm:px-6 lg:px-8 text-center">
+    <div class="overflow-hidden">
+      <table
+        class="border border-neutral-200 text-center text-sm font-light text-surface dark:border-white/10 dark:text-white">
+        <thead class="border-b border-neutral-200 font-medium dark:border-white/10 text-center">
+          
+
+        </thead>
+        <tbody>
+
+          <tr class="flex justify-center">
+            <th scope="col" class="px-6 py-4">Gross Income</th>
+          </tr>
+
+
+          <tr class="flex justify-center">
+            <td scope="col" class="px-6 py-4">
+              <p class="font-bold">
+                AHF
+              </p>
+
+            </td>
+            <td scope="col" class="px-6 py-4 font-bold">Branch</td>
+
+          </tr>
+
+          <tr class="flex justify-center">
+            <td scope="col" class="px-6 py-4">
+              <p>
+                ${{ahf_annual_cap_data.grocss_income|intcomma}}
+                
+              </p>
+
+
+            </td>
+            <td scope="col" class="px-6 py-4 font-bold">
+
+              <p>
+                ${{ahf_annual_cap_data.branch_gross_income|intcomma}}
+
+              </p>
+            </td>
+
+          </tr>
+
+          <tr class="flex justify-center">
+            <td scope="col" class="px-6 py-4">
+              <p>
+                {{ahf_amount}}%
+              </p>
+
+            </td>
+            <td scope="col" class="px-6 py-4 font-bold">
+
+              <p>
+                {{branch_amount}}%
+              </p>
+            </td>
+
+          </tr>
+
+
+          <tr class="flex justify-center">
+            <td scope="col" class="px-6 py-4">
+              <p class="font-bold">
+                Loans per year
+              </p>
+
+            </td>
+            <td scope="col" class="px-6 py-4 font-bold">
+
+              <p>
+                {{loan_break_point.loand_per_year}} 
+              
+                <form action="{% url 'change_loan' %}" method="post">
+                  {% csrf_token %}
+                   <input type="Number" value="{{loan_break_point.loand_per_year}}" name="M9"  id="M9" required/>
+               
+              
+              </p>
+            </td>
+
+          </tr>
+
+
+
+          <tr class="flex justify-center">
+            <td scope="col" class="px-6 py-4">
+
+
+              <p class="font-bold">
+                Loans per month
+              </p>
+
+            </td>
+            <td scope="col" class="px-6 py-4 font-bold">
+              <p>
+              
+               
+                   <input type="Number" placeholder="{{loan_break_point.loand_per_year}}" name="M9"  id="M9" required/>
+                   <input type="submit" value="save" />
+                </form>
+              </p>
+            </td>
+
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<nav class="relative flex  flex-wrap bg-zinc-50 py-2 shadow-dark-mild dark:bg-neutral-700 lg:py-4 w-3/4">
+  <div class="flex flex-wrap  justify-between px-3">
+      <span class="ms-2 text-xl text-black dark:text-white">
+          <h6 class="mr-3 mb-2 mt-0 text-base font-medium leading-tight text-primary">
+              Above ${{loan_break_point|intcomma}}
+          </h6>
+      </span>
+      <div>
+          <h6 class="mt-0 text-base font-medium leading-tight text-primary max-w-[calc(100%-3em)]">
+              Single Loan Branch Commission
+          </h6>
+      </div>
+  </div>
+</nav>
+
+
+
+
+
+
+
+
+
+
+<!-- comp plan table -->
+ <div id="container" class="flex items-center">
+  {% include 'includes/comp_plan_table.html' %}
+
+  <div style="display: flex;justify-content:space-around;">
+    {% include 'includes/ahf_annual_cap.html' %}
+    <div class="ml-8">
+      {% include 'includes/gross_income.html' %}
+
+    </div>
+    
+  </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<tr class="border-b border-neutral-200 dark:border-white/10">
 
             <td class="text-center whitespace-nowrap px-6 py-4  font-bold" id="D8">
                 {% if 100 < bps %} 100 {% else %} 0 {% endif %} </td>

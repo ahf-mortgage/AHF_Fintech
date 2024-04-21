@@ -1,39 +1,27 @@
 {% load humanize %}
-
-<div class="flex flex-col" style="width: 80%;justify-content:space-between;">
-    <div class="overflow-x-auto sm:-mx-6 lg:-mx-8" style="margin-left: auto;">
-        <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+    <div class="overflow-x-auto sm:-mx-2 lg:-mx-4">
+        <div class="inline-block min-w-full sm:px-2 lg:px-4">
             <div class="overflow-hidden">
                 <table class="min-w-full text-left text-sm font-light text-surface dark:text-white">
                     <thead class="border-b border-neutral-200 font-medium dark:border-white/10">
-                        <tr>
-
-                            <th scope="col" class="px-6 py-4"></th>
+                        <tr class="bg-gray-500">
+                            <th scope="col" class="px-6 py-4" style="background-color: white;"></th>
                             <th scope="col" class="px-6 py-4" style="font-weight: 300;font-size:0.8rem;">AHF</th>
                             <th scope="col" class="px-6 py-4">Branch</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr class="border-b border-neutral-200 dark:border-white/10">
-
-                            <td class="whitespace-nowrap px-6 py-4">Split</td>
+                            <td class="whitespace-nowrap px-6 py-4 font-bold">Split</td>
                             <td class="whitespace-nowrap px-6 py-4">{{ahf_amount}}%</td>
-
                             <td class="whitespace-nowrap px-6 py-4">
                                 <p class="font-bold">
                                     {{branch_amount}}%
                                 </p>
                             </td>
-
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-
-
     </div>
-    <!-- lower loan point table -->
-    {% include 'includes/lower_loan_break_points.html' %}
-
-</div>
