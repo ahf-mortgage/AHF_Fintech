@@ -46,21 +46,16 @@ def home(request):
     
      #F7 * J9 -> E21 * D23 /10000 + comp_flat_fee * J9(constant loan/peryear)
     annual_ahf_cap =  calculate_annual_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
-    
     grocss_ahf_income = calculate_gross_ahf_income(loan_break_point,comp_plan,float(branch.commission))
     grocss_income = gross_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
-   
     branch_gross = branch_gross_income(loan_break_point,comp_plan,float(branch.commission))
     
 
     
     E23 = (275 * loan_break_point.loan_break_point )/ 10000 + comp_plan.Flat_Fee 
-   
     nums_loans = [math.ceil(get_gci_result(comp_plan, num) * float((1-branch.commission))) for num in loan_below_limits]
-   
-
     annual_ahf_to_gci_result = [int(annual_ahf_cap)// num for num in  nums_loans]
-    print("{loan_break_point.loand_per_year ",loan_break_point.loan_per_year)
+   
     
     
     ahf_annual_cap_data = {
@@ -75,7 +70,7 @@ def home(request):
     context = {
         'E23':E23,
         'loan_below_limits':loan_below_limits,
-        'loan_break_point':loan_break_point,
+        'loan_per_year':loan_break_point.loan_per_year,
         'comp_plan_for_lower_limit':comp_plan,
         'ahf_amount': math.ceil(ahf_amount) if ahf_amount > 0 else None,
         'rows':rows,
@@ -89,7 +84,6 @@ def home(request):
         'ahf_commission_amount':  1 - float(branch.commission) if branch.commission > 0 else None ,#ahf_amount, # ahf.commission,
         'branch_commission': math.ceil(branch_commission) if branch_commission > 0 else None,
         'branch_commission_amount':branch.commission if branch.commission > 0 else None,
-        
         'ahf_annual_cap_data':ahf_annual_cap_data,
 
     }

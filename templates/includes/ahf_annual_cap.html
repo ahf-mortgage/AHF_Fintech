@@ -1,108 +1,74 @@
 {% load humanize %}
-{% load static %}
-
-<div class="flex flex-row">
+{% load safe_divide %}
+<div class="flex flex-col">
   <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-    <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8 text-center">
+    <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
       <div class="overflow-hidden">
-        <table
-          class="min-w-full border border-neutral-200 text-center text-sm font-light text-surface dark:border-white/10 dark:text-white">
-          <thead class="border-b border-neutral-200 font-medium dark:border-white/10 text-center"
-            style="display:flex;flex-direction:column;justify-content:space-around;">
-            <tr class="flex justify-center">
+        <table class="min-w-full text-left text-sm font-light text-surface dark:text-white">
+          <thead class="border-b border-neutral-200 font-medium dark:border-white/10">
+            <tr>
+            <tr>
 
-              <th scope="col" class="px-6 py-4">AHF Annual Cap</th>
+              <p class="mb-0 mt-0 text-base font-light leading-relaxed bg-gray-200">
+                AHF Annual Cap
+              </p>
+
+
+
+              <th scope="col" class="px-6 py-4">AHF</th>
+              <th scope="col" class="px-6 py-4">BRANCH</th>
+
             </tr>
-
           </thead>
           <tbody>
 
-            <tr class="flex justify-center">
-              <th scope="col" class="px-6 py-4">Gross Income</th>
             </tr>
+            <tr class="border-b border-neutral-200 dark:border-white/10">
 
-
-            <tr class="flex justify-center">
-              <td scope="col" class="px-6 py-4">
-                <p class="font-bold">
-                  AHF
-                </p>
-
+              <td class="whitespace-nowrap px-6 py-4">
+                ${{ahf_annual_cap_data.grocss_income|intcomma}}
               </td>
-              <td scope="col" class="px-6 py-4 font-bold">Branch</td>
-
-            </tr>
-
-            <tr class="flex justify-center">
-              <td scope="col" class="px-6 py-4">
-                <p>
-                  ${{ahf_annual_cap_data.annual_ahf_cap|intcomma}}
-                  capped
-                </p>
-
-
-              </td>
-              <td scope="col" class="px-6 py-4 font-bold">
-
-                <p>
-                  ${{ahf_annual_cap_data.grocss_ahf_income|intcomma}}
-
-                </p>
+              <td class="whitespace-nowrap px-6 py-4">
+                ${{ahf_annual_cap_data.grocss_ahf_income|intcomma}}
               </td>
 
             </tr>
+            <tr class="border-b border-neutral-200 dark:border-white/10">
+
+              <td class="whitespace-nowrap px-6 py-4">Loan per year</td>
+              <td class="whitespace-nowrap px-6 py-4">
+
+                <form action="{% url 'change_loan' %}" method="post" class="flex flex-col">
+                  {% csrf_token %}
 
 
 
-            <tr class="flex justify-center">
-              <td scope="col" class="px-6 py-4">
-                <p>
-                  {{ahf_amount}}%
-                </p>
+                  <div class="relative mb-3" data-twe-input-wrapper-init>
+                    <input type="text"
+                      class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
+                      id="exampleFormControlInputText" value="{{loan_per_year}}" />
+                    <label for="exampleFormControlInputText"
+                      class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[0.9rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-400 dark:peer-focus:text-primary">
+                      {{loan_per_year}}
 
-              </td>
-              <td scope="col" class="px-6 py-4 font-bold">
+                    </label>
+                  </div>
 
-                <p>
-                  {{branch_amount}}%
-                </p>
+
+                  <input type="submit" value="save"
+                    class="bg-gray-500 text-white rounded-md font-bold hover:bg-blue-700" required />
+                </form>
+
               </td>
 
             </tr>
 
 
-            <tr class="flex justify-center">
-              <td scope="col" class="px-6 py-4">
-                <p class="font-bold">
-                  Loans per year
-                </p>
+            <tr class="border-b border-neutral-200 dark:border-white/10">
 
-              </td>
-              <td scope="col" class="px-6 py-4 font-bold">
-
-                <p>
-                  21
-                </p>
-              </td>
-
-            </tr>
-
-
-
-            <tr class="flex justify-center">
-              <td scope="col" class="px-6 py-4">
-
-
-                <p class="font-bold">
-                  Loans per month
-                </p>
-
-              </td>
-              <td scope="col" class="px-6 py-4 font-bold">
-
-                <p>
-                  1.75
-                </p>
+              <td class="whitespace-nowrap px-6 py-4">Loan per year</td>
+              <td class="whitespace-nowrap px-6 py-4">
+                {{loan_per_year|safe_divide}}
               </td>
 
             </tr>
