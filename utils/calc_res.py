@@ -39,3 +39,8 @@ def branch_gross_income(loan_break_amount,comp_plan,commission):
 
 def get_gci_result(comp_plan,num):
     return comp_plan.Percentage * 100 * num /10000 + comp_plan.Flat_Fee
+
+
+# s1 = m9
+
+    

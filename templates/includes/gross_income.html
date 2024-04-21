@@ -76,7 +76,13 @@
               <td scope="col" class="px-6 py-4 font-bold">
 
                 <p>
-                  21
+                  {{loan_break_point.loand_per_year}} 
+                
+                  <form action="{% url 'change_loan' %}" method="post">
+                    {% csrf_token %}
+                     <input type="Number" value="{{loan_break_point.loand_per_year}}" name="M9"  id="M9" required/>
+                 
+                
                 </p>
               </td>
 
@@ -94,9 +100,12 @@
 
               </td>
               <td scope="col" class="px-6 py-4 font-bold">
-
                 <p>
-                  1.75
+                
+                 
+                     <input type="Number" placeholder="{{loan_break_point.loand_per_year}}" name="M9"  id="M9" required/>
+                     <input type="submit" value="save" />
+                  </form>
                 </p>
               </td>
 

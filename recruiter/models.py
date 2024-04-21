@@ -27,6 +27,8 @@ class Bps(models.Model):
     
 class LoanBreakPoint(models.Model):
     loan_break_point = models.FloatField()
+    loan_per_year = models.IntegerField(blank=True,null=True)
+    loan_per_month = models.IntegerField(blank=True,null=True)
 
     def __str__(self):
         return f"{self.loan_break_point}"
