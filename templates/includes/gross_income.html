@@ -1,6 +1,6 @@
 {% load humanize %}
 {% load safe_divide %}
-<div class="flex flex-col">
+<div>
   <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
     <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
       <div class="overflow-hidden">
@@ -15,8 +15,8 @@
 
 
 
-              <th scope="col" class="px-6 py-4">AHF</th>
-              <th scope="col" class="px-6 py-4">BRANCH</th>
+              <th scope="col" class="px-6">AHF</th>
+              <th scope="col" class="px-6">BRANCH</th>
 
             </tr>
           </thead>
@@ -25,18 +25,18 @@
             </tr>
             <tr class="border-b border-neutral-200 dark:border-white/10">
 
-              <td class="whitespace-nowrap px-6 py-4">
+              <td class="whitespace-nowrap px-6">
                 ${{ahf_annual_cap_data.grocss_income|intcomma}}
               </td>
-              <td class="whitespace-nowrap px-6 py-4">
+              <td class="whitespace-nowrap px-6">
                 ${{ahf_annual_cap_data.branch_gross_income|intcomma}}
               </td>
 
             </tr>
             <tr class="border-b border-neutral-200 dark:border-white/10">
 
-              <td class="whitespace-nowrap px-6 py-4">Loan per year</td>
-              <td class="whitespace-nowrap px-6 py-4">
+              <td class="whitespace-nowrap px-6">Loan per year</td>
+              <td class="whitespace-nowrap px-6">
 
                 <form action="{% url 'change_loan' %}" method="post" class="flex flex-col">
                   {% csrf_token %}
@@ -66,8 +66,8 @@
 
             <tr class="border-b border-neutral-200 dark:border-white/10">
 
-              <td class="whitespace-nowrap px-6 py-4">Loan per year</td>
-              <td class="whitespace-nowrap px-6 py-4">
+              <td class="whitespace-nowrap px-6">Loan per year</td>
+              <td class="whitespace-nowrap px-6">
                 {{loan_per_year|safe_divide}}
               </td>
 

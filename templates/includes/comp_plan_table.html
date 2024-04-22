@@ -12,58 +12,58 @@
 <div class="overflow-x-auto" style="display: flex;justify-content:space-between;margin: 50px;">
     <div class="flex flex-col">
         <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+            <div class="inline-block min-w-full sm:px-6 lg:px-8">
                 <div class="overflow-hidden">
                     <table class="text-left text-sm font-light text-surface dark:text-white" style="width: 100%;">
                         <thead
                             class="border-b border-neutral-200 bg-white font-medium dark:border-white/10 dark:bg-body-dark">
                             <tr>
-                                <th scope="col" class="px-6 py-4">Wholesale comp plan</th>
-                                <th scope="col" class="px-6 py-4"></th>
+                                <th scope="col" class="px-6">Wholesale comp plan</th>
+                                <th scope="col" class="px-6"></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
-                                <td class="whitespace-nowrap px-6 py-4 font-medium">Flat Fee</td>
-                                <td class="whitespace-nowrap px-6 py-4">{{comp_plan_for_lower_limit.Flat_Fee}}</td>
+                                <td class="whitespace-nowrap px-6 font-medium">Flat Fee</td>
+                                <td class="whitespace-nowrap px-6">{{comp_plan_for_lower_limit.Flat_Fee}}</td>
                             </tr>
                             <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
-                                <td class="whitespace-nowrap px-6 py-4 font-medium">Percentage (0.000% -
+                                <td class="whitespace-nowrap px-6 font-medium">Percentage (0.000% -
                                     {{comp_plan_for_lower_limit.Percentage}}%)</td>
-                                <td class="whitespace-nowrap px-6 py-4">{{comp_plan_for_lower_limit.Percentage}}</td>
+                                <td class="whitespace-nowrap px-6">{{comp_plan_for_lower_limit.Percentage}}</td>
                             </tr>
                             <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
-                                <td class="whitespace-nowrap px-6 py-4 font-medium">Minimum Compensation ($0 -
+                                <td class="whitespace-nowrap px-6 font-medium">Minimum Compensation ($0 -
                                     ${{gci|intcomma}})</td>
-                                <td class="whitespace-nowrap px-6 py-4">
+                                <td class="whitespace-nowrap px-6">
 
                                 </td>
                             </tr>
 
 
                             <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
-                                <td class="whitespace-nowrap px-6 py-4 font-medium">Maximum Compensation (Min. Comp -
+                                <td class="whitespace-nowrap px-6 font-medium">Maximum Compensation (Min. Comp -
 
                                 </td>
-                                <td class="whitespace-nowrap px-6 py-4">
+                                <td class="whitespace-nowrap px-6">
 
                                 </td>
                             </tr>
 
 
                             <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
-                                <td class="whitespace-nowrap px-6 py-4 font-medium">Max</td>
-                                <td class="whitespace-nowrap px-6 py-4">
+                                <td class="whitespace-nowrap px-6 font-medium">Max</td>
+                                <td class="whitespace-nowrap px-6">
                                     <form action="{% url 'comp_plan_change_view' %}" method="post"
                                         style="display: flex;justify-content:center;">
                                         {% csrf_token %}
                                         <div class="relative mb-3" data-twe-input-wrapper-init>
                                             <input 
                                                 type="Number"
-                                                class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
+                                                class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
                                                 id="max_gci" name="max_gci" class="inputs_fields" placeholder="MAX GCI"
                                                 value="{{comp_plan_for_lower_limit.MAX_GCI}}" />
-                                            <label for="exampleFormControlInput1"
+                                            <label 
                                                 class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[0.9rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-400 dark:peer-focus:text-primary">
 
                                             </label>
@@ -77,9 +77,9 @@
 
                             <!-- Table row for Comp Percentage -->
                             <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
-                                <td class="whitespace-nowrap px-6 py-4 font-medium">Comp Percentage</td>
+                                <td class="whitespace-nowrap px-6 font-medium">Comp Percentage</td>
 
-                                <td class="whitespace-nowrap px-6 py-4">
+                                <td class="whitespace-nowrap px-6">
                                     <!-- for comp plan -->
 
 
@@ -108,15 +108,15 @@
 
                             <!--Table  for loan break point -->
                             <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
-                                <td class="whitespace-nowrap px-6 py-4 font-medium">Loan break point</td>
-                                <td class="whitespace-nowrap px-6 py-4">
+                                <td class="whitespace-nowrap px-6  font-medium">Loan break point</td>
+                                <td class="whitespace-nowrap px-6">
 
                                     <div class="relative mb-3" data-twe-input-wrapper-init>
                                         <input
                                             type="Number" 
                                             name="loan_break_point"
                                             id="loan_break_point"
-                                            class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
+                                            class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
                                             id="exampleFormControlInputText" class="inputs_fields" placeholder=""
                                             value="{{loan_break_point}}" />
                                         <label for="exampleFormControlInputText"
@@ -133,8 +133,8 @@
 
                             <!--Table row  for split -->
                             <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
-                                <td class="whitespace-nowrap px-6 py-4 font-medium">Split</td>
-                                <td class="whitespace-nowrap px-6 py-4">
+                                <td class="whitespace-nowrap px-6 font-medium">Split</td>
+                                <td class="whitespace-nowrap px-6">
 
 
                                     <div style="display: flex;">
@@ -154,7 +154,7 @@
                                             id="btn-save" 
                                             type="submit"
                                             value="Save"
-                                            class="bg-gray-500 text-white font-bold py-2 px-2 rounded disabled"
+                                            class="bg-gray-500 text-white font-bold px-2 rounded disabled"
                                             >
 
                                     </div>
@@ -172,8 +172,7 @@
         </div>
     </div>
 
-    <div style="display: flex;flex-direction:row;justify-content:space-around;">
-    </div>
+    
 
     <div>
 
