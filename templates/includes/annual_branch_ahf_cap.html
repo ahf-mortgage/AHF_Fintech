@@ -3,36 +3,64 @@
 
 <table class="min-w-full text-start text-sm font-light text-surface dark:text-white">
   <thead class="border-b border-neutral-200 dark:border-white/10">
-    <tr>
-      <th scope="col" class="px-6 py-4">
+
+
+    <tr class="w-full bg-blue-100 py-4" style="height: 20px;">
+      <th class="px-6"></th>
+      <th class="px-6"></th>
+      <th class="px-6"></th>
+      <th class="px-6"></th>
+      <th class="px-6"></th>
+    </tr>
+
+
+    <tr class="w-full bg-gray-200 py-4" style="height: 20px;">
+      <th class="px-6"></th>
+      <th class="px-6"></th>
+      <th class="px-6"></th>
+      <th class="px-6"></th>
+      <th class="px-6"></th>
+    </tr>
+
+
+
+    <tr class="w-full bg-gray-200" style="margin-bottom:0;">
+      <th scope="col" class="px-6">
         Annual cap
       </th>
-      <th scope="col" class="px-6 py-4">
+      <th scope="col" class="px-6">
 
       </th>
       <th scope="col" class="font-light">
-        GCI
+        GCI 
+      
       </th>
 
-      <th scope="col" class="px-6 py-4">
+      <th scope="col" class="px-6">
         AHF
       </th>
-      <th scope="col" class="px-6 py-4">
+      <th scope="col" class="px-6">
         Branch
       </th>
     </tr>
 
-    <tr>
-      <th scope="col" class="px-6 py-4">
+    <tr class="bg-gray-200"  style="margin-top: 0;">
+      <th scope="col" class="w-full">
         Loans per year
       </th>
-      <th scope="col" class="px-6 py-4">
+      <th scope="col" class="w-full">
         per Month
       </th>
+
+
+      <th>
+        COST
+      </th>
+     
       <th scope="col" class="font-light">
         {{ahf_amount}}%
       </th>
-      <th scope="col" class="px-6 py-4">
+      <th scope="col" class="px-6">
         {{branch_amount}}%
       </th>
 
@@ -45,38 +73,37 @@
 
 
 
-
-
-
     {% for num in ahf_annual_cap_data.annual_ahf_to_gci_result %}
 
-    <tr class="border-b border-neutral-200 dark:border-white/10">
 
-      <td class="text-center whitespace-nowrap px-6 py-4 font-bold">
 
+
+    <tr class="border-b border-neutral-200 dark:border-white/10 bg-gray-100" id="row_{{num}}">
+
+      <td class="text-center whitespace-nowrap px-6">
         {{num}}
       </td>
-
-      <td class="text-center whitespace-nowrap px-6 py-4 font-bold">
+      <td class="text-center whitespace-nowrap px-6">
         {{ num|safe_divide }}
-
       </td>
 
-      <td class="text-center whitespace-nowrap px-6 py-4" id="D2_{{num}}">
+      <td class="text-center whitespace-nowrap px-6" id="D2_{{num}}">
         a
       </td>
 
-      <td class="text-center whitespace-nowrap px-6 py-4" id="L2_{{num}}">
+      <td class="text-center whitespace-nowrap px-6" id="L2_{{num}}">
         $0
       </td>
 
-      <td class="text-center whitespace-nowrap px-6 py-4" id="K2_{{num}}">
+      <td class="text-center whitespace-nowrap px-6" id="K2_{{num}}">
         $0
       </td>
+
+      
 
       {% endfor %}
 
-    </tr>
+
 
 
   </tbody>
@@ -103,16 +130,26 @@
 
   const below_limits_raw = "{{loan_below_limits}}"
   const below_limits = JSON.parse(below_limits_raw);
-
+  let index = 0
+  
 
 
   annual_ahf_to_gci_result = JSON.parse(annual_ahf_to_gci_result);
-
+  
   for (let [gci, num] of zipArrays(below_limits, annual_ahf_to_gci_result)) {
+   
+    if(index % 2 == 0) {
+    const tr = document.getElementById(`row_${num}`)
+      tr.classList.remove("bg-gray-100")
+
+    }
+   
     const D2 = document.getElementById(`D2_${num}`)
     const gci_result = (plan_percentage * 100) * gci / 10000 + Number.parseFloat("{{comp_plan_for_lower_limit.Flat_Fee}}")
     const result = E23 - gci_result
     D2.innerText = `${result.toLocaleString()}`
+
+    index += 1
 
   }
 

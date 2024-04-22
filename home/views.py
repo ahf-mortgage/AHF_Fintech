@@ -66,9 +66,12 @@ def home(request):
         'annual_ahf_to_gci_result':annual_ahf_to_gci_result
         
     }
+ 
   
     context = {
         'E23':E23,
+        'ahf_bps':int(bps.bps) *float(1- branch.commission),
+        'branch_bps':int(bps.bps) *float(branch.commission),
         'loan_below_limits':loan_below_limits,
         'loan_per_year':int(loan_break_point.loan_per_year),
         'comp_plan_for_lower_limit':comp_plan,
@@ -76,7 +79,7 @@ def home(request):
         'rows':rows,
         'rows_counter':row_counter,
         'branch_amount': math.ceil(branch.commission * 100) if branch.commission > 0 else None,
-        'bps':bps.bps if bps.bps > 0 else None,
+        'bps':int(bps.bps) if bps.bps > 0 else None,
         'loan_break_point': math.ceil(loan_break_point.loan_break_point) ,# if loan_break_point >0 else None,
         'comp_plan':comp_plan.Flat_Fee if comp_plan.Flat_Fee > 0 else None,
         'gci': math.ceil(gci),

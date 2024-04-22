@@ -1,73 +1,96 @@
 {% load humanize %}
-<span class="ms-2 text-xl text-black dark:text-white"  style="display: flex;justify-content:space-between;margin: 50px;">
 
-    <!-- header of at and below table  -->
-    <h6 class="mb-2 mt-0 text-base font-medium leading-tight text-primary">
-        At and below ${{loan_break_point|intcomma}}
-    </h6>
-
-    <!-- header of at and below table  -->
-    <h6 class="mb-2 mt-0 text-base font-medium leading-tight text-primary">
-        Single Loan Branch Commission
-    </h6>
-
-
-</span>
 
 <!-- table of at and below -->
 <table class="min-w-full text-start text-sm font-light text-surface dark:text-white">
     <thead class="border-b border-neutral-200 font-medium dark:border-white/10">
 
-
-
-        <tr>
-
-            <th scope="col" class="px-6 py-4">Loan amount</th>
-            <th scope="col" class="px-6 py-4">GCI
-                <br>
-                {{gci|intcomma}}
+        <tr class="dark:border-white/10 bg-blue-100" style="margin-bottom:0;">
+            <th scope="col" class="px-6 py-0">
+                At and below ${{loan_break_point|intcomma}}
             </th>
-            <th scope="col" class="px-6 py-4">
+
+            <th scope="col" class="px-6 py-0"></th>
+            <th scope="col" class="px-6 py-0"></th>
+
+            <th scope="col" class="px-6 py-0">
+                Single Loan Branch Commission
+            </th>
+        </tr>
+
+
+        <tr class="border-b border-black bg-gray-300" style="margin-bottom:0;">
+
+            <th scope="col" class="px-6"></th>
+            <th scope="col" class="px-6"
+
+
+            </th>
+            <th scope="col" class="px-6">
                 <p>
                     AHF
                 </p>
-
-                <br>
-                <p style="font-weight: 300;font-size:0.8rem;">
-                    {{ahf_amount}}%
-                </p>
-
             </th>
 
-            <th scope="col" class="px-6 py-4">
+            <th scope="col" class="px-6">
                 Branch
-                <br>
-                {{branch_amount}}%
+
             </th>
         </tr>
+
+
+        <tr class="border-b border-black dark:border-white bg-gray-200" style="margin-bottom:0;">
+            <th scope="col" class="px-6 py-0">
+                BPS
+            </th>
+
+            <th scope="col" class="px-6 py-0">
+                {{bps}}
+            </th>
+            <th scope="col" class="px-6 py-0">
+                {{ahf_bps}}
+            </th>
+
+            <th scope="col" class="px-6 py-0">
+                {{branch_bps}}
+            </th>
+        </tr>
+
+
+
+        <tr class="bg-gray-300 font-light" style="margin-bottom:0;">
+
+            <th class="font-light" scope="col" class="px-6">Loan amount</th>
+            <th class="font-light" scope="col" class="px-6">GCI </th>
+            <th class = "font-light" scope="col" class="px-6"> {{ahf_amount}}%</th>
+            <th class = "font-light" scope="col" class="px-6">{{branch_amount}}%</th>
+        </tr>
+
+
     </thead>
     <tbody>
 
-       
+
 
         {% for num in loan_below_limits %}
-        <tr class="border-b border-neutral-200 dark:border-white/10">
+        <tr class="border-b border-neutral-200 dark:border-white/10 bg-gray-200" id="below_row_{{num}}">
 
-            <td class="text-center whitespace-nowrap px-6 py-4 font-bold" id="G2_{{num}}">
+            <td class="text-center whitespace-nowrap px-6" id="G2_{{num}}">
                 {{num|intcomma}}
             </td>
 
-            <td class="text-center whitespace-nowrap px-6 py-4 font-bold" id="D2_{{num}}">
-                
+            <td class="text-center whitespace-nowrap px-6" id="D2_{{num}}">
+
             </td>
 
-            <td class="text-center whitespace-nowrap px-6 py-4" id="F2_{{num}}">
-                
+            <td class="text-center whitespace-nowrap px-6" id="F2_{{num}}">
+
             </td>
 
-            <td class="text-center whitespace-nowrap px-6 py-4" id="H2_{{num}}">
-            
+            <td class="text-center whitespace-nowrap px-6" id="H2_{{num}}">
+
             </td>
+         
             </td>
         </tr>
         {% endfor %}

@@ -10,7 +10,7 @@
     .grid-container {
       display: grid;
       grid-template-columns: auto auto auto auto auto;
-      padding: 10px;
+      padding: 5px;
     }
 
     .comission-grid-item {
@@ -30,20 +30,24 @@
     }
     .grid-item {
       background-color: rgba(255, 255, 255, 0.8);
-    
       padding: 20px;
       font-size: 30px;
       text-align: center;
+      width: max-content;
     }
   </style>
 </head>
 
 <body>
+
   <div class="grid-container">
     <div class="grid-item">
-      {% include 'includes/comission_split.html' %}
+      {% include 'includes/comp_plan_table.html'%}
     </div>
   </div>
+
+
+
 
   <div class="grid-container">
     <div class="grid-item">
@@ -57,7 +61,7 @@
       {% include 'includes/gross_income.html' %}
     </div>
     <div class="grid-item">
-
+     
       <!-- 4 -->
     </div>
     <div class="grid-item">
@@ -259,7 +263,7 @@
     const loan_below_limits = JSON.parse(loan_below_limits_raw);
     const comp_plan_percentage = Number.parseFloat("{{comp_plan_for_lower_limit.Percentage}}")
 
-
+    let counter = 0
 
 
     // Table data for loan below loan limit
@@ -267,12 +271,23 @@
       const D2 = document.getElementById(`D2_${num}`)
       const F2 = document.getElementById(`F2_${num}`)
       const H2 = document.getElementById(`H2_${num}`)
+      const row = document.getElementById(`below_row_${num}`)
       let branch_share = 0
       let ahf_share = 0
+
+    
 
       const gci_result = (comp_plan_percentage * 100) * num / 10000 + Number.parseFloat("{{comp_plan_for_lower_limit.Flat_Fee}}")
       const branch_amount = (Number.parseFloat("{{branch_amount}}") / 100)//Number.parseFloat("{{branch_commission_amount}}")
       const ahf_amount = 1 - (Number.parseFloat("{{branch_amount}}") / 100)
+
+      if(counter % 2 == 0 ) {
+        row.classList.remove("bg-gray-200")
+      }
+
+      if(counter == 0) {
+        row.classList.add("font-bold")
+      }
 
       if (gci_result < MAX_GCI) {
         D2.innerText = (gci_result).toLocaleString()
@@ -285,7 +300,9 @@
         ahf_share = MAX_GCI * ahf_amount
       }
       F2.innerText = ahf_share.toLocaleString()
-      H2.innerHTML = `<p class='font-bold'> ${branch_share.toLocaleString()} </p>`
+      H2.innerHTML = `<p> ${branch_share.toLocaleString()} </p>`
+
+    counter += 1
 
     }
 
