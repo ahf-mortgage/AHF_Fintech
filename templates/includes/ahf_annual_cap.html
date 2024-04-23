@@ -33,7 +33,7 @@
             </tr>
             <tr class="border-b border-neutral-200 dark:border-white/10">
 
-              <td class="whitespace-nowrap px-6">Loan per year</td>
+              <td class="whitespace-nowrap px-6">Loans per year</td>
               <td class="whitespace-nowrap px-6">
 
                 <form action="{% url 'change_loan' %}" method="post" class="flex flex-col">
@@ -64,7 +64,7 @@
 
             <tr class="border-b border-neutral-200 dark:border-white/10">
 
-              <td class="whitespace-nowrap px-6">Loan per year</td>
+              <td class="whitespace-nowrap px-6">Loans per month</td>
               <td class="whitespace-nowrap px-6">
                 {{loan_per_year|safe_divide}}
               </td>

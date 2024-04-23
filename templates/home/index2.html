@@ -7,6 +7,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    .middle-grid-container {
+
+      display: grid;
+      grid-template-columns: 4fr 0.5fr 0.5fr;
+      grid-auto-flow: column;
+      grid-gap: 10px;
+
+
+    }
     .grid-container {
       display: grid;
       grid-template-columns: auto auto auto auto auto;
@@ -49,23 +58,35 @@
 
 
 
-  <div class="grid-container">
-    <div class="grid-item w-full">
-      {% include 'includes/above_loan_break_points.html' %}
-    </div>
-    <div class="small-grid-item">
+  <div class="flex flex-row">
+   
 
-      {% include 'includes/ahf_annual_cap.html' %}
+    <div class="middle-grid-container">
+      <div class="grid-item w-full">
+        {% include 'includes/above_loan_break_points.html' %}
+      </div>
+      <div class="small-grid-item">
+  
+        {% include 'includes/ahf_annual_cap.html' %}
+      </div>
+      <div class="small-grid-item">
+        {% include 'includes/gross_income.html' %}
+      </div>
     </div>
-    <div class="small-grid-item">
-      {% include 'includes/gross_income.html' %}
+
+
+    <div style="min-width:100%;">
+   
+      {% include 'includes/W2_Branch_Yearly_Gross_Income.html' %}
+
     </div>
-    <div class="grid-item">
-      <!-- 4 -->
-    </div>
-    <div class="grid-item">
-      <!-- 5 -->
-    </div>
+
+  </div>
+
+
+
+  <div class="grid-container px-0 mx-0" style="float: left;">
+  
     <div class="grid-item">
       {% include 'includes/lower_loan_break_points.html' %}
 
@@ -82,8 +103,9 @@
   </div>
 
   <div class="mt-12">
-    {% include 'includes/bottom_tab_bar.html' %}
+    <!-- {% include 'includes/bottom_tab_bar.html' %} -->
   </div>
+</div>
 
   <script>
 
@@ -249,11 +271,11 @@
 
     // Branch
     const G13 = document.getElementById("G13")
-    G13.innerText = `${D13 * branch_commission_amount}`
+    G13.innerText = `${Math.round((D13 * branch_commission_amount),0).toLocaleString()}`
 
     // Branch
     const G14 = document.getElementById("G14")
-    G14.innerText = `${D14 * branch_commission_amount}`
+    G14.innerText = `${(D14 * branch_commission_amount).toLocaleString()}`
 
     // for loan below limit
     // gci=   (comp_plan.Percentage * 100) * loan_break_point.loan_break_point / 10000 + comp_plan.Flat_Fee

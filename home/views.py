@@ -204,9 +204,9 @@ def comp_plan_change_view(request):
 
 def change_loan(request):
     if request.method == "POST":
+        # print(request.POST.get('M9'),"m9")
         loan = LoanBreakPoint.objects.all().first()
-        print("loan ",loan)
-        loan.loand_per_year = int(request.POST.get("M9"))
+        loan.loan_per_year = int(request.POST.get("M9"))
         loan.save()
         return  redirect("/")
     context = {
