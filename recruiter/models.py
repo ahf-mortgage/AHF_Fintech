@@ -27,8 +27,7 @@ class Bps(models.Model):
     
 class LoanBreakPoint(models.Model):
     loan_break_point = models.FloatField()
-    loan_per_year = models.IntegerField(blank=True,null=True)
-    loan_per_month = models.IntegerField(blank=True,null=True)
+   
 
     def __str__(self):
         return f"{self.loan_break_point}"
@@ -36,6 +35,8 @@ class LoanBreakPoint(models.Model):
     
 class AHF(models.Model):
     commission = models.FloatField()
+    loan_per_year = models.IntegerField(default=1)
+    loan_per_month = models.IntegerField(blank=True,null=True)
 
     def __str__(self):
         return f"{self.commission}"
@@ -43,6 +44,8 @@ class AHF(models.Model):
     
 class Branch(models.Model):
     commission = models.DecimalField(max_digits=10,decimal_places=2)
+    loan_per_year = models.IntegerField(blank=True,null=True)
+    loan_per_month = models.IntegerField(blank=True,null=True)
 
     def __str__(self):
         return f"{self.commission}"

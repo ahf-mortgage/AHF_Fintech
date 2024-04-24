@@ -10,9 +10,10 @@
     .middle-grid-container {
 
       display: grid;
-      grid-template-columns: 4fr 0.5fr 0.5fr;
+      grid-template-columns: auto auto;
       grid-auto-flow: column;
       grid-gap: 10px;
+      background-color: red;
 
 
     }
@@ -20,6 +21,13 @@
       display: grid;
       grid-template-columns: auto auto auto auto auto;
       padding: 5px;
+    } 
+
+    .w2-branch-grid-container {
+      display: grid;
+      grid-template-columns: 0.5fr auto;
+     
+
     }
 
     .comission-grid-item {
@@ -61,7 +69,7 @@
   <div class="flex flex-row">
    
 
-    <div class="middle-grid-container">
+    <div class="grid-container px-0 mx-0"  style="min-width:100%;">
       <div class="grid-item w-full">
         {% include 'includes/above_loan_break_points.html' %}
       </div>
@@ -69,15 +77,22 @@
   
         {% include 'includes/ahf_annual_cap.html' %}
       </div>
+
+
       <div class="small-grid-item">
         {% include 'includes/gross_income.html' %}
       </div>
+     
     </div>
 
 
-    <div style="min-width:100%;">
-   
-      {% include 'includes/W2_Branch_Yearly_Gross_Income.html' %}
+    <div class="w2-branch-grid-container px-0 mx-0" style="min-width:100%;">
+
+      
+      <div>
+        {% include 'includes/W2_Branch_Yearly_Gross_Income.html' %}
+      </div>
+     
 
     </div>
 
@@ -102,9 +117,7 @@
     </div>
   </div>
 
-  <div class="mt-12">
-    <!-- {% include 'includes/bottom_tab_bar.html' %} -->
-  </div>
+ 
 </div>
 
   <script>

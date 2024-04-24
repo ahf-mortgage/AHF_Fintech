@@ -38,7 +38,7 @@
               <td class="whitespace-nowrap px-6">Loans per year</td>
               <td class="whitespace-nowrap px-6">
 
-                <form action="{% url 'change_loan' %}" method="post" class="flex flex-col">
+                <form action="{% url 'change_branch_loan' %}" method="post" class="flex flex-col">
                   {% csrf_token %}
 
                   <div class="relative mb-3" data-twe-input-wrapper-init>
@@ -67,6 +67,16 @@
               <td class="whitespace-nowrap px-6">Loans per month</td>
               <td class="whitespace-nowrap px-6">
                 {{loan_per_year|safe_divide}}
+              </td>
+
+            </tr>
+
+
+            <tr class="border-b border-neutral-200 dark:border-white/10">
+
+              <td class="whitespace-nowrap px-6 font-bold">Revenue share</td>
+              <td class="whitespace-nowrap px-6 font-bold">
+                {{revenue_share}} %
               </td>
 
             </tr>

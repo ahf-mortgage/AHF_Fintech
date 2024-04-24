@@ -55,7 +55,9 @@ def home(request):
     E23 = (275 * loan_break_point.loan_break_point )/ 10000 + comp_plan.Flat_Fee 
     nums_loans = [math.ceil(get_gci_result(comp_plan, num) * float((1-branch.commission))) for num in loan_below_limits]
     annual_ahf_to_gci_result = [int(annual_ahf_cap)// num for num in  nums_loans]
-   
+    
+    revenue_share = round((branch.loan_per_year / ahf.loan_per_year) * 100,2)if (branch.loan_per_year / ahf.loan_per_year) < 1 else 100
+    
     
     
     ahf_annual_cap_data = {
@@ -70,10 +72,14 @@ def home(request):
   
     context = {
         'E23':E23,
+        'revenue_share':revenue_share,
+        'comp_plan_for_lower_limit_MAX_GCI':int(comp_plan.MAX_GCI),
+        'ahf_loan_per_year':ahf.loan_per_year,
+        'ahf_loan_per_month':ahf.loan_per_year / 12,
         'ahf_bps':int(bps.bps) *float(1- branch.commission),
         'branch_bps':int(bps.bps) *float(branch.commission),
         'loan_below_limits':loan_below_limits,
-        'loan_per_year':int(loan_break_point.loan_per_year),
+        'loan_per_year':int(branch.loan_per_year),
         'comp_plan_for_lower_limit':comp_plan,
         'ahf_amount': math.ceil(ahf_amount) if ahf_amount > 0 else None,
         'rows':rows,
@@ -202,10 +208,10 @@ def comp_plan_change_view(request):
     }
     return render(request,"home/index2.html",context)
 
-def change_loan(request):
+def change_branch_loan(request):
     if request.method == "POST":
         # print(request.POST.get('M9'),"m9")
-        loan = LoanBreakPoint.objects.all().first()
+        loan = Branch.objects.all().first()
         loan.loan_per_year = int(request.POST.get("M9"))
         loan.save()
         return  redirect("/")
@@ -213,6 +219,19 @@ def change_loan(request):
         
     }
     return render(request,"home/index2.html",context)
+
+
+def change_ahf_loan(request):
+    if request.method == "POST":
+        loan = AHF.objects.all().first()
+        loan.loan_per_year = int(request.POST.get("H10"))
+        loan.save()
+        return  redirect("/")
+    context = {
+        
+    }
+    return render(request,"home/index2.html",context)
+    
     
 #S1 = M9 Number of loans
 #P1 = M7 Branch Yearly Gross Revenue
