@@ -1,5 +1,5 @@
 {% load humanize %}
-
+{% load safe_divide %}
 
 <style>
     .justify-end {
@@ -15,7 +15,8 @@
       <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
         <div class="overflow-hidden">
           <table
-            class="min-w-full text-center text-sm font-light text-surface dark:text-white">
+            class="min-w-full text-center text-sm font-light text-surface dark:text-white"
+            >
             <thead
               class="border-b border-neutral-200 font-medium dark:border-white/10">
 
@@ -51,100 +52,117 @@
 
 
             <tbody>
-              <tr class="border-b border-neutral-200 dark:border-white/10">
-                <td class="font-bold whitespace-nowrap font-medium justify-end">
-                    Education and training
+                
+
+            {% for category in categories %}
+            <tr  
+            class="flex font-bold min-w-full text-center text-sm text-surface dark:text-white"
+             >
+                <td>
+                  {{category}}
+
+            </td>
+
+            </tr>
+
+             {% for expense in category.expense.all %}
+
+              <tr  
+            class="flex space-around px-5 min-w-full text-center text-sm font-light text-surface dark:text-white"
+
+            style="flex-direction: row; justify-content: space-between;" 
+             >
+                <td class="whitespace-nowrap justify-end">
+                  {{expense|intcomma}}
+
                 </td>
-                <td class="whitespace-nowrap"></td>
-              </tr>
 
-              <tr class="border-b border-neutral-200 dark:border-white/10">
-                <td class="pl-4 font-small whitespace-nowrap font-medium justify-end ">
-                    20/20 VISION PRO COACHING
+                  <td class="whitespace-nowrap">
+                  {{expense.expense|intcomma}}
+
                 </td>
-                <td class="whitespace-nowrap">$3,600 </td>
-              </tr>
-           
-
-              <tr class="border-b border-neutral-200 dark:border-white/10">
-                <td class="pl-4 whitespace-nowrap font-medium justify-end ">
-                    NMLS Annual CE
-                </td>
-                <td class="whitespace-nowrap"> $100 </td>
-              </tr>
+            </tr>
 
 
-              <tr class="border-b border-neutral-200 dark:border-white/10">
-                <td class="font-bold whitespace-nowrap font-medium justify-end ">
-                    Licensing fees
-                </td>
-                <td class="whitespace-nowrap">$30 </td>
-              </tr>
+            {% endfor %}
 
 
-
-              <tr class="border-b border-neutral-200 dark:border-white/10">
-                <td class="whitespace-nowrap font-medium justify-end ">
-                    NMLS Annual renewal fee for MLOs
-                </td>
-                <td class="whitespace-nowrap">$300</td>
-              </tr>
-           
+            {% endfor %}
 
 
               <tr class="border-b border-neutral-200 dark:border-white/10">
                 <td class="whitespace-nowrap font-medium justify-end ">
-                    MLO Annual Renewal Fee
-                </td>
-                <td class="whitespace-nowrap">$2,364 </td>
-              </tr>
+                 <p class="font-bold"> Total Expense </p>
 
-              <tr class="border-b border-neutral-200 dark:border-white/10">
-                <td class="whitespace-nowrap font-medium justify-end ">
-                    Advertising & Marketing
                 </td>
-                <td class="whitespace-nowrap">$7,200 </td>
-              </tr>
-           
-              <tr class="border-b border-neutral-200 dark:border-white/10">
-                <td class="whitespace-nowrap font-medium justify-end ">
-                    Agency fee
-                </td>
-                <td class="whitespace-nowrap">  </td>
+                <td class="whitespace-nowrap">
+                       <p>  {{total_expense|intcomma}} <p>
+                 </td>
               </tr>
 
 
               <tr class="border-b border-neutral-200 dark:border-white/10">
                 <td class="whitespace-nowrap font-medium justify-end ">
-                    Facebook
-                </td>
-                <td class="whitespace-nowrap">  $7,200 </td>
-              </tr>
-           
-           
-            
-            <tr class="border-b border-neutral-200 dark:border-white/10">
-                <td class="whitespace-nowrap font-medium justify-end ">
-                    Google
-                </td>
-                <td class="whitespace-nowrap">$7,200</td>
-              </tr>
-           
-
-              <tr class="border-b border-neutral-200 dark:border-white/10">
-                <td class="whitespace-nowrap font-medium justify-end ">
-                    Total expenses
+                 <p class="font-bold"> Taxable Gross Payroll </p>
 
                 </td>
-                <td class="whitespace-nowrap">$20,794 </td>
+                <td class="whitespace-nowrap">
+                       <p>  {{total_expense|intcomma}} <p>
+                 </td>
               </tr>
-           
-           
-         
+
+
              
-              
+
+              {% for column in  ewh_columns%}
+             
+              <tr class="border-b border-neutral-200 dark:border-white/10">
+                <td class="whitespace-nowrap justify-end">
+                 {{column}}
+          
+                </td>
+                <td class="whitespace-nowrap">{{ewh|dict_get:column|intcomma}}</td>
+              </tr>
+
+              {% endfor %}
+
+
+              <tr class="border-b border-neutral-200 dark:border-white/10">
+                <td class="whitespace-nowrap font-medium justify-end ">
+                 <p class="font-bold"> Net payback </p>
+
+                </td>
+                <td class="whitespace-nowrap">
+                       <p>  {{total_expense|intcomma}} <p>
+                 </td>
+              </tr>
+
+
+              <tr class="border-b border-neutral-200 dark:border-white/10">
+                <td class="whitespace-nowrap font-medium justify-end ">
+                 <p class="font-bold">Branch payroll liabilities</p>
+
+                </td>
+                <td class="whitespace-nowrap">
+                    
+                 </td>
+              </tr>
+
+
+
+              {% for column in  bpl_columns%}
+             
+              <tr class="border-b border-neutral-200 dark:border-white/10">
+                <td class="whitespace-nowrap justify-end">
+                 {{column}}
+          
+                </td>
+                <td class="whitespace-nowrap">{{bpl|dict_get:column|intcomma}}</td>
+              </tr>
+
+              {% endfor %}
             
-           
+
             </tbody>
           </table>
         </div>
@@ -152,5 +170,20 @@
     </div>
   </div>
 
+  <script>
+    const employee_with_holding = document.getElementById("Social_Security")
+
+    var myArray = JSON.parse(String.parse(('{{ewh_columns}}')));
+    
+
+
+console.log("Hello world");
  
+  
+
+
+  </script>
+
+ 
+
 

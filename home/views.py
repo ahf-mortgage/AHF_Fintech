@@ -8,8 +8,19 @@ from utils.calc_res import (
                     calculate_gross_ahf_income,
                     gross_ahf_income,
                     branch_gross_income,
-                    get_gci_result
+                    get_gci_result,
+                    calcalate_total_expense
+
     )
+
+from utils.w2_branch import W2_brach_column_names
+from W2branchYearlyGross.models import (
+                                        Category,
+                                        EmployeeWithHoldings,
+                                        BranchPayrollLiabilities
+                                        )
+
+
 
 
 
@@ -68,11 +79,45 @@ def home(request):
         'annual_ahf_to_gci_result':annual_ahf_to_gci_result
         
     }
- 
+    
+
+
+
+    categories = Category.objects.all()
+    total_expense = calcalate_total_expense()
+    ewh = EmployeeWithHoldings.objects.all()
+    ewh_meta = EmployeeWithHoldings._meta
+    ewh_columns = [field.name for field in ewh_meta.get_fields()]
+    ewh_columns.remove('id')
+    ewh = ewh.values().first()
+    
+    
+    bpl = BranchPayrollLiabilities.objects.all()
+    bpl_meta = BranchPayrollLiabilities._meta
+    bpl_columns = [field.name for field in ewh_meta.get_fields()]
+    bpl_columns.remove('id')
+    bpl = bpl.values().first()
+  
+    
+
+
   
     context = {
+
+        'categories':categories,
+        'total_expense':total_expense,
+        
+        
+        'ewh':dict(ewh),
+        'ewh_columns':ewh_columns,
+        
+        'bpl':dict(bpl),
+        'bpl_columns':bpl_columns,
+        
+        
         'E23':E23,
         'revenue_share':revenue_share,
+        'W2_brach_column_names':W2_brach_column_names,
         'comp_plan_for_lower_limit_MAX_GCI':int(comp_plan.MAX_GCI),
         'ahf_loan_per_year':ahf.loan_per_year,
         'ahf_loan_per_month':ahf.loan_per_year / 12,
@@ -232,6 +277,10 @@ def change_ahf_loan(request):
     }
     return render(request,"home/index2.html",context)
     
+
+
+
+
     
 #S1 = M9 Number of loans
 #P1 = M7 Branch Yearly Gross Revenue

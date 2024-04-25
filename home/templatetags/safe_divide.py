@@ -12,4 +12,10 @@ def  safe_divide(value):
 @register.filter(name='divide_by_10')
 def  divide_by_10(value):
     return int(int(value)/10)
+
+
+
+@register.filter(name='dict_get')
+def dict_get(dictionary, key):
+    return dictionary.get(key)
  
