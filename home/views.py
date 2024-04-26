@@ -106,6 +106,7 @@ def home(request):
 
         'categories':categories,
         'total_expense':total_expense,
+        'min_compesate':comp_plan.Maximum_Compensation / 1000,
         
         
         'ewh':dict(ewh),

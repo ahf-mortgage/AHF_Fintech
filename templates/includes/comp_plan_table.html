@@ -1,5 +1,6 @@
 {% load humanize %}
 {% load static %}
+{% load safe_divide %}
 
 <style>
     .disabled {
@@ -29,21 +30,23 @@
                                 <td class="whitespace-nowrap px-6">{{comp_plan_for_lower_limit.Flat_Fee}}</td>
                             </tr>
                             <tr class="border-b border-neutral-200 bg-gray/[0.02] dark:border-white/10">
-                                <td class="whitespace-nowrap px-6 font-medium">Percentage (0.000% -
-                                    {{comp_plan_for_lower_limit.Percentage}}%)</td>
-                                <td class="whitespace-nowrap px-6">{{comp_plan_for_lower_limit.Percentage}}</td>
-                            </tr>
-                            <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10 bg-gray-200">
-                                <td class="whitespace-nowrap px-6 font-medium">Minimum Compensation ($0 -
-                                    ${{gci|intcomma}})</td>
+                                <td class="whitespace-nowrap px-6 font-medium">Percentage (0.000% -2.750%)</td>
                                 <td class="whitespace-nowrap px-6">
 
+                                    {{min_compesate}}%
+                                    
+                                  </td>
+                            </tr>
+                            <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10 bg-gray-200">
+                                <td class="whitespace-nowrap px-6 font-medium">Minimum Compensation ($0 -$2,750)</td>
+                                <td class="whitespace-nowrap px-6">
+                                      
                                 </td>
                             </tr>
 
 
                             <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
-                                <td class="whitespace-nowrap px-6 font-medium">Maximum Compensation (Min. Comp -
+                                <td class="whitespace-nowrap px-6 font-medium">Maximum Compensation (Min. Comp - $40,000)
 
                                 </td>
                                 <td class="whitespace-nowrap px-6">
@@ -51,19 +54,22 @@
                                 </td>
                             </tr>
 
+
+                           
 
                             <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
                                 <td class="whitespace-nowrap font-medium pl-6">Max</td>
+                                <form 
+                                action="{% url 'comp_plan_change_view' %}"
+                                 method="post"
+                                style="display: flex;justify-content:center;"
+                                class="pl-6"
+                                >
+                                {% csrf_token %}
                                 <td class="whitespace-nowrap">
-                                    <form 
-                                        action="{% url 'comp_plan_change_view' %}"
-                                         method="post"
-                                        style="display: flex;justify-content:center;"
-                                        class="pl-6"
-                                        >
-                                        {% csrf_token %}
+                                   
                                         <div 
-                                        class="relative mb-3"
+                                        class="ml-8 relative mb-3"
                                          data-twe-input-wrapper-init>
                                             <input 
                                                 type="text"

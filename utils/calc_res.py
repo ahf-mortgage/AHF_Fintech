@@ -14,7 +14,9 @@ def calculate_gross_ahf_income(loan_break_amount,comp_plan,commission):
     """
         ahf gross income commission 
     """
-    return ((275 * loan_break_amount.loan_break_point )/ 10000 + comp_plan.Flat_Fee )* commission * 21
+    # return ((275 * loan_break_amount.loan_break_point )/ 10000 + comp_plan.Flat_Fee )* commission * 21
+    return loan_break_amount.loan_break_point * commission
+    
 
 
 
