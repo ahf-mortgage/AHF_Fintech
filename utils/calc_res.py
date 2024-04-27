@@ -1,6 +1,5 @@
 
 from recruiter.models import Bps,Branch
-
 bps = Bps.objects.all().first().bps
 
 def calculate_annual_ahf_income(loan_break_amount,comp_plan,ahf_comission_amount):
@@ -44,8 +43,23 @@ def branch_gross_income(loan_break_amount,comp_plan,commission):
      #275 *  loan_amount_break. loan_amount_break/10000 + comp_plan.Flat_FEE  * M9
     # return ((275 * loan_break_amount.loan_break_point )/ 10000 + comp_plan.Flat_Fee )  * 48
     loans_per_year = Branch.objects.all().first().loan_per_year
-    # (bps*loan_break_point/10000 + flat_fee) * branch_commis_split* loans_per_year
-    return (bps*loan_break_amount.loan_break_point/10000)*commission * loans_per_year
+    annual_cap = AHF.objects.all().first().loan_per_year
+    
+    
+    total_commission = (bps*loan_break_amount.loan_break_point/10000) # 27500
+    ahf_commission = total_commission * (1 - commission)
+    branch_commission = total_commission * (commission)
+    if loans_per_year > annual_cap:
+        return annual_cap * branch_commission + total_commission * (loans_per_year - annual_cap)
+    else:
+        return loans_per_year * branch_commission 
+    
+                       
+                       
+    # if branch_loans_per_year > annual_cap:  
+    #     return (bps*loan_break_amount.loan_break_point/10000) * (branch_loans_per_year - annual_cap)  + annual_cap * (bps*loan_break_amount.loan_break_point/10000)*commission 
+    # else:
+    #      return (bps*loan_break_amount.loan_break_point/10000)*commission * branch_loans_per_year 
 
 
 
