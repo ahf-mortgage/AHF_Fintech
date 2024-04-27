@@ -13,7 +13,7 @@ from utils.calc_res import (
 
     )
 
-from utils.w2_branch import W2_brach_column_names
+from utils.w2_branch import W2_branch_column_names
 from W2branchYearlyGross.models import (
                                         Category,
                                         EmployeeWithHoldings,
@@ -33,7 +33,7 @@ def home(request):
     comp_plan        = CompPlan.objects.all().first()
     ahf              = AHF.objects.all().first() 
     branch           = Branch.objects.all().first() 
-    gci               = (comp_plan.Percentage * 100) * loan_break_point.loan_break_point/10000 + comp_plan.Flat_Fee
+    gci               = (comp_plan.Percentage * 100) * loan_break_point.loan_break_point/10000  #+ comp_plan.Flat_Fee
     
     
     
@@ -57,13 +57,15 @@ def home(request):
     
      #F7 * J9 -> E21 * D23 /10000 + comp_flat_fee * J9(constant loan/peryear)
     annual_ahf_cap =  calculate_annual_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
-    grocss_ahf_income = calculate_gross_ahf_income(loan_break_point,comp_plan,float(branch.commission))
-    grocss_income = gross_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
+    gross_ahf_income = calculate_gross_ahf_income(loan_break_point,comp_plan,float(branch.commission))
+    gross_income = calculate_gross_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
     branch_gross = branch_gross_income(loan_break_point,comp_plan,float(branch.commission))
-    
+    flat_fee_gci = int((comp_plan.Percentage * 100) * loan_break_point.loan_break_point / 10000) 
+    above_loan_break_point_ahf_commission = int(flat_fee_gci * (branch.commission))
+   
 
     
-    E23 = (275 * loan_break_point.loan_break_point )/ 10000 + comp_plan.Flat_Fee 
+    E23 = (bps.bps * loan_break_point.loan_break_point )/ 10000 + comp_plan.Flat_Fee 
     nums_loans = [math.ceil(get_gci_result(comp_plan, num) * float((1-branch.commission))) for num in loan_below_limits]
     annual_ahf_to_gci_result = [int(annual_ahf_cap)// num for num in  nums_loans]
     
@@ -73,8 +75,8 @@ def home(request):
     
     ahf_annual_cap_data = {
         'annual_ahf_cap':math.ceil(annual_ahf_cap),
-        'grocss_ahf_income':math.ceil(grocss_ahf_income),
-        'grocss_income': math.ceil(grocss_income),
+        'gross_ahf_income':math.ceil(gross_ahf_income),
+        'gross_income': math.ceil(gross_income),
         'branch_gross_income':math.ceil(branch_gross),
         'annual_ahf_to_gci_result':annual_ahf_to_gci_result
         
@@ -107,6 +109,8 @@ def home(request):
         'categories':categories,
         'total_expense':total_expense,
         'min_compesate':comp_plan.Maximum_Compensation / 1000,
+        'flat_fee_gci': flat_fee_gci, #+  comp_plan.Flat_Fee
+        'above_loan_break_point_ahf_commission':above_loan_break_point_ahf_commission,
         
         
         'ewh':dict(ewh),
@@ -118,7 +122,7 @@ def home(request):
         
         'E23':E23,
         'revenue_share':revenue_share,
-        'W2_brach_column_names':W2_brach_column_names,
+        'W2_branch_column_names':W2_branch_column_names,
         'comp_plan_for_lower_limit_MAX_GCI':int(comp_plan.MAX_GCI),
         'ahf_loan_per_year':ahf.loan_per_year,
         'ahf_loan_per_month':ahf.loan_per_year / 12,

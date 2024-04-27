@@ -7,51 +7,61 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    .middle-grid-container {
+/* Styles for the grid containers */
+.middle-grid-container {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-auto-flow: column;
+  grid-gap: 10px;
+  background-color: red;
+}
 
-      display: grid;
-      grid-template-columns: auto auto;
-      grid-auto-flow: column;
-      grid-gap: 10px;
-      background-color: red;
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto;
+  padding: 5px;
+}
 
+.w2-branch-grid-container {
+  display: grid;
+  grid-template-columns: 0.5fr auto;
+}
 
-    }
-    .grid-container {
-      display: grid;
-      grid-template-columns: auto auto auto auto auto;
-      padding: 5px;
-    } 
+/* Styles for the grid items */
+.comission-grid-item,
+.small-grid-item,
+.grid-item {
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 20px;
+  font-size: 30px;
+  text-align: center;
+}
 
-    .w2-branch-grid-container {
-      display: grid;
-      grid-template-columns: 0.5fr auto;
-     
+/* Responsive styles for small screens */
+@media (max-width: 480px) {
+  /* Adjust the middle-grid-container for small screens */
+  .middle-grid-container {
+    grid-template-columns: auto;
+    grid-auto-flow: row;
+  }
 
-    }
+  /* Adjust the grid-container for small screens */
+  .grid-container {
+    grid-template-columns: auto auto auto;
+  }
 
-    .comission-grid-item {
-      background-color: rgba(255, 255, 255, 0.8);
-      padding: 20px;
-      font-size: 30px;
-      text-align: center;
-      max-width: 100/2%;
-    }
-    .small-grid-item {
-      background-color: rgba(255, 255, 255, 0.8);
-      padding: 20px;
-      font-size: 30px;
-      text-align: center;
-      max-width: 100/4%;
-  
-    }
-    .grid-item {
-      background-color: rgba(255, 255, 255, 0.8);
-      padding: 20px;
-      font-size: 30px;
-      text-align: center;
-      width: max-content;
-    }
+  /* Adjust the w2-branch-grid-container for small screens */
+  .w2-branch-grid-container {
+    grid-template-columns: auto;
+  }
+
+  /* Adjust the grid items for small screens */
+  .comission-grid-item,
+  .small-grid-item,
+  .grid-item {
+    font-size: 20px;
+  }
+}
   </style>
 </head>
 
@@ -311,7 +321,7 @@
 
     
 
-      const gci_result = (comp_plan_percentage * 100) * num / 10000 + Number.parseFloat("{{comp_plan_for_lower_limit.Flat_Fee}}")
+      const gci_result = (comp_plan_percentage * 100) * num / 10000  //+ Number.parseFloat("{{comp_plan_for_lower_limit.Flat_Fee}}")
       const branch_amount = (Number.parseFloat("{{branch_amount}}") / 100)//Number.parseFloat("{{branch_commission_amount}}")
       const ahf_amount = 1 - (Number.parseFloat("{{branch_amount}}") / 100)
 

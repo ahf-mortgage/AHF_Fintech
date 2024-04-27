@@ -1,4 +1,4 @@
-W2_brach_column_names = [
+W2_branch_column_names = [
 "Net income before payroll",
 "W2 Taxable gross payroll",
 "Employee withholdings",

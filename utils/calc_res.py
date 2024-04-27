@@ -1,21 +1,29 @@
-#ahf_annual_amount = (((271(constant))*(loan_break_amount)/10000+comp_plan.Flat_plan)* ahf_comission_amount) *  21(constant)
 
+from recruiter.models import Bps,Branch
+
+bps = Bps.objects.all().first().bps
 
 def calculate_annual_ahf_income(loan_break_amount,comp_plan,ahf_comission_amount):
     """
        annual income commission 
     """
-    print(loan_break_amount.loan_break_point ," loan_break_amount.loan_break_point ", comp_plan.Flat_Fee,"  comp_plan.Flat_Fee ",ahf_comission_amount," ahf_comission_amount")
     return( (275 * loan_break_amount.loan_break_point )/ 10000 + comp_plan.Flat_Fee )* ahf_comission_amount * 21
 
 
 # branch_amount =  275 * loan_amout_break / 10000 + comp.Flat_Fee * branch.commission*  21
-def calculate_gross_ahf_income(loan_break_amount,comp_plan,commission):
+from recruiter.models import AHF
+def calculate_gross_ahf_income(loan_break_amount,comp_plan,commission,value = 275):
     """
         ahf gross income commission 
     """
-    # return ((275 * loan_break_amount.loan_break_point )/ 10000 + comp_plan.Flat_Fee )* commission * 21
-    return loan_break_amount.loan_break_point * commission
+    
+    
+    # return ((275 * loan_break_amount.loan_break_point )/ 10000 + comp_plan.Flat_Fee )* commission 
+    # return loan_break_amount.loan_break_point * commission
+    
+    # (275(need to be input variable)*loans_break_amount/10000+ Flat_fee) * branch_commission_spilit * loans_per_year
+    loans_per_year = AHF.objects.all().first().loan_per_year
+    return  ((value * loan_break_amount.loan_break_point )/ 10000 + comp_plan.Flat_Fee)* commission * loans_per_year
     
 
 
@@ -32,10 +40,12 @@ def gross_ahf_income(loan_break_amount,comp_plan,ahf_comission_amount):
     #IF(M9<=J9,M9*F7,I7)
     return   M9*(275 * loan_break_amount.loan_break_point /10000 + comp_plan.Flat_Fee) * 0.3 if M9 <= J9 else   calculate_annual_ahf_income(loan_break_amount,comp_plan,ahf_comission_amount)
 
-
 def branch_gross_income(loan_break_amount,comp_plan,commission):
      #275 *  loan_amount_break. loan_amount_break/10000 + comp_plan.Flat_FEE  * M9
-    return ((275 * loan_break_amount.loan_break_point )/ 10000 + comp_plan.Flat_Fee )  * 48
+    # return ((275 * loan_break_amount.loan_break_point )/ 10000 + comp_plan.Flat_Fee )  * 48
+    loans_per_year = Branch.objects.all().first().loan_per_year
+    # (bps*loan_break_point/10000 + flat_fee) * branch_commis_split* loans_per_year
+    return (bps*loan_break_amount.loan_break_point/10000)*commission * loans_per_year
 
 
 

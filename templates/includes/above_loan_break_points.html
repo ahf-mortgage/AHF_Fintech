@@ -28,7 +28,7 @@
                 GCI
                 <br>
 
-                Flat fee   ${{gci|intcomma}}
+                Flat fee   ${{flat_fee_gci|intcomma}}
             </th>
 
             <th scope="col" class="font-light" colspan="bg-gray-100">
@@ -45,7 +45,7 @@
                 Branch
                 <br>
                 
-                ${{ahf_annual_cap_data.grocss_ahf_income|intcomma}}
+                ${{above_loan_break_point_ahf_commission|intcomma}}
             </th>
 
         </tr>
@@ -73,6 +73,8 @@
             <td class="text-center whitespace-nowrap font-bold" id="G7"></td>
 
         </tr>
+
+
         <tr class="border-b border-neutral-200 dark:border-white/10">
 
             <td class="text-center whitespace-nowrap px-6 font-bold" id="D8">
@@ -137,6 +139,8 @@
 
         <tr class="border-b border-neutral-200 dark:border-white/10 bg-gray-100">
             <td class="text-center whitespace-nowrap px-6  font-bold" id="D13">
+
+                
                 {% if 225 < bps %} 225 {% else %} 0 {% endif %} </td>
             <td class="text-center whitespace-nowrap px-6 font-bold" id="E13"></td>
             <td class="text-center whitespace-nowrap px-6" id="F13">Cell</td>

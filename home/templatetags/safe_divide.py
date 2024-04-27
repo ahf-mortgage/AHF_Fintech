@@ -5,13 +5,20 @@ register = template.Library()
 
 @register.filter(name='safe_divide')
 def  safe_divide(value):
-    return round(int(value)/12,2)
+    return int(value)/12
  
  
  
 @register.filter(name='divide_by_10')
 def  divide_by_10(value):
-    return int(int(value)/10)
+    return round(int(value)/10,2)
+
+
+
+@register.filter(name='divide_by_12')
+def  divide_by_12(value):
+    return round(int(value)/12,2)
+
 
 
 
