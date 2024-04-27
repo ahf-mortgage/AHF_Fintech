@@ -84,7 +84,7 @@
         {{num}}
       </td>
       <td class="text-center whitespace-nowrap px-6">
-        {{ num|safe_divide }}
+        {{ num|safe_divide|floatformat:"2"}}
       </td>
 
       <td class="text-center whitespace-nowrap px-6" id="D2_{{num}}">
