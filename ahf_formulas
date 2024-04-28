@@ -72,6 +72,48 @@ N2 = ahf_annual_cap_data.branch_gross_income
 
 N33=IF($N$22<=R33,$N$22*Q33,T33)
 
+N22 =  (ahf_annual_cap_data.branch_gross_income - 20974) * 92.3199268694749% 
+Q33 = 0.6%
+R33 = 7000
+T33 = Q33*R33
+
+if N22 < 7000:
+	return N22 * 0.006
+else:
+	7000 *  0.006
+	
+	
+## CA Unemployment	
+N34=IF($N$22<=R34,$N$22*Q34,T34)
+R34 = 700
+T34 = Q34*R34
+Q34 = 6.2%
+R34 = 7000
+
+if N22 <= 700:
+	N22 * 6.2%
+else:
+	6.2% * 7000
+	
+	
+##Employment Training Tax (ETT) 	
+N35=IF($N$22<=R35,$N$22*Q35,T35)
+N22 =  (ahf_annual_cap_data.branch_gross_income - 20974) * 92.3199268694749% 
+R35 = 7000(need to be input)
+Q35 = 0.1%(need to be input)
+T35 = Q35 * R35
+
+
+if N22 <= R35:
+	N22 * 0.1%
+	
+else:
+	Q35 * R35
+
+
+
+
+
 
 
 

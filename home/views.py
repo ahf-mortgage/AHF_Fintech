@@ -12,7 +12,8 @@ from utils.calc_res import (
                     calculate_social_security,
                     calculate_total_expense,
                     calculate_medicare,
-                    calculate_fed_un_employ
+                    calculate_fed_un_employ,
+                    calculate_CA_Unemployment
 
     )
 
@@ -21,6 +22,7 @@ from W2branchYearlyGross.models import (
                                         Category,
                                         EmployeeWithholding,
                                         BranchPayrollLiabilities,
+                                        BranchPayrollLiabilitiesQ,
                                       
                                         )
 
@@ -70,7 +72,8 @@ def home(request):
     #  calculate_social_security(loan_break_amount,comp_plan,commission,above_loan_break_point_ahf_commission,percentage,small_percentage):
     social_security = calculate_social_security(loan_break_point,comp_plan,float(1 - branch.commission),above_loan_break_point_ahf_commission,0.923199268694749
 ,0.062) 
-    
+    CA_Unemployment = calculate_CA_Unemployment(branch_gross)
+    print("CA_Unemployment ",CA_Unemployment)
 
 
     
@@ -81,28 +84,31 @@ def home(request):
     revenue_share = round((branch.loan_per_year / ahf.loan_per_year) * 100,2)if (branch.loan_per_year / ahf.loan_per_year) < 1 else 100
     
     
-    
-    ahf_annual_cap_data = {
-        'annual_ahf_cap':math.ceil(annual_ahf_cap),
-        'gross_ahf_income':math.ceil(gross_ahf_income),
-        'gross_income': math.ceil(gross_income),
-        'branch_gross_income':math.ceil(branch_gross),
-        'annual_ahf_to_gci_result':annual_ahf_to_gci_result
         
-    }
+    bpl = BranchPayrollLiabilities.objects.all()
+    bplqs = BranchPayrollLiabilitiesQ.objects.all()
+    bpl_meta = BranchPayrollLiabilities._meta
+    bpl_columns = [field.name for field in BranchPayrollLiabilities._meta.get_fields()]
+    bpl_columns_index= [30 + index for index in range(1,len(bpl_columns))]
+    column_and_index_dict = {} 
+    column_and_bplqs_dict = {}
+    
+    for column,index in zip(bpl_columns,bpl_columns_index):
+        column_and_index_dict[column] = index
 
-    
-    w2_branch_yearly_gross_income_data = {
-        'social_security':social_security,
-        'calculate_fed_un_employ':calculate_fed_un_employ(branch_gross)
-    }
-    
-    
-    
-    
+    for column,q_value in zip(bpl_columns,bplqs):
+        column_and_bplqs_dict[column] = q_value
 
+    q_value = 0
+    q_value = sum([ b.value for b in bplqs])
 
-
+    print("debug ",q_value)
+        
+    
+    
+    bpl_columns.remove('id')
+    bpl = bpl.values().first()
+    
     categories = Category.objects.all()
     total_expense = calculate_total_expense()
     ewh = EmployeeWithholding.objects.all()
@@ -112,15 +118,28 @@ def home(request):
     ewh = ewh.values().first()
     
     
-    bpl = BranchPayrollLiabilities.objects.all()
-    bpl_meta = BranchPayrollLiabilities._meta
-    bpl_columns = [field.name for field in BranchPayrollLiabilities._meta.get_fields()]
-    bpl_columns.remove('id')
-    bpl = bpl.values().first()
+    
+    ahf_annual_cap_data = {
+        'annual_ahf_cap':math.ceil(annual_ahf_cap),
+        'gross_ahf_income':math.ceil(gross_ahf_income),
+        'gross_income': math.ceil(gross_income),
+        'branch_gross_income':math.ceil(branch_gross),
+        'annual_ahf_to_gci_result':annual_ahf_to_gci_result
+
+        
+    }
 
     
+    w2_branch_yearly_gross_income_data = {
+        'social_security':social_security,
+        'calculate_fed_un_employ':calculate_fed_un_employ(branch_gross),
+        'calculate_CA_Unemployment':CA_Unemployment,
+        'bplqs':bplqs,
+        'column_and_bplqs_dict':column_and_bplqs_dict,
+        'q_value': q_value 
+    }
 
-
+    
   
     context = {
 
@@ -129,6 +148,7 @@ def home(request):
         'min_compesate':comp_plan.Maximum_Compensation / 1000,
         'flat_fee_gci': flat_fee_gci, #+  comp_plan.Flat_Fee
         'above_loan_break_point_ahf_commission':above_loan_break_point_ahf_commission,
+        'column_and_index_dict':column_and_index_dict,
         
         
         'ewh':dict(ewh),

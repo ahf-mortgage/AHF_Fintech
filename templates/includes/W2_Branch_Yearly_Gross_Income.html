@@ -25,8 +25,9 @@
               <th scope="col" class=""></th>
             </tr>
 
-
+         
             <tr class="bg-gray-200">
+
               <th scope="col" class="w-auto justify-end">
                 W2 Branch Yearly Gross Income
               </th>
@@ -36,13 +37,33 @@
               <th scope="col" class="">
 
               </th>
+
+              <!-- O column -->
+              <th scope="col" class="">
+              
+              </th>
+
               <th scope="col" class="">
                 Number of Loans
               </th>
               <th scope="col" class="">
                 {{loan_per_year}}
               </th>
+
+              <!-- R column -->
+              <th scope="col" class="">
+                {{loan_per_year}}
+              </th>
+
+
+
             </tr>
+
+            =
+
+
+
+
           </thead>
 
 
@@ -149,7 +170,7 @@
             {% endfor %}
 
 
-            <tr class="border-b border-neutral-200 dark:border-white/10 bg-gray-500">
+            <tr class="w-full border-b border-neutral-200 dark:border-white/10 bg-gray-500">
               <td class="whitespace-nowrap font-medium justify-end ">
                 <p class="font-bold"> Net paycheck </p>
 
@@ -186,9 +207,63 @@
               {% elif column == 'Fed_Unemploy'%}
               <td class="whitespace-nowrap"> {{w2_branch_yearly_gross_income_data.calculate_fed_un_employ|intcomma}}</td>
 
+              {% elif column == 'CA_Unemployment'%}
+              <td class="whitespace-nowrap"> 
+                {{w2_branch_yearly_gross_income_data.calculate_CA_Unemployment|intcomma}} 
+              </td>
+
               {% else %}
               <td class="whitespace-nowrap"> {{bpl|dict_get:column|intcomma}}</td>
               {% endif %}
+              <td>
+
+              </td>
+              <td>
+                
+              </td>
+
+             
+              <td class="px-2">
+                {% if column  != 'total'%}
+                <form action="{% url 'W2branchYearlyGross:control_Q_value_branch_payroll_liabilities' %}" method="post">
+                  {% csrf_token %}
+                  
+                  <input 
+                    type="text"
+                    value="{{w2_branch_yearly_gross_income_data.column_and_bplqs_dict|dict_get:column}}"
+                    id="{{w2_branch_yearly_gross_income_data.column_and_bplqs_dict|dict_get:column}"
+                    name= "value"
+                  />
+                  <input 
+                    type="hidden"
+                    name="Q_value"
+                    value="Q{{column_and_index_dict|dict_get:column}}"
+                    id="Q{{column_and_index_dict|dict_get:column}}"
+                  >
+
+                </form>
+
+                {% else %}
+                <h1 class="font-bold">
+                    {{w2_branch_yearly_gross_income_data.q_value}}
+
+                </h1>
+
+                {% endif %}
+               
+              </td>
+
+              <td class="px-2">
+                $168,600
+              </td>
+
+              <td class="px-4">
+                capped
+              </td>
+
+              <td class="px-4">
+                $10,453
+              </td>
             </tr>
 
             {% endfor %}

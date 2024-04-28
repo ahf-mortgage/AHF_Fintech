@@ -56,3 +56,17 @@ class BranchPayrollLiabilities(models.Model):
         
     def __str__(self) -> str:
         return f"{self.Social_Security}"
+    
+    
+    
+
+class BranchPayrollLiabilitiesQ(models.Model):
+
+    value = models.FloatField()
+    Q_value = models.CharField(max_length=3,null= False,blank=False,unique=True)
+    # def save(self, *args, **kwargs):
+    #     self.value = self.value / 100
+    #     super().save(*args, **kwargs)
+    
+    def __str__(self) -> str:
+        return f"{self.value}"

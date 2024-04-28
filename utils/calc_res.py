@@ -122,7 +122,8 @@ def calculate_social_security(loan_break_amount,comp_plan,commission,above_loan_
 
 
 def calculate_medicare(branch_gross_income ):
-    if ((branch_gross_income - 20974) * (0.923199268694749) <=  200000):
+    N22 = (branch_gross_income - 20974) * (0.923199268694749)
+    if (N22<=  200000):
         
      return ((branch_gross_income - 20974) * (branch_gross_income )) * 0.014499999999999999
     
@@ -137,8 +138,25 @@ def calculate_fed_un_employ(branch_gross_income ):
         return N22 * 0.006
     else:
         return 7000 *  0.006
-        
     
+def calculate_CA_Unemployment(branch_gross_income):
+    N22 = (branch_gross_income - 20974) * (0.923199268694749)
+    if N22 <= 700:
+        return N22 * 0.062
+    else:
+        return 0.062 * 7000
+        
+        
+# def calculate_Employment_Training_Tax(branch_gross_income):
+    
+#     N22 = (branch_gross_income - 20974) * (0.923199268694749)
+#     if N22 <= R35:
+# 	    N22 * 0.1%
+	
+#     else:
+#         Q35 * R35
+
+        
 
 
     
