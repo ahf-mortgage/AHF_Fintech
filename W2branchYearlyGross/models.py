@@ -55,18 +55,15 @@ class BranchPayrollLiabilities(models.Model):
         
         
     def __str__(self) -> str:
-        return f"{self.Social_Security}"
+        return f"Social_Security {self.Social_Security}  Medicare {self.Medicare} Fed_Unemploy {self.Fed_Unemploy}"
     
     
     
 
 class BranchPayrollLiabilitiesQ(models.Model):
+	bpql = models.ForeignKey(BranchPayrollLiabilities,blank = True,null= True,unique = False,on_delete = models.CASCADE)
+	value = models.FloatField()
+	Q_value = models.CharField(max_length=3,null= False,blank=False,unique=True)
 
-    value = models.FloatField()
-    Q_value = models.CharField(max_length=3,null= False,blank=False,unique=True)
-    # def save(self, *args, **kwargs):
-    #     self.value = self.value / 100
-    #     super().save(*args, **kwargs)
-    
-    def __str__(self) -> str:
-        return f"{self.value}"
+	def __str__(self) -> str:
+		return f"{self.value}"

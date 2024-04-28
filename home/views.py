@@ -97,7 +97,12 @@ def home(request):
         column_and_index_dict[column] = index
 
     for column,q_value in zip(bpl_columns,bplqs):
-        column_and_bplqs_dict[column] = q_value
+        # if column != "id" or column != "branchpayrollliabilitiesq":
+        column_and_bplqs_dict[column] = q_value.value
+    column_and_bplqs_dict.pop("id")
+    column_and_bplqs_dict.pop("branchpayrollliabilitiesq")
+
+    print("column_and_bplqs_dict ",column_and_bplqs_dict)
 
     q_value = 0
     q_value = sum([ b.value for b in bplqs])
