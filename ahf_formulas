@@ -17,4 +17,23 @@ K8=IF(K10<=H10,E8*K10,H8+$C8*(K10-H$10))
 K10 = 96(need to be input box)
 H10 = loans_per_year
 
+C8 = bps * loan_break_amout /10000
+else case :
+	H8+$C8*(K10-H$10) 
+	
+	
+W2 Taxable gross payroll formulas
+Social Security = =IF($N$22<=R24,$N$22*Q24,T24)
+N22 = N20*Q22
+R24 = 168600 (need to be input)
+Q24 = 6.2% (need to be input)
+T24 = =Q24*R24
+
+N20 = N2-O17
+Q22 = 92.3199268694749% (need to be input)
+
+N2 = IF(K10<=H10,E8*K10,H8+$C8*(K10-H$10)) (branch gross income)
+O17 =E8(branch commission for above loans limit)
+	
+	
 

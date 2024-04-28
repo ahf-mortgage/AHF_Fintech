@@ -9,15 +9,17 @@ from utils.calc_res import (
                     gross_ahf_income,
                     branch_gross_income,
                     get_gci_result,
-                    calcalate_total_expense
+                    calculate_social_security,
+                    calculate_total_expense
 
     )
 
 from utils.w2_branch import W2_branch_column_names
 from W2branchYearlyGross.models import (
                                         Category,
-                                        EmployeeWithHoldings,
-                                        BranchPayrollLiabilities
+                                        EmployeeWithholding,
+                                        BranchPayrollLiabilities,
+                                      
                                         )
 
 
@@ -62,7 +64,10 @@ def home(request):
     branch_gross = branch_gross_income(loan_break_point,comp_plan,float(branch.commission))
     flat_fee_gci = int((comp_plan.Percentage * 100) * loan_break_point.loan_break_point / 10000) 
     above_loan_break_point_ahf_commission = int(flat_fee_gci * (branch.commission))
-   
+    # social_security = calculate_social_security()
+    #  calculate_social_security(loan_break_amount,comp_plan,commission,above_loan_break_point_ahf_commission,percentage,small_percentage):
+    social_security = calculate_social_security(loan_break_point,comp_plan,float(1 - branch.commission),above_loan_break_point_ahf_commission,0.9633,0.62) 
+    print("social security ",social_security)
 
     
     E23 = (bps.bps * loan_break_point.loan_break_point )/ 10000 + comp_plan.Flat_Fee 
@@ -86,9 +91,9 @@ def home(request):
 
 
     categories = Category.objects.all()
-    total_expense = calcalate_total_expense()
-    ewh = EmployeeWithHoldings.objects.all()
-    ewh_meta = EmployeeWithHoldings._meta
+    total_expense = calculate_total_expense()
+    ewh = EmployeeWithholding.objects.all()
+    ewh_meta = EmployeeWithholding._meta
     ewh_columns = [field.name for field in ewh_meta.get_fields()]
     ewh_columns.remove('id')
     ewh = ewh.values().first()
@@ -96,10 +101,11 @@ def home(request):
     
     bpl = BranchPayrollLiabilities.objects.all()
     bpl_meta = BranchPayrollLiabilities._meta
-    bpl_columns = [field.name for field in ewh_meta.get_fields()]
+    bpl_columns = [field.name for field in BranchPayrollLiabilities._meta.get_fields()]
     bpl_columns.remove('id')
     bpl = bpl.values().first()
-  
+    
+ 
     
 
 

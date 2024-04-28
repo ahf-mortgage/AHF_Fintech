@@ -12,8 +12,8 @@ class YourModelAdmin(admin.ModelAdmin):
     list_display = ('name','expense','category')
     
     
-from .models import EmployeeWithHoldings
-@admin.register(EmployeeWithHoldings)
+from .models import EmployeeWithholding
+@admin.register(EmployeeWithholding)
 class EmployeeWithHoldingsModelAdin(admin.ModelAdmin):
     list_filter = ('Social_Security', 'Medicare', 'CA_disability')
     list_display = ('Social_Security','Medicare','CA_disability')

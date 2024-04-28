@@ -84,25 +84,25 @@ percentage = 0
 increment = 0.5
 
      
-def get_percentage_recurssion():
-    if balance < break_point:
-        return percentage
-    if balance < 0:#if R39 is negative then S21 = S21 - increment
-        increment = increment/10
-        percentage -= increment
-        get_percentage_recurssion()
+# def get_percentage_recurssion():
+#     if balance < break_point:
+#         return percentage
+#     if balance < 0:#if R39 is negative then S21 = S21 - increment
+#         increment = increment/10
+#         percentage -= increment
+#         get_percentage_recurssion()
         
-    else:
-        increment = increment/ 10
-        percentage += increment
-        get_percentage_recurssion()
+#     else:
+#         increment = increment/ 10
+#         percentage += increment
+#         get_percentage_recurssion()
         
     
 
 
 
 from W2branchYearlyGross.models import Category
-def calcalate_total_expense():
+def calculate_total_expense():
     total_expense = 0
     categories = Category.objects.all()
     for cat in categories:
@@ -110,6 +110,13 @@ def calcalate_total_expense():
             total_expense += expense.expense
 
     return total_expense
+
+
+def calculate_social_security(loan_break_amount,comp_plan,commission,above_loan_break_point_ahf_commission,percentage,small_percentage):
+# Social Security = (branch gross income)-E8(branch commission for above loans limit)*92.3199268694749% (need to be input)*6.2% (need to be input)
+    branch_gross_income_num = branch_gross_income(loan_break_amount,comp_plan,commission)
+    branch_commission = above_loan_break_point_ahf_commission
+    return branch_gross_income_num - branch_commission * (percentage) * small_percentage
 
     
 

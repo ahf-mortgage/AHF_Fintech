@@ -15,18 +15,22 @@ class Expense(models.Model):
 	expense  = models.FloatField(blank = False,null = False)
 
 	def save(self, *args, **kwargs):
-		self.expense = 12 * self.expense
+		self.expense = self.expense
 		super().save(*args, **kwargs)
 
 	def __str__(self):
 		return f"{self.name}"
 
 
-class EmployeeWithHoldings(models.Model):
+class EmployeeWithholding(models.Model):
 	Social_Security =  models.FloatField()
 	Medicare        =  models.FloatField()
 	CA_disability   =  models.FloatField()
-	total 			= models.FloatField()
+	total 			= models.FloatField(blank=True,null=True)
+ 
+	class Meta:
+		verbose_name = "Employee Withholding"
+		verbose_name_plural = "Employee Withholding"
  
 	def save(self, *args, **kwargs):
 		self.total = self.Social_Security + self.Medicare + self.CA_disability 
@@ -38,11 +42,11 @@ class EmployeeWithHoldings(models.Model):
 
 
 class BranchPayrollLiabilities(models.Model):
-    Social_Security =  models.FloatField()
+    Social_Security =  models.FloatField("Social Security")
     Medicare        =  models.FloatField()
     Fed_Unemploy   =  models.FloatField()
-    Employment_Training_Tax =   models.FloatField()
-    CA_Unemployment =  models.FloatField()
+    CA_Unemployment =  models.FloatField("CA Unemployment")
+    Employment_Training_Tax =   models.FloatField("Employment Training Tax (ETT)")
     total 			=  models.FloatField(blank=True,null=True)
     
     def save(self, *args, **kwargs):

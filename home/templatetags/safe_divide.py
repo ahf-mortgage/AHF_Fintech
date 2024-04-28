@@ -25,4 +25,11 @@ def  divide_by_12(value):
 @register.filter(name='dict_get')
 def dict_get(dictionary, key):
     return dictionary.get(key)
- 
+
+
+
+@register.filter("split_word")
+def split_words(value):
+    print("split words",value, " ".join(value.split("_")))
+    return " ".join(value.split("_"))
+  
