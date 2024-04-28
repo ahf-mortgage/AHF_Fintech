@@ -10,7 +10,9 @@ from utils.calc_res import (
                     branch_gross_income,
                     get_gci_result,
                     calculate_social_security,
-                    calculate_total_expense
+                    calculate_total_expense,
+                    calculate_medicare,
+                    calculate_fed_un_employ
 
     )
 
@@ -66,8 +68,10 @@ def home(request):
     above_loan_break_point_ahf_commission = int(flat_fee_gci * (branch.commission))
     # social_security = calculate_social_security()
     #  calculate_social_security(loan_break_amount,comp_plan,commission,above_loan_break_point_ahf_commission,percentage,small_percentage):
-    social_security = calculate_social_security(loan_break_point,comp_plan,float(1 - branch.commission),above_loan_break_point_ahf_commission,0.9633,0.62) 
-    print("social security ",social_security)
+    social_security = calculate_social_security(loan_break_point,comp_plan,float(1 - branch.commission),above_loan_break_point_ahf_commission,0.923199268694749
+,0.062) 
+    
+
 
     
     E23 = (bps.bps * loan_break_point.loan_break_point )/ 10000 + comp_plan.Flat_Fee 
@@ -86,6 +90,15 @@ def home(request):
         'annual_ahf_to_gci_result':annual_ahf_to_gci_result
         
     }
+
+    
+    w2_branch_yearly_gross_income_data = {
+        'social_security':social_security,
+        'calculate_fed_un_employ':calculate_fed_un_employ(branch_gross)
+    }
+    
+    
+    
     
 
 
@@ -104,8 +117,7 @@ def home(request):
     bpl_columns = [field.name for field in BranchPayrollLiabilities._meta.get_fields()]
     bpl_columns.remove('id')
     bpl = bpl.values().first()
-    
- 
+
     
 
 
@@ -124,6 +136,7 @@ def home(request):
         
         'bpl':dict(bpl),
         'bpl_columns':bpl_columns,
+        'w2_branch_yearly_gross_income_data':w2_branch_yearly_gross_income_data,
         
         
         'E23':E23,

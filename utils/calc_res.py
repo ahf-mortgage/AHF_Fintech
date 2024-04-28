@@ -116,7 +116,30 @@ def calculate_social_security(loan_break_amount,comp_plan,commission,above_loan_
 # Social Security = (branch gross income)-E8(branch commission for above loans limit)*92.3199268694749% (need to be input)*6.2% (need to be input)
     branch_gross_income_num = branch_gross_income(loan_break_amount,comp_plan,commission)
     branch_commission = above_loan_break_point_ahf_commission
+    # (((branch gross income)) - (branch commission for above loans limit) *92.3199268694749% (need to be input) * (6.2% (need to be input))
+
     return branch_gross_income_num - branch_commission * (percentage) * small_percentage
+
+
+def calculate_medicare(branch_gross_income ):
+    if ((branch_gross_income - 20974) * (0.923199268694749) <=  200000):
+        
+     return ((branch_gross_income - 20974) * (branch_gross_income )) * 0.014499999999999999
+    
+    else :
+        return  (200000 *  0.014499999999999999) +(0.009000000000000001)*((branch_gross_income - 20974) * 0.923199268694749)-200000
+    
+    
+    
+def calculate_fed_un_employ(branch_gross_income ):
+    N22 = (branch_gross_income - 20974) * (0.923199268694749)
+    if N22 < 7000:
+        return N22 * 0.006
+    else:
+        return 7000 *  0.006
+        
+    
+
 
     
 

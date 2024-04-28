@@ -179,9 +179,16 @@
               <td class="whitespace-nowrap justify-end">
                 {{column|split_word}}
 
-              </td>
-              
+            
+              {% if column == 'Social_Security' %}
+                <td class="whitespace-nowrap"> {{w2_branch_yearly_gross_income_data.social_security|intcomma}}</td>
+
+              {% elif column == 'Fed_Unemploy'%}
+              <td class="whitespace-nowrap"> {{w2_branch_yearly_gross_income_data.calculate_fed_un_employ|intcomma}}</td>
+
+              {% else %}
               <td class="whitespace-nowrap"> {{bpl|dict_get:column|intcomma}}</td>
+              {% endif %}
             </tr>
 
             {% endfor %}

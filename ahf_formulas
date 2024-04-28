@@ -29,11 +29,75 @@ R24 = 168600 (need to be input)
 Q24 = 6.2% (need to be input)
 T24 = =Q24*R24
 
+
 N20 = N2-O17
 Q22 = 92.3199268694749% (need to be input)
 
+
 N2 = IF(K10<=H10,E8*K10,H8+$C8*(K10-H$10)) (branch gross income)
 O17 =E8(branch commission for above loans limit)
+
+social_security = (N20*Q22) * (6.2% (need to be input))
+social_securty= ((N2-O17)*Q22) * (6.2% (need to be input))
+social_security =(((branch gross income)) - (branch commission for above loans limit) *92.3199268694749% (need to be input) * (6.2% (need to be input))
+
+
+##Medicare
+
+N25  =IF($N$22<=R25,$N$22*Q25,T25+$U$25*($N$22-$R$25))   
+
+
+
+
+#pass 1
+N22 = N20*Q22 = (ahf_annual_cap_data.branch_gross_income - 20974) * 92.3199268694749%
+T25 =Q25*R25 =(200000 * 1.45% )
+R25 = 200000
+Q25 = 1.45%
+
+U25 = 0.9%
+
+
+
+#pass 2
+N20=N2-O17 = ahf_annual_cap_data.branch_gross_income - 20974
+Q22= 92.3199268694749%
+
+N2 = ahf_annual_cap_data.branch_gross_income
+017 = 20974
+
+
+
+##Fed Unemploy
+
+N33=IF($N$22<=R33,$N$22*Q33,T33)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	
 	
 
