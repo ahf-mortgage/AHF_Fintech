@@ -23,6 +23,7 @@ from W2branchYearlyGross.models import (
                                         EmployeeWithholding,
                                         BranchPayrollLiabilities,
                                         BranchPayrollLiabilitiesQ,
+                                       BranchPayrollLiabilitieR
                                 
                                         )
 
@@ -83,13 +84,17 @@ def home(request):
     
     
         
-    bpl = BranchPayrollLiabilities.objects.all()
+    bpl   = BranchPayrollLiabilities.objects.all()
     bplq  =  BranchPayrollLiabilitiesQ.objects.all()
+    bplr  =  BranchPayrollLiabilitieR.objects.all().first()
     bpl_meta = BranchPayrollLiabilities._meta
     bpl_columns = [field.name for field in BranchPayrollLiabilities._meta.get_fields()]
     bpl_columns_index= [30 + index for index in range(1,len(bpl_columns))]
     column_and_index_dict = {} 
     column_and_bplqs_dict = {}
+    bplqr_dict = {}
+    
+    print(" bplqr_dict ",bplqr_dict)
     
     for column,index in zip(bpl_columns,bpl_columns_index):
         column_and_index_dict[column] = index
@@ -97,6 +102,18 @@ def home(request):
         
     for column,q_value in zip(bpl_columns,bplq):
         column_and_bplqs_dict[column] = q_value
+        
+    bpl_columns.remove('branchpayrollliabilitiesq')
+ 
+    for column in bpl_columns:
+        bplqr_dict[column] = getattr(bplr,column)
+        
+    print(bplqr_dict ," bpqlr dict")
+        
+        
+  
+
+    
     
     
     bpl_columns.remove('id')
@@ -119,7 +136,8 @@ def home(request):
         'gross_ahf_income':math.ceil(gross_ahf_income),
         'gross_income': math.ceil(gross_income),
         'branch_gross_income':math.ceil(branch_gross),
-        'annual_ahf_to_gci_result':annual_ahf_to_gci_result
+        'annual_ahf_to_gci_result':annual_ahf_to_gci_result,
+        
         
     }
 
@@ -128,7 +146,9 @@ def home(request):
         'social_security':social_security,
         'calculate_fed_un_employ':calculate_fed_un_employ(branch_gross),
         'calculate_CA_Unemployment':CA_Unemployment,
-        'column_and_bplqs_dict':column_and_bplqs_dict
+        'column_and_bplqs_dict':column_and_bplqs_dict,
+        'bplqr_dict':bplqr_dict, 
+      
     }
 
     
@@ -141,6 +161,8 @@ def home(request):
         'flat_fee_gci': flat_fee_gci, #+  comp_plan.Flat_Fee
         'above_loan_break_point_ahf_commission':above_loan_break_point_ahf_commission,
         'column_and_index_dict':column_and_index_dict,
+        'bplqr':bplqr_dict,
+        'bplqr_total': sum(bplqr_dict.values()),
         
         
         'ewh':dict(ewh),

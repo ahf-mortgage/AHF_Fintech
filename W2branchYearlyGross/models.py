@@ -67,3 +67,23 @@ class BranchPayrollLiabilitiesQ(models.Model):
 
 	def __str__(self) -> str:
 		return f"{self.value}"
+
+
+
+
+class BranchPayrollLiabilitieR(models.Model):
+    Social_Security =  models.FloatField("Social Security")
+    Medicare        =  models.FloatField()
+    Fed_Unemploy   =  models.FloatField()
+    CA_Unemployment =  models.FloatField("CA Unemployment")
+    Employment_Training_Tax =   models.FloatField("Employment Training Tax (ETT)")
+    total 			=  models.FloatField(blank=True,null=True)
+    
+    def save(self, *args, **kwargs):
+        self.total = float(self.Social_Security) + float(self.Medicare) + float(self.Fed_Unemploy) +  float(self.Employment_Training_Tax) + float(self.CA_Unemployment)
+        super().save(*args, **kwargs)
+        
+        
+    def __str__(self) -> str:
+        return f"Social_Security"
+    

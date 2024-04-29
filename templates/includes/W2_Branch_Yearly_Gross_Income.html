@@ -59,7 +59,6 @@
 
             </tr>
 
-      
           </thead>
 
 
@@ -219,7 +218,7 @@
               </td>
 
              
-              <td class="px-2">
+              <td class="pl-2">
                 {% if column  != 'total'%}
                 <form action="{% url 'W2branchYearlyGross:control_Q_value_branch_payroll_liabilities' %}" method="post">
                   {% csrf_token %}
@@ -238,26 +237,51 @@
                   >
 
                 </form>
-
                 {% else %}
                 <h1 class="font-bold">
                     {{w2_branch_yearly_gross_income_data.q_value}}
-
                 </h1>
-
                 {% endif %}
                
               </td>
 
-              <td class="px-2">
-                $168,600
+              <td class="pl-2">
+
+                {% if column  != 'total'%}
+                <form action="{% url 'W2branchYearlyGross:control_R_value_branch_payroll_liabilities' %}" method="post">
+                  {% csrf_token %}
+                  
+                  <input 
+                    type="text"
+                    value="{{bplqr|dict_get:column}}"
+                    id="{{column}}"
+                    name= "value"
+                  />
+                  <input 
+                    type="hidden"
+                    name="column"
+                    value="{{column}}"
+                   
+                  >
+
+                </form>
+
+                {% else %}
+                <h1 class="font-bold">
+                
+                    {{bplqr_total}}
+
+                </h1>
+
+                {% endif %}
+                
               </td>
 
-              <td class="px-4">
+              <td class="pr-4">
                 capped
               </td>
 
-              <td class="px-4">
+              <td class="pr-4">
                 $10,453
               </td>
             </tr>
