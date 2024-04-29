@@ -34,9 +34,9 @@ class BranchPayrollLiabilitieR (admin.ModelAdmin):
     list_filter = ('Social_Security', 'Medicare')
     
     
-from .models import BranchPayrollLiabilitiesQ
-@admin.register(BranchPayrollLiabilitiesQ)
-class BranchPayrollLiabilitiesQ(admin.ModelAdmin):
-    # list_filter = ('Social_Security', 'Medicare', 'CA_disability')
-    list_filter = ('value',)
+from .models import BranchPayrollLiabilitieQ
+@admin.register(BranchPayrollLiabilitieQ)
+class BranchPayrollLiabilitieQ(admin.ModelAdmin):
+    list_filter = ('Social_Security', 'Medicare')
+   
 

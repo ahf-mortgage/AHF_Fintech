@@ -217,7 +217,9 @@
                 
               </td>
 
-             
+             <p>
+
+             </p>
               <td class="pl-2">
                 {% if column  != 'total'%}
                 <form action="{% url 'W2branchYearlyGross:control_Q_value_branch_payroll_liabilities' %}" method="post">
@@ -225,22 +227,22 @@
                   
                   <input 
                     type="text"
-                    value="{{w2_branch_yearly_gross_income_data.column_and_bplqs_dict|dict_get:column}}"
-                    id="{{w2_branch_yearly_gross_income_data.column_and_bplqs_dict|dict_get:column}"
+                    value="{{bplq_dict|dict_get:column}}"
+                    id="{{column}}"
                     name= "value"
                   />
-                  <input 
-                    type="hidden"
-                    name="Q_value"
-                    value="Q{{column_and_index_dict|dict_get:column}}"
-                   
-                  >
+                  
+                <input 
+                type="hidden"
+                name="column"
+                value="{{column}}"
+              />
 
-                </form>
+              </form>
                 {% else %}
-                <h1 class="font-bold">
-                    {{w2_branch_yearly_gross_income_data.q_value}}
-                </h1>
+              
+                    {{bplq_total}}
+                
                 {% endif %}
                
               </td>
@@ -269,7 +271,7 @@
                 {% else %}
                 <h1 class="font-bold">
                 
-                    {{bplqr_total}}
+                    {{bplr_total}}
 
                 </h1>
 

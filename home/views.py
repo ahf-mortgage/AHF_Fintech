@@ -22,7 +22,7 @@ from W2branchYearlyGross.models import (
                                         Category,
                                         EmployeeWithholding,
                                         BranchPayrollLiabilities,
-                                        BranchPayrollLiabilitiesQ,
+                                        BranchPayrollLiabilitieQ,
                                        BranchPayrollLiabilitieR
                                 
                                         )
@@ -85,7 +85,7 @@ def home(request):
     
         
     bpl   = BranchPayrollLiabilities.objects.all()
-    bplq  =  BranchPayrollLiabilitiesQ.objects.all()
+    bplq  =  BranchPayrollLiabilitieQ.objects.all().first()
     bplr  =  BranchPayrollLiabilitieR.objects.all().first()
     bpl_meta = BranchPayrollLiabilities._meta
     bpl_columns = [field.name for field in BranchPayrollLiabilities._meta.get_fields()]
@@ -93,27 +93,24 @@ def home(request):
     column_and_index_dict = {} 
     column_and_bplqs_dict = {}
     bplqr_dict = {}
+    bplq_dict = {}
     
-    print(" bplqr_dict ",bplqr_dict)
+    
     
     for column,index in zip(bpl_columns,bpl_columns_index):
         column_and_index_dict[column] = index
         
-        
-    for column,q_value in zip(bpl_columns,bplq):
-        column_and_bplqs_dict[column] = q_value
-        
-    bpl_columns.remove('branchpayrollliabilitiesq')
- 
     for column in bpl_columns:
         bplqr_dict[column] = getattr(bplr,column)
         
-    print(bplqr_dict ," bpqlr dict")
         
+    for column in bpl_columns:
+        bplq_dict[column] = getattr(bplq,column)
+        
+        
+
         
   
-
-    
     
     
     bpl_columns.remove('id')
@@ -162,7 +159,9 @@ def home(request):
         'above_loan_break_point_ahf_commission':above_loan_break_point_ahf_commission,
         'column_and_index_dict':column_and_index_dict,
         'bplqr':bplqr_dict,
-        'bplqr_total': sum(bplqr_dict.values()),
+        'bplq_dict':bplq_dict,
+        'bplr_total': sum(bplqr_dict.values()),
+        'bplq_total': sum(bplq_dict.values()),
         
         
         'ewh':dict(ewh),

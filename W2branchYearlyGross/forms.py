@@ -1,7 +1,7 @@
 from django import forms
-from .models import BranchPayrollLiabilitiesQ
+from .models import BranchPayrollLiabilitieQ
 
 class BranchPayrollLiabilitiesQForm(forms.ModelForm):
     class Meta:
-        model = BranchPayrollLiabilitiesQ
-        fields = "value","Q_value"
+        model = BranchPayrollLiabilitieQ
+        fields = "__all__"
