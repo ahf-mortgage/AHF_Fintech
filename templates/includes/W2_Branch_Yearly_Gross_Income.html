@@ -8,94 +8,16 @@
     width: 100px;
   }
 </style>
+
+
+{% include 'includes/education_and_training.html' %}
 <div class="flex flex-col">
   <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
     <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
       <div class="overflow-hidden">
         <table class="min-w-full text-center text-sm font-light text-surface dark:text-white">
-          <thead class="border-b border-neutral-200 font-medium dark:border-white/10">
-
-            <tr class="bg-white-200" style="height:20px;margin-bottom: 50px;">
-              <th scope="col" class="">
-
-              </th>
-              <th scope="col" class=""></th>
-              <th scope="col" class=""></th>
-              <th scope="col" class=""></th>
-              <th scope="col" class=""></th>
-            </tr>
-
-         
-            <tr class="bg-gray-200">
-
-              <th scope="col" class="w-auto justify-end">
-                W2 Branch Yearly Gross Income
-              </th>
-              <th scope="col" class="">
-                ${{ahf_annual_cap_data.branch_gross_income|intcomma}}
-              </th>
-              <th scope="col" class="">
-
-              </th>
-
-              <!-- O column -->
-              <th scope="col" class="">
-              
-              </th>
-
-              <th scope="col" class="">
-                Number of Loans
-              </th>
-              <th scope="col" class="">
-                {{loan_per_year}}
-              </th>
-
-              <!-- R column -->
-              <th scope="col" class="">
-                {{loan_per_year}}
-              </th>
-
-
-
-            </tr>
-
-          </thead>
-
-
+        
           <tbody>
-
-            {% for category in categories %}
-            <tr class="flex font-bold border-b border-neutral-200 dark:border-white/10">
-              <td>
-                <p>
-                  {{category}}
-                </p>
-              </td>
-
-              <td>
-                <p>
-                
-                </p>
-              </td>
-            </tr>
-            
-            {% for expense in category.expense.all %}
-
-            <tr class="flex space-between px-5 min-w-full text-center text-sm font-light text-surface dark:text-white"
-              style="flex-direction: row;justify-content:space-between;">
-
-              <td class="whitespace-nowrap justify-end">
-                {{expense|intcomma}}
-
-              </td>
-
-              <td class="flex flex-start px-2">
-                {{expense.expense|intcomma}}
-              </td>
-            </tr>
-            {% endfor %}
-          {% endfor %}
-
 
             <tr class="border-b border-neutral-200 dark:border-white/10">
               <td class="whitespace-nowrap font-medium justify-end ">
@@ -103,7 +25,8 @@
 
               </td>
               <td class="whitespace-nowrap">
-                <p> {{total_expense|intcomma}}
+                <p>
+                  {{total_expense|intcomma}}
                 <p>
               </td>
             </tr>

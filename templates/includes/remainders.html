@@ -1,3 +1,43 @@
+{% for category in categories %}
+<tr class="flex font-bold border-b border-neutral-200 dark:border-white/10">
+  <td>
+    <p>
+  {{category}} 
+    </p>
+  </td>
+
+  <td>
+    <p>
+    
+    </p>
+  </td>
+</tr>
+
+{% for expense in category.expense.all %}
+<tr class="flex space-between px-5 min-w-full text-center text-sm font-light text-surface dark:text-white"
+  style="flex-direction: row;justify-content:space-between;">
+  
+  <td class="whitespace-nowrap justify-end px-8">
+    {{expense|intcomma}}
+  </td>
+  <td class="flex flex-start px-8">
+    {{expense.expense|intcomma}}
+  </td>
+</tr>
+{% endfor %}
+{% endfor %}
+
+
+
+
+
+
+
+
+
+
+
+
 <br />
 <br />
 <br />
