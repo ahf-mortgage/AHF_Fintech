@@ -23,7 +23,7 @@ from W2branchYearlyGross.models import (
                                         EmployeeWithholding,
                                         BranchPayrollLiabilities,
                                         BranchPayrollLiabilitiesQ,
-                                      
+                                
                                         )
 
 
@@ -39,7 +39,7 @@ def home(request):
     comp_plan        = CompPlan.objects.all().first()
     ahf              = AHF.objects.all().first() 
     branch           = Branch.objects.all().first() 
-    gci               = (comp_plan.Percentage * 100) * loan_break_point.loan_break_point/10000  #+ comp_plan.Flat_Fee
+    gci              = (comp_plan.Percentage * 100) * loan_break_point.loan_break_point/10000  #+ comp_plan.Flat_Fee
     
     
     
@@ -73,20 +73,18 @@ def home(request):
     social_security = calculate_social_security(loan_break_point,comp_plan,float(1 - branch.commission),above_loan_break_point_ahf_commission,0.923199268694749
 ,0.062) 
     CA_Unemployment = calculate_CA_Unemployment(branch_gross)
-    print("CA_Unemployment ",CA_Unemployment)
-
-
+  
     
     E23 = (bps.bps * loan_break_point.loan_break_point )/ 10000 + comp_plan.Flat_Fee 
     nums_loans = [math.ceil(get_gci_result(comp_plan, num) * float((1-branch.commission))) for num in loan_below_limits]
     annual_ahf_to_gci_result = [int(annual_ahf_cap)// num for num in  nums_loans]
     
-    revenue_share = round((branch.loan_per_year / ahf.loan_per_year) * 100,2)if (branch.loan_per_year / ahf.loan_per_year) < 1 else 100
+    revenue_share = round((branch.loan_per_year / ahf.loan_per_year) * 100,2) if (branch.loan_per_year / ahf.loan_per_year) < 1 else 100
     
     
         
     bpl = BranchPayrollLiabilities.objects.all()
-    bplqs = BranchPayrollLiabilitiesQ.objects.all()
+    bplq  =  BranchPayrollLiabilitiesQ.objects.all()
     bpl_meta = BranchPayrollLiabilities._meta
     bpl_columns = [field.name for field in BranchPayrollLiabilities._meta.get_fields()]
     bpl_columns_index= [30 + index for index in range(1,len(bpl_columns))]
@@ -95,20 +93,10 @@ def home(request):
     
     for column,index in zip(bpl_columns,bpl_columns_index):
         column_and_index_dict[column] = index
-
-    for column,q_value in zip(bpl_columns,bplqs):
-        # if column != "id" or column != "branchpayrollliabilitiesq":
-        column_and_bplqs_dict[column] = q_value.value
-    column_and_bplqs_dict.pop("id")
-    column_and_bplqs_dict.pop("branchpayrollliabilitiesq")
-
-    print("column_and_bplqs_dict ",column_and_bplqs_dict)
-
-    q_value = 0
-    q_value = sum([ b.value for b in bplqs])
-
-    print("debug ",q_value)
         
+        
+    for column,q_value in zip(bpl_columns,bplq):
+        column_and_bplqs_dict[column] = q_value
     
     
     bpl_columns.remove('id')
@@ -122,6 +110,8 @@ def home(request):
     ewh_columns.remove('id')
     ewh = ewh.values().first()
     
+ 
+    
     
     
     ahf_annual_cap_data = {
@@ -130,7 +120,6 @@ def home(request):
         'gross_income': math.ceil(gross_income),
         'branch_gross_income':math.ceil(branch_gross),
         'annual_ahf_to_gci_result':annual_ahf_to_gci_result
-
         
     }
 
@@ -139,9 +128,7 @@ def home(request):
         'social_security':social_security,
         'calculate_fed_un_employ':calculate_fed_un_employ(branch_gross),
         'calculate_CA_Unemployment':CA_Unemployment,
-        'bplqs':bplqs,
-        'column_and_bplqs_dict':column_and_bplqs_dict,
-        'q_value': q_value 
+        'column_and_bplqs_dict':column_and_bplqs_dict
     }
 
     
