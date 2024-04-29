@@ -10,9 +10,9 @@ class Category(models.Model):
 
 
 class Expense(models.Model):
-	category = models.ForeignKey(Category, related_name = "expense", on_delete = models.CASCADE)
-	name = models.CharField(max_length = 100)
-	expense  = models.FloatField(blank = False,null = False)
+	category    = models.ForeignKey(Category, related_name = "expense", on_delete = models.CASCADE)
+	name        = models.CharField(max_length = 100)
+	expense     = models.FloatField(blank = False,null = False)
 
 	def save(self, *args, **kwargs):
 		self.expense = self.expense

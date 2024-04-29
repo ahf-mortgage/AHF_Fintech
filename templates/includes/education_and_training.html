@@ -42,10 +42,7 @@
                 
                 </th>
 
-
-
-            
-                  <th scope="col" class="">
+                <th scope="col" class="">
                     Number of Loans
                   </th>
                   <th scope="col" class="">
@@ -82,7 +79,36 @@
                     {{expense|intcomma}}
                 </td>
                 <td class="flex flex-start">
-                    {{expense.expense|intcomma}}
+
+
+                <form action="{% url 'W2branchYearlyGross:control_expense' %}" method="post" class="flex flex-col">
+                  {% csrf_token %}
+                  <div class="relative mb-3" data-twe-input-wrapper-init>
+                    <input 
+                      type="text"
+                      class="peer block min-h-[auto] rounded border-0 bg-transparent leading-[1.6] outline-none transition-all duration-200 ease-linear focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
+                      value="{{expense.expense}}"
+                      id="category_expense"
+                      name="category_expense"
+    
+                  />
+
+                  <input 
+                  type="hidden"
+                  name="category"
+                  value="{{category}}"
+                  
+                  />
+
+                  <input 
+                  type="hidden"
+                  name="expense"
+                  value="{{expense}}"
+              
+                  />
+                 
+                  </div>
+                </form>
                 </td>
                 </tr>
             {% endfor %}

@@ -1,6 +1,6 @@
 
 from django.shortcuts import render,redirect
-from .models import BranchPayrollLiabilitieQ, BranchPayrollLiabilitieR
+from .models import BranchPayrollLiabilitieQ, BranchPayrollLiabilitieR,Category,Expense
 from .forms import BranchPayrollLiabilitiesQForm
 
 def control_Q_value_branch_payroll_liabilities(request):
@@ -43,6 +43,37 @@ def control_R_value_branch_payroll_liabilities(request):
         return redirect("/")
   
     return redirect("/")
+
+
+
+
+
+
+def control_expense(request):
+    
+    """
+        Education and training
+        Licensing fees
+        Advertising & Marketing
+    """
+    category = Category.objects.all()
+    expense = Expense.objects.all()
+    if request.method == "POST":
+        category_name = request.POST.get('category')
+        expense_name  = request.POST.get('expense')
+        category_expense = request.POST.get('category_expense')
+        try:
+            category = Category.objects.filter(name = category_name).first()
+            expense = Expense.objects.filter(category = category ,name = expense_name).first()
+        except Category.DoesNotExist or Expense.DoesNotExist:
+            raise ValueError("not found")
+        expense.expense = float(category_expense)
+        expense.save()
+        
+        return redirect("/")
+    return redirect("/")
+  
+        
   
         
         
