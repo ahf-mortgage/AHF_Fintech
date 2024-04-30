@@ -1,86 +1,163 @@
 {% load humanize %}
 
-<p class="mb-0 mt-0 text-base font-light leading-relaxed bg-gray-300">
-    Loan amount breakpoint ${{loan_break_point|intcomma}}
-</p>
-
-<div class="flex justify-between">
-    <p class="mb-0 mt-0 text-base leading-relaxed font-bold">
-        Above ${{loan_break_point|intcomma}}
-    </p>
-    <p class="mb-0 mt-0 text-base leading-relaxed font-bold">
-        branch commission
-    </p>
-
-</div>
-
-
 <table class="min-w-full text-start text-sm font-light text-surface dark:text-white">
     <thead class="border-b border-neutral-200 dark:border-white/10">
 
 
-        <tr>
-            
-            <th scope="col" class="w-32">
-             
+        <tr scope="col" class="min-w-full  bg-gray-200 m-4">
+            <th colspan="5" class="space-around min-w-full text-center">
+                <p class="pl-10 text-center">
+                    Loan Amount breakpoint ${{loan_break_point|intcomma}}
+                </p>
             </th>
-            <th scope="col" class="border border-black px-0 w-32">
+            <th class="px-6"></th>
+            <th class="px-6"></th>
+            <th class="px-6"></th>
+            <th class="px-6"></th>
+
+
+            <th class="px-6"></th>
+            <th class="px-6"></th>
+
+            <th class="px-6"></th>
+            <th class="px-6"></th>
+
+
+        </tr>
+
+
+        <tr scope="col" class="min-w-full  bg-gray-400 m-4">
+            <th colspan="5" class="space-around min-w-full text-center">
+                <p class="pl-10 text-center">
+                    Above ${{loan_break_point|intcomma}}
+                </p>
+            </th>
+            <th class="px-6"></th>
+            <th class="px-6"></th>
+            <th class="px-6"></th>
+            <th class="px-6"></th>
+
+
+            <th class="px-6"></th>
+            <th class="px-6"></th>
+
+            <th class="px-6"></th>
+            <th class="max-w-full">
+                Single Loan Branch Commission
+            </th>
+
+
+        </tr>
+
+
+
+        <tr scope="col" class="min-w-full  bg-gray-100 m-4">
+            <th colspan="5" class="space-around min-w-full text-center">
                 GCI
                 <br>
 
-                Flat fee   ${{flat_fee_gci|intcomma}}
+                Flat fee ${{flat_fee_gci|intcomma}}
             </th>
-
-            <th scope="col" class="font-light" colspan="bg-gray-100">
+            <th class="">
                 AHF
                 <br>
-
                 ${{ahf_commission|intcomma}}
-
-
-
+            </th>
+            <th class="px-6">
 
             </th>
-            <th class="px-3 py-2" colspan="5">
+            <th class="px-6"></th>
+            <th class="px-6"></th>
+
+
+            <th class="px-6"></th>
+            <th class="px-6"></th>
+
+            <th class="px-6"></th>
+            <th class="max-w-full">
                 Branch
                 <br>
-                
                 ${{above_loan_break_point_ahf_commission|intcomma}}
             </th>
 
+
         </tr>
 
-        <tr>
 
-            <th scope="col" class="w-32">Bps</th>
-            <th scope="col">Loan amount</th>
-            <th scope="col" class="font-light">{{ahf_amount}}%</th>
 
-            <th scope="col">{{branch_amount}}%</th>
+        <tr scope="col" class="min-w-full  bg-gray-100 m-4">
+            <th colspan="5" class="space-around min-w-full text-center">
+             Bps
+            </th>
+
+            <th class="">
+                Loan amount
+            </th>
+
+            <th class="px-6">
+                {{ahf_amount}}%
+            </th>
+
+            <th class="px-6"></th>
+
+            <th class="px-6"></th>
+
+
+            <th class="px-6"></th>
+
+            <th class="px-6"></th>
+
+            <th class="px-6"></th>
+
+            <th class="max-w-full">
+            {{branch_amount}}%
+            </th>
+
+
         </tr>
+
+
+
+     
     </thead>
 
 
-    <tbody>
-        <tr class="border-b border-neutral-200 dark:border-white/10 bg-gray-100">
-
-            <td class="text-center whitespace-nowrap font-bold" id="D7">
+    <tbody class="min-w-full">
+        <tr scope="col" class="min-w-full  bg-gray-100 m-4">
+            <td class="px-6 text-center"></td>
+            <td></td>
+       
+            <td class="px-6 text-center whitespace-nowrap font-bold" id="D7">
                 {% if 50 < bps %} 50 {% else %} 0 {% endif %} <td class="text-center whitespace-nowrap font-bold"
                     id="E6">
 
             </td>
+            <td class="px-6"></td>
+            <td class="px-6 text-center"></td>
+            <td class="px-6"></td>
+            <td class="px-6 text-center"></td>
+            <td class="px-6"></td>
+          
             <td class="text-center whitespace-nowrap" id="F7">cell</td>
+            <td class="px-6"></td>
+            <td class="px-6"></td>
+          
+            
+        
             <td class="text-center whitespace-nowrap font-bold" id="G7"></td>
 
         </tr>
 
 
         <tr class="border-b border-neutral-200 dark:border-white/10">
+            <td class="px-6 text-center"></td>
+            <td></td>
 
             <td class="text-center whitespace-nowrap px-6 font-bold" id="D8">
                 {% if 100 < bps %} 100 {% else %} 0 {% endif %} </td>
             <td class="text-center whitespace-nowrap  font-bold" id="E8">cell</td>
             <td class="text-center whitespace-nowrap" id="F8">Cell</td>
+          
             <td class="text-center whitespace-nowrap font-bold" id="G8">Cell</td>
 
         </tr>
@@ -88,6 +165,9 @@
 
 
         <tr class="border-b border-neutral-200 dark:border-white/10 bg-gray-100">
+            <td class="px-6 text-center"></td>
+            <td></td>
+
 
             <td class="text-center whitespace-nowrap font-bold" id="D9">
 
@@ -101,9 +181,11 @@
 
 
         <tr class="border-b border-neutral-200 dark:border-white/10 ">
+            <td class="px-6 text-center"></td>
+            <td></td>
 
             <td class="text-center whitespace-nowrap px-6 font-bold" id="D10">
-            {% if 150 < bps %} 150 {% else %} 0 {% endif %} </td>
+                {% if 150 < bps %} 150 {% else %} 0 {% endif %} </td>
             <td class="text-center whitespace-nowrap px-6 font-bold" id="E10">555</td>
             <td class="text-center whitespace-nowrap px-6" id="F10">Cell</td>
             <td class="text-center whitespace-nowrap px-6 font-bold" id="G10">Cell</td>
@@ -112,6 +194,8 @@
 
 
         <tr class="border-b border-neutral-200 dark:border-white/10 bg-gray-100">
+            <td class="px-6 text-center"></td>
+            <td></td>
 
             <td class="text-center whitespace-nowrap px-6 font-bold" id="D11">
 
@@ -124,6 +208,8 @@
         </tr>
 
         <tr class="border-b border-neutral-200 dark:border-white/10">
+            <td class="px-6 text-center"></td>
+            <td></td>
 
             <td class="text-center whitespace-nowrap px-6 font-bold" id="D12">
 
@@ -138,16 +224,22 @@
 
 
         <tr class="border-b border-neutral-200 dark:border-white/10 bg-gray-100">
+            <td class="px-6 text-center"></td>
+            <td></td>
             <td class="text-center whitespace-nowrap px-6  font-bold" id="D13">
 
-                
+
                 {% if 225 < bps %} 225 {% else %} 0 {% endif %} </td>
             <td class="text-center whitespace-nowrap px-6 font-bold" id="E13"></td>
             <td class="text-center whitespace-nowrap px-6" id="F13">Cell</td>
             <td class="text-center whitespace-nowrap px-6 font-bold" id="G13">Cell</td>
+
+
         </tr>
 
         <tr class="border-b border-neutral-200 dark:border-white/10 ">
+            <td class="px-6 text-center"></td>
+            <td></td>
             <td class="text-center whitespace-nowrap px-6 font-bold" id="D14">
                 {% if 250 < bps %} 250 {% else %} 0 {% endif %} </td>
             <td class="text-center whitespace-nowrap px-6  font-bold" id="E14"></td>
@@ -158,6 +250,4 @@
     </tbody>
 
 
-
 </table>
-

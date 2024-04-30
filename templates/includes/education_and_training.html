@@ -60,7 +60,7 @@
             <tbody>
 
             {% for category in categories %}
-              <tr class="flex -border-b border-neutral-200 dark:border-white/10">
+              <tr class="flex  dark:border-white/10">
 
                 <td class="whitespace-nowrap px-6 font-medium">
                   {{category}}
@@ -90,14 +90,13 @@
                       value="{{expense.expense}}"
                       id="category_expense"
                       name="category_expense"
-    
                   />
 
                   <input 
                   type="hidden"
                   name="category"
                   value="{{category}}"
-                  
+                                
                   />
 
                   <input 
@@ -112,11 +111,7 @@
                 </td>
                 </tr>
             {% endfor %}
-
             {% endfor %}
-           
-              
-            
              
             </tbody>
           </table>

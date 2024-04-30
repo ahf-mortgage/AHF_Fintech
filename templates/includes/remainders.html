@@ -1,3 +1,166 @@
+<tr>
+
+  <th scope="col" class="px-6 w-32">Bps</th>
+  <th scope="col" class="px-6">Loan amount</th>
+  <th scope="col" class="px-6 font-light">{{ahf_amount}}%</th>
+  <th>
+
+  </th>
+  <th>
+
+  </th>
+  <th>
+
+  </th>
+  <th scope="col">{{branch_amount}}%</th>
+
+
+</tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<tr>
+            
+  <th scope="col" class="w-32">
+   
+  </th>
+  <th scope="col" class="border border-black px-0 w-32">
+      GCI
+      <br>
+
+      Flat fee   ${{flat_fee_gci|intcomma}}
+  </th>
+
+  <th scope="col" class="font-light" colspan="bg-gray-100">
+      AHF
+      <br>
+      ${{ahf_commission|intcomma}}
+
+
+
+
+  </th>
+
+
+  <th class="px-3 py-2" colspan="5">
+      Branch
+      <br>
+      
+      ${{above_loan_break_point_ahf_commission|intcomma}}
+  </th>
+
+  <th class="px-6 py-2" colspan="5">
+     
+  </th>
+
+</tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<tr>
+            
+  <th scope="col" class="w-32">
+   
+  </th>
+  <th scope="col" class="border border-black px-0 w-32">
+      <p class="mb-0 mt-0 text-base font-light leading-relaxed bg-gray-300">
+          Loan amount breakpoint ${{loan_break_point|intcomma}}
+      </p>
+      
+  </th>
+
+  <th scope="col" class="font-light" colspan="bg-gray-100">
+      AHF
+      <br>
+
+      ${{ahf_commission|intcomma}}
+
+
+
+
+  </th>
+
+
+  <th class="px-3 py-2" colspan="5">
+      Branch
+      <br>
+      
+      ${{above_loan_break_point_ahf_commission|intcomma}}
+  </th>
+
+  <th class="px-6 py-2" colspan="5">
+      <div class="flex justify-between">
+          <p class="mb-0 mt-0 text-base leading-relaxed font-bold">
+              Above ${{loan_break_point|intcomma}}
+          </p>
+          <p class="mb-0 mt-0 text-base leading-relaxed font-bold">
+          Branch commission
+          </p>
+      
+      </div>
+  </th>
+
+</tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 {% for category in categories %}
 <tr class="flex font-bold border-b border-neutral-200 dark:border-white/10">
   <td>
