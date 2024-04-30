@@ -23,7 +23,8 @@ from W2branchYearlyGross.models import (
                                         EmployeeWithholding,
                                         BranchPayrollLiabilities,
                                         BranchPayrollLiabilitieQ,
-                                       BranchPayrollLiabilitieR
+                                       BranchPayrollLiabilitieR,
+                                       Q22
                                 
                                         )
 
@@ -83,10 +84,12 @@ def home(request):
     revenue_share = round((branch.loan_per_year / ahf.loan_per_year) * 100,2) if (branch.loan_per_year / ahf.loan_per_year) < 1 else 100
     
     
+    
         
     bpl   = BranchPayrollLiabilities.objects.all()
     bplq  =  BranchPayrollLiabilitieQ.objects.all().first()
     bplr  =  BranchPayrollLiabilitieR.objects.all().first()
+    q22 = Q22.objects.all().first()
     bpl_meta = BranchPayrollLiabilities._meta
     bpl_columns = [field.name for field in BranchPayrollLiabilities._meta.get_fields()]
     bpl_columns_index= [30 + index for index in range(1,len(bpl_columns))]
@@ -145,6 +148,9 @@ def home(request):
         'calculate_CA_Unemployment':CA_Unemployment,
         'column_and_bplqs_dict':column_and_bplqs_dict,
         'bplqr_dict':bplqr_dict, 
+        'net_income_before_payroll':int(branch_gross - total_expense),
+        'w2_Taxable_gross_payroll':int(branch_gross - total_expense) * q22.value/100,
+        'q22':q22.value
       
     }
 
@@ -153,7 +159,7 @@ def home(request):
     context = {
 
         'categories':categories,
-        'total_expense':total_expense,
+        'total_expense':int(total_expense),
         'min_compesate':comp_plan.Maximum_Compensation / 1000,
         'flat_fee_gci': flat_fee_gci, #+  comp_plan.Flat_Fee
         'above_loan_break_point_ahf_commission':above_loan_break_point_ahf_commission,

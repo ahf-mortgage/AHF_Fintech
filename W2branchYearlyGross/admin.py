@@ -38,5 +38,12 @@ from .models import BranchPayrollLiabilitieQ
 @admin.register(BranchPayrollLiabilitieQ)
 class BranchPayrollLiabilitieQ(admin.ModelAdmin):
     list_filter = ('Social_Security', 'Medicare')
+    
+    
+from .models import Q22
+@admin.register(Q22)
+class Q22Admin(admin.ModelAdmin):
+    list_filter = ('value',)
+   
    
 

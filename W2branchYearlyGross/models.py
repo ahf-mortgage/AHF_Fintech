@@ -92,3 +92,11 @@ class BranchPayrollLiabilitieR(models.Model):
     def __str__(self) -> str:
         return f"Social_Security"
     
+    
+    
+    
+class Q22(models.Model):
+   value = models.FloatField()
+   
+    
+    

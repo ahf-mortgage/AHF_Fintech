@@ -3,163 +3,235 @@
 
 
 <div class="flex flex-col">
-    <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-      <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-        <div class="overflow-hidden">
-          <table
-            class="min-w-full text-center text-sm font-light text-surface dark:text-white">
-            <thead class="border-b border-neutral-200 font-medium dark:border-white/10">
+  <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+    <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+      <div class="overflow-hidden">
+        <table class="min-w-full text-center text-sm font-light text-surface dark:text-white">
+          <thead class="border-b border-neutral-200 font-medium dark:border-white/10">
 
-                <tr class="bg-white-200" style="height:20px;margin-bottom: 50px;">
-                  <th scope="col" class="">
-    
-                  </th>
-                  <th scope="col" class=""></th>
-                  <th scope="col" class=""></th>
-                  <th scope="col" class=""></th>
-                  <th scope="col" class=""></th>
-                </tr>
-    
-             
-                <tr class="bg-gray-200">
-    
-                  <th scope="col" class="flex w-auto">
-                    W2 Branch Yearly Gross Income
-                  </th>
-                  <th scope="col" class="font-bold">
-                    ${{ahf_annual_cap_data.branch_gross_income|intcomma}}
-                  </th>
+            <tr class="bg-white-200" style="height:20px;margin-bottom: 50px;">
+              <th scope="col" class="">
 
-                <th scope="col" class="font-bold">
-                
-                </th>
+              </th>
+              <th scope="col" class=""></th>
+              <th scope="col" class=""></th>
+              <th scope="col" class=""></th>
+              <th scope="col" class=""></th>
+            </tr>
 
-                <th scope="col" class="font-bold">
-                
-                </th>
 
-                <th scope="col" class="font-bold">
-                
-                </th>
+            <tr class="bg-gray-200">
 
-                <th scope="col" class="">
-                    Number of Loans
-                  </th>
-                  <th scope="col" class="">
-                    {{loan_per_year}}
-                  </th>
-    
-                  <!-- R column -->
-                  <th scope="col" class="">
-                    {{loan_per_year}}
-                  </th>
-                </tr>
-    
-              </thead>
-    
-            <tbody>
+              <th scope="col" class="flex w-auto">
+                W2 Branch Yearly Gross Income
+              </th>
+              <th scope="col" class="font-bold">
+                testing ${{ahf_annual_cap_data.branch_gross_income|intcomma}}
+              </th>
+
+              <th scope="col" class="font-bold">
+
+              </th>
+
+              <th scope="col" class="font-bold">
+
+              </th>
+
+              <th scope="col" class="font-bold">
+
+              </th>
+
+              <th scope="col" class="">
+                Number of Loans
+              </th>
+              <th scope="col" class="">
+                {{loan_per_year}}
+              </th>
+
+              <!-- R column -->
+              <th scope="col" class="">
+                {{loan_per_year}}
+              </th>
+            </tr>
+
+          </thead>
+
+          <tbody>
 
             {% for category in categories %}
-              <tr class="flex  dark:border-white/10">
+            <tr class="flex  dark:border-white/10 ">
 
-                <td class="whitespace-nowrap px-6 font-medium">
-                  {{category}}
-                </td>
-                <td class="whitespace-nowrap">
-                </td>
-                <td class="whitespace-nowrap">
-                </td>
-              </tr>
+              <td class="whitespace-nowrap px-6 font-medium">
+                {{category}}
+              </td>
+              <td class="whitespace-nowrap">
+              </td>
+              <td class="whitespace-nowrap">
+              </td>
+            </tr>
 
             {% for expense in category.expense.all %}
-                <tr class="flex space-between min-w-full text-center text-sm font-light text-surface dark:text-white"
-                style="flex-direction: row;justify-content:space-around;">
-                
-                <td class="whitespace-nowrap justify-end">
-                    {{expense|intcomma}}
-                </td>
-                <td class="flex flex-start">
+            <tr class="flex space-between min-w-full text-center text-sm font-light text-surface dark:text-white"
+              style="flex-direction: row;justify-content:space-around;">
+
+              <td class="whitespace-nowrap">
+                {{expense|intcomma}}
+              </td>
+              <td class="px-4">
+
+              </td>
+
+              <td class="px-4">
+
+              </td>
+
+              <td class="px-4">
+
+              </td>
+              <td class="px-4">
 
 
                 <form action="{% url 'W2branchYearlyGross:control_expense' %}" method="post" class="flex flex-col">
                   {% csrf_token %}
                   <div class="relative mb-3" data-twe-input-wrapper-init>
-                    <input 
-                      type="text"
+                    <input type="text"
                       class="peer block min-h-[auto] rounded border-0 bg-transparent leading-[1.6] outline-none transition-all duration-200 ease-linear focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
-                      value="{{expense.expense}}"
-                      id="category_expense"
-                      name="category_expense"
-                  />
+                      value="{{expense.expense}}" id="category_expense" name="category_expense" />
 
-                  <input 
-                  type="hidden"
-                  name="category"
-                  value="{{category}}"
-                                
-                  />
+                    <input type="hidden" name="category" value="{{category}}" />
 
-                  <input 
-                  type="hidden"
-                  name="expense"
-                  value="{{expense}}"
-              
-                  />
-                 
+                    <input type="hidden" name="expense" value="{{expense}}" />
+
                   </div>
                 </form>
-                </td>
-                </tr>
+              </td>
+
+            </tr>
             {% endfor %}
             {% endfor %}
-             
 
-         
 
-            <tr class="flex space-around bg-gray-200">
-    
+
+
+            <tr class="flex space-around">
+
               <td scope="px-4">
                 Total Expense
               </td>
               <td class="px-4">
-              
-               
+
+
+              </td>
+              <td class="px-4">
+
               </td>
 
-            <td class="px-4 class="font-bold">
-            
-            </td>
+              <td class="px-4">
 
-         <td>
-          {{total_expense|intcomma}}
-         </td>
-              
-          
-              
-  
-          
-          
-            <td scope="col" class="font-bold">
-            
-            </td>
-
-            <td scope="col" class="">
-             
-              </td>
-              <td scope="col" class="">
-              
               </td>
 
-              <!-- R column -->
-              <td scope="col" class="">
-             
+              <td class="px-4">
+
+              </td>
+
+              <td class="px-4 class=" font-bold">
+
+              </td>
+
+              <td>
+                {{total_expense|intcomma}}
               </td>
             </tr>
 
+
+            <tr class="flex space-around bg-gray-200 py-4">
+
+              <td scope="px-4">
+                Net income before payroll
+              </td>
+              <td class="px-4">
+
+
+              </td>
+
+              <td class="px-4 class=" font-bold">
+
+              </td>
+
+          
+              <td class="px-4">
+
+              </td>
+
+              <td class="px-4">
+
+              </td>
+
+              <td class="px-4">
+
+              </td>
+              <!-- R column -->
+              <td scope="col" class="">
+
+                <td>
+                 {{w2_branch_yearly_gross_income_data.net_income_before_payroll|intcomma}}
+                </td>
+  
+
+              </td>
+            </tr>
+
+
             
-            </tbody>
-          </table>
-        </div>
+
+
+            <tr class="border-b border-neutral-200 dark:border-white/10">
+              <td class="whitespace-nowrap font-medium justify-end ">
+                <p class="font-bold"> Taxable Gross Payroll </p>
+
+              </td>
+              <td class="whitespace-nowrap">
+                <p> 
+                  {{w2_branch_yearly_gross_income_data.w2_Taxable_gross_payroll}} 
+                <p>
+              </td>
+
+
+              <td class="whitespace-nowrap">
+                <p>
+                  21,422
+                <p>
+              </td>
+
+              <td class="whitespace-nowrap">
+                <form action="{% url 'W2branchYearlyGross:control_Q22_value' %}" method="post">
+                {% csrf_token %}
+                  <p>
+                  <div class="relative mb-3" data-twe-input-wrapper-init>
+                    <input type="text"
+                      class="mx-4 peer block min-h-[auto] rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0 text-center"
+                      id="Q22" 
+                      value="{{w2_branch_yearly_gross_income_data.q22}}"
+                      id="Q22"
+                      name="Q22" 
+                      />
+                    <p>
+                </form>
+
+              </td>
+
+              <td class="whitespace-nowrap font-bold" colspan="2">
+                <p>
+                  1785 per month
+                <p>
+              </td>
+            </tr>
+
+
+
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
+</div>

@@ -1,6 +1,6 @@
 
 from django.shortcuts import render,redirect
-from .models import BranchPayrollLiabilitieQ, BranchPayrollLiabilitieR,Category,Expense
+from .models import BranchPayrollLiabilitieQ, BranchPayrollLiabilitieR,Category,Expense,Q22
 from .forms import BranchPayrollLiabilitiesQForm
 
 def control_Q_value_branch_payroll_liabilities(request):
@@ -71,6 +71,24 @@ def control_expense(request):
         expense.save()
         
         return redirect("/")
+    return redirect("/")
+  
+  
+  
+def control_Q22_value(request):
+    
+    """
+        control percentage to calculate W2 Taxable gross payroll
+     
+    """
+    instance = Q22.objects.all().first()
+    if request.method == "POST":
+        q22 = request.POST.get("Q22")
+        instance.value = q22
+        instance.save()
+        return redirect("/")
+        
+   
     return redirect("/")
   
         
