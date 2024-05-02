@@ -13,7 +13,8 @@ from utils.calc_res import (
                     calculate_total_expense,
                     calculate_medicare,
                     calculate_fed_un_employ,
-                    calculate_CA_Unemployment
+                    calculate_CA_Unemployment,
+                    net_paycheck_for_employee_with_holdings
 
     )
 
@@ -163,7 +164,8 @@ def home(request):
         'net_income_before_payroll'     :int(branch_gross - total_expense),
         'w2_Taxable_gross_payroll'      :math.floor(int(branch_gross - total_expense)* q22.value/100),
         'q22'                           :q22.value,
-        'balance'                       :balance
+        'balance'                       :balance,
+        
       
     }
 
@@ -184,6 +186,12 @@ def home(request):
         'bplq_total': sum(bplq_dict.values()),
         'total_bqlr': math.floor(bplr_total),
         'employee_with_holdings_q_columns_total':employee_with_holdings_q_columns_total,
+        'net_paycheck_for_employee_with_holdings_total':math.floor(net_paycheck_for_employee_with_holdings(
+            branch_gross,
+            total_expense,
+            q22,
+            bplr_total
+            )),
         
         'ewh':dict(ewh),
         'ewh_columns':ewh_columns,

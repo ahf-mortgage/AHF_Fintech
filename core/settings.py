@@ -18,7 +18,9 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'https://www.ahf.mortgage',
     "www.ahf.mortgage",
-     '127.0.0.1' ]
+    'http://18.144.126.117',
+     '127.0.0.1'
+     ]
 CSRF_TRUSTED_ORIGINS = [
   
     # 'http://www.ahf.mortgage',

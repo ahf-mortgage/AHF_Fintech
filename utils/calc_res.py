@@ -171,7 +171,8 @@ def calculate_fed_un_employ(branch_gross_income ):
         return N22 * 0.006
     else:
         return 7000 *  0.006
-    
+
+
 def calculate_CA_Unemployment(branch_gross,total_expense,q22):
     """
     $N$22*Q26
@@ -180,6 +181,23 @@ def calculate_CA_Unemployment(branch_gross,total_expense,q22):
     Q26 = BranchPayrollLiabilitieQ.objects.all().first().CA_Unemployment
     N22 = math.ceil(int(branch_gross - total_expense)* q22.value/100),
     return (Q26/100) * N22[0]
+
+
+def net_paycheck_for_employee_with_holdings(branch_gross,total_expense,q22,total):
+    """
+    N28=N22-N27
+    """
+    N22 = int(branch_gross - total_expense)* q22.value/100
+    N27 = total
+    
+    print("N22 ",N22)
+    print("N27 ",N27)
+    print("N22 - N27 ",(N22 - N27))
+    
+    return N22 - N27
+
+
+
         
         
 # def calculate_Employment_Training_Tax(branch_gross_income):
