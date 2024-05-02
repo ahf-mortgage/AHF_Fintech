@@ -5,7 +5,7 @@ register = template.Library()
 
 @register.filter(name='safe_divide')
 def  safe_divide(value):
-    return int(value)/12
+    return math.ceil(int(value)/12)
  
  
  

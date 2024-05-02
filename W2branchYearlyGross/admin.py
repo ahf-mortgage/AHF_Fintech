@@ -20,6 +20,21 @@ class EmployeeWithHoldingsModelAdin(admin.ModelAdmin):
 
 
 
+from .models import EmployeeWithholdingQ
+@admin.register(EmployeeWithholdingQ)
+class EmployeeWithHoldingsModelAdin(admin.ModelAdmin):
+    list_filter = ('Social_Security', 'Medicare', 'CA_disability')
+    list_display = ('Social_Security','Medicare','CA_disability')
+    
+    
+    
+from .models import EmployeeWithholdingR
+@admin.register(EmployeeWithholdingR)
+class EmployeeWithHoldingsModelAdin(admin.ModelAdmin):
+    list_filter = ('Social_Security', 'Medicare', 'CA_disability')
+    list_display = ('Social_Security','Medicare','CA_disability')
+
+
    
 from .models import BranchPayrollLiabilities
 @admin.register(BranchPayrollLiabilities)

@@ -23,6 +23,7 @@ else case :
 	
 	
 W2 Taxable gross payroll formulas
+Employee withhodlding
 Social Security = =IF($N$22<=R24,$N$22*Q24,T24)
 N22 = N20*Q22
 R24 = 168600 (need to be input)

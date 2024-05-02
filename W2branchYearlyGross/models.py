@@ -21,7 +21,6 @@ class Expense(models.Model):
 	def __str__(self):
 		return f"{self.name}"
 
-
 class EmployeeWithholding(models.Model):
 	Social_Security =  models.FloatField()
 	Medicare        =  models.FloatField()
@@ -33,7 +32,7 @@ class EmployeeWithholding(models.Model):
 		verbose_name_plural = "Employee Withholding"
  
 	def save(self, *args, **kwargs):
-		self.total = self.Social_Security + self.Medicare + self.CA_disability 
+		self.total = f'Employee with holdings {self.Social_Security}' #self.Social_Security + self.Medicare + self.CA_disability 
 		super().save(*args, **kwargs)
      
 	
@@ -41,7 +40,49 @@ class EmployeeWithholding(models.Model):
 		return f"EmployeeWithHoldings_{ self.Social_Security + self.Medicare + self.CA_disability }"
 
 
+class EmployeeWithholdingQ(models.Model):
+	Social_Security =  models.FloatField()
+	Medicare        =  models.FloatField()
+	CA_disability   =  models.FloatField()
+	total 			= models.FloatField(blank=True,null=True)
+ 
+	class Meta:
+		verbose_name = "Employee Withholding Q column"
+		verbose_name_plural = "Employee Withholding R column"
+ 
+	# def save(self, *args, **kwargs):
+	# 	self.total = f'Employee with holdings {self.Social_Security}' #self.Social_Security + self.Medicare + self.CA_disability 
+	# 	super().save(*args, **kwargs)
+     
+	
+	def __str__(self) -> str:
+		return f"EmployeeWithHoldings_{ self.Social_Security + self.Medicare + self.CA_disability }"
+
+
+
+class EmployeeWithholdingR(models.Model):
+	Social_Security =  models.FloatField()
+	Medicare        =  models.FloatField()
+	CA_disability   =  models.FloatField()
+	total 			= models.FloatField(blank=True,null=True)
+ 
+	class Meta:
+		verbose_name = "Employee Withholding R column"
+		verbose_name_plural = "Employee Withholding R column"
+ 
+	# def save(self, *args, **kwargs):
+	# 	self.total = f'Employee with holdings {self.Social_Security}' #self.Social_Security + self.Medicare + self.CA_disability 
+	# 	super().save(*args, **kwargs)
+     
+	
+	def __str__(self) -> str:
+		return f"EmployeeWithHoldings_{ self.Social_Security + self.Medicare + self.CA_disability }"
+
 class BranchPayrollLiabilities(models.Model):
+    class Meta:
+        verbose_name = "Branch Payroll Liabilities"
+        verbose_name_plural = "Branch Payroll Liabilities"
+  
     Social_Security =  models.FloatField("Social Security")
     Medicare        =  models.FloatField()
     Fed_Unemploy   =  models.FloatField()
@@ -49,15 +90,19 @@ class BranchPayrollLiabilities(models.Model):
     Employment_Training_Tax =   models.FloatField("Employment Training Tax (ETT)")
     total 			=  models.FloatField(blank=True,null=True)
     
-    def save(self, *args, **kwargs):
-        self.total = self.Social_Security + self.Medicare + self.Fed_Unemploy +  self.Employment_Training_Tax + self.CA_Unemployment 
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     self.total = self.Social_Security + self.Medicare + self.Fed_Unemploy +  self.Employment_Training_Tax + self.CA_Unemployment 
+    #     super().save(*args, **kwargs)
         
         
     def __str__(self) -> str:
         return f"Social_Security {self.Social_Security}  Medicare {self.Medicare} Fed_Unemploy {self.Fed_Unemploy}"
     
 class BranchPayrollLiabilitieQ(models.Model):
+    class Meta:
+        verbose_name = "Branch Payroll Liabilities Q column"
+        verbose_name_plural = "Branch Payroll Liabilities Q column"
+  
     Social_Security =  models.FloatField("Social Security")
     Medicare        =  models.FloatField()
     Fed_Unemploy   =  models.FloatField()
@@ -65,9 +110,9 @@ class BranchPayrollLiabilitieQ(models.Model):
     Employment_Training_Tax =   models.FloatField("Employment Training Tax (ETT)")
     total 			=  models.FloatField(blank=True,null=True)
     
-    def save(self, *args, **kwargs):
-        self.total = float(self.Social_Security) + float(self.Medicare) + float(self.Fed_Unemploy) +  float(self.Employment_Training_Tax) + float(self.CA_Unemployment)
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     self.total =  self.Social_Security #float(self.Social_Security) + float(self.Medicare) + float(self.Fed_Unemploy) +  float(self.Employment_Training_Tax) + float(self.CA_Unemployment)
+    #     super().save(*args, **kwargs)
         
         
     def __str__(self) -> str:
@@ -77,6 +122,11 @@ class BranchPayrollLiabilitieQ(models.Model):
 
 
 class BranchPayrollLiabilitieR(models.Model):
+    class Meta:
+        verbose_name = "Branch Payroll Liabilities R column"
+        verbose_name_plural = "Branch Payroll Liabilities R column"
+        
+        
     Social_Security =  models.FloatField("Social Security")
     Medicare        =  models.FloatField()
     Fed_Unemploy   =  models.FloatField()

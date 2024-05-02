@@ -21,10 +21,11 @@ from utils.w2_branch import W2_branch_column_names
 from W2branchYearlyGross.models import (
                                         Category,
                                         EmployeeWithholding,
+                                        EmployeeWithholdingQ,
                                         BranchPayrollLiabilities,
                                         BranchPayrollLiabilitieQ,
-                                       BranchPayrollLiabilitieR,
-                                       Q22
+                                        BranchPayrollLiabilitieR,
+                                        Q22
                                 
                                         )
 
@@ -70,12 +71,9 @@ def home(request):
     branch_gross = branch_gross_income(loan_break_point,comp_plan,float(branch.commission))
     flat_fee_gci = int((comp_plan.Percentage * 100) * loan_break_point.loan_break_point / 10000) 
     above_loan_break_point_ahf_commission = int(flat_fee_gci * (branch.commission))
-    # social_security = calculate_social_security()
-    #  calculate_social_security(loan_break_amount,comp_plan,commission,above_loan_break_point_ahf_commission,percentage,small_percentage):
-    social_security = calculate_social_security(loan_break_point,comp_plan,float(1 - branch.commission),above_loan_break_point_ahf_commission,0.923199268694749
-,0.062) 
-    CA_Unemployment = calculate_CA_Unemployment(branch_gross)
   
+    
+
     
     E23 = (bps.bps * loan_break_point.loan_break_point )/ 10000 + comp_plan.Flat_Fee 
     nums_loans = [math.ceil(get_gci_result(comp_plan, num) * float((1-branch.commission))) for num in loan_below_limits]
@@ -86,17 +84,21 @@ def home(request):
     
     
         
-    bpl   = BranchPayrollLiabilities.objects.all()
-    bplq  =  BranchPayrollLiabilitieQ.objects.all().first()
-    bplr  =  BranchPayrollLiabilitieR.objects.all().first()
-    q22 = Q22.objects.all().first()
-    bpl_meta = BranchPayrollLiabilities._meta
-    bpl_columns = [field.name for field in BranchPayrollLiabilities._meta.get_fields()]
-    bpl_columns_index= [30 + index for index in range(1,len(bpl_columns))]
-    column_and_index_dict = {} 
-    column_and_bplqs_dict = {}
-    bplqr_dict = {}
-    bplq_dict = {}
+    bpl                     = BranchPayrollLiabilities.objects.all()
+    bplq                    = BranchPayrollLiabilitieQ.objects.all().first()
+    ewl                     = EmployeeWithholding.objects.all().first()
+    ewlq                    = EmployeeWithholdingQ.objects.all().first()
+    bplr                    = BranchPayrollLiabilitieR.objects.all().first()
+    q22                     = Q22.objects.all().first()
+    bpl_meta                = BranchPayrollLiabilities._meta
+    bpl_columns             = [field.name for field in BranchPayrollLiabilities._meta.get_fields()]
+    ewl_columns             = [field.name for field in EmployeeWithholding._meta.get_fields()]
+    bpl_columns_index       = [30 + index for index in range(1,len(bpl_columns))]
+    column_and_index_dict   = {} 
+    column_and_bplqs_dict   = {}
+    bplqr_dict              = {}
+    bplq_dict               = {}
+    ewl_dict                = {}
     
     
     
@@ -107,21 +109,22 @@ def home(request):
         bplqr_dict[column] = getattr(bplr,column)
         
         
-    for column in bpl_columns:
-        bplq_dict[column] = getattr(bplq,column)
+    for column in ewl_columns:
+        bplq_dict[column] = getattr(ewl,column)
+        
+    for column in ewl_columns:
+        ewl_dict[column] = getattr(ewlq,column)
+        
+ 
         
         
-
-        
-  
-    
-    
     bpl_columns.remove('id')
     bpl = bpl.values().first()
     
     categories = Category.objects.all()
     total_expense = calculate_total_expense()
     ewh = EmployeeWithholding.objects.all()
+  
     ewh_meta = EmployeeWithholding._meta
     ewh_columns = [field.name for field in ewh_meta.get_fields()]
     ewh_columns.remove('id')
@@ -132,25 +135,35 @@ def home(request):
     
     
     ahf_annual_cap_data = {
-        'annual_ahf_cap':math.ceil(annual_ahf_cap),
-        'gross_ahf_income':math.ceil(gross_ahf_income),
-        'gross_income': math.ceil(gross_income),
-        'branch_gross_income':math.ceil(branch_gross),
-        'annual_ahf_to_gci_result':annual_ahf_to_gci_result,
+        'annual_ahf_cap'            :math.ceil(annual_ahf_cap),
+        'gross_ahf_income'          :math.ceil(gross_ahf_income),
+        'gross_income'              :math.ceil(gross_income),
+        'branch_gross_income'       :math.ceil(branch_gross),
+        'annual_ahf_to_gci_result'  :annual_ahf_to_gci_result,
         
         
     }
-
     
+    # Employee withholding data
+    _calculate_social_security              = calculate_social_security(branch_gross,total_expense,q22) 
+    CA_Unemployment                         = calculate_CA_Unemployment(branch_gross,total_expense,q22)
+    medicare                                = calculate_medicare(branch_gross,total_expense,q22)
+    bplr_total                              = _calculate_social_security + CA_Unemployment + medicare
+    employee_with_holdings_q_columns_total  = sum(ewl_dict.values())
+    balance                                 = math.ceil(branch_gross) - 611.42
+  
+      
     w2_branch_yearly_gross_income_data = {
-        'social_security':social_security,
-        'calculate_fed_un_employ':calculate_fed_un_employ(branch_gross),
-        'calculate_CA_Unemployment':CA_Unemployment,
-        'column_and_bplqs_dict':column_and_bplqs_dict,
-        'bplqr_dict':bplqr_dict, 
-        'net_income_before_payroll':int(branch_gross - total_expense),
-        'w2_Taxable_gross_payroll':int(branch_gross - total_expense) * q22.value/100,
-        'q22':q22.value
+        'calculate_social_security'     :math.floor(_calculate_social_security),
+        'calculate_fed_un_employ'       :calculate_fed_un_employ(branch_gross),
+        'calculate_CA_Unemployment'     :math.floor(CA_Unemployment),
+        'calculate_Medicare'            :math.floor(medicare),
+        'column_and_bplqs_dict'         :column_and_bplqs_dict,
+        'bplqr_dict'                    :bplqr_dict, 
+        'net_income_before_payroll'     :int(branch_gross - total_expense),
+        'w2_Taxable_gross_payroll'      :math.floor(int(branch_gross - total_expense)* q22.value/100),
+        'q22'                           :q22.value,
+        'balance'                       :balance
       
     }
 
@@ -166,9 +179,11 @@ def home(request):
         'column_and_index_dict':column_and_index_dict,
         'bplqr':bplqr_dict,
         'bplq_dict':bplq_dict,
+        'ewl_dict':ewl_dict,
         'bplr_total': sum(bplqr_dict.values()),
         'bplq_total': sum(bplq_dict.values()),
-        
+        'total_bqlr': math.floor(bplr_total),
+        'employee_with_holdings_q_columns_total':employee_with_holdings_q_columns_total,
         
         'ewh':dict(ewh),
         'ewh_columns':ewh_columns,

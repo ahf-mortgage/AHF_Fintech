@@ -1,13 +1,42 @@
 
 from django.shortcuts import render,redirect
-from .models import BranchPayrollLiabilitieQ, BranchPayrollLiabilitieR,Category,Expense,Q22
+from .models import (
+    BranchPayrollLiabilitieQ,
+    BranchPayrollLiabilitieR,
+    EmployeeWithholdingQ,
+    Category,
+    Expense,
+    Q22
+    )
+
 from .forms import BranchPayrollLiabilitiesQForm
+
+
 
 def control_Q_value_branch_payroll_liabilities(request):
     instance = None
     try:
         instance = BranchPayrollLiabilitieQ.objects.all().first()
     except BranchPayrollLiabilitieQ.DoesNotExist as e:
+        raise e
+
+    if request.method == "POST":
+        column_name = request.POST.get('column')
+        value = request.POST.get('value')
+        print("column name ",column_name,"value ",value)
+        setattr(instance,column_name,value)
+        instance.save()
+        print("setattr(instance,column_name,value) ",setattr(instance,column_name,value))
+        return redirect("/")
+  
+    return redirect("/")
+
+
+def control_Q_value_for_employee_with_holding(request):
+    instance = None
+    try:
+        instance = EmployeeWithholdingQ.objects.all().first()
+    except EmployeeWithholdingQ.DoesNotExist as e:
         raise e
 
     if request.method == "POST":

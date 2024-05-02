@@ -1,5 +1,14 @@
-
+import math
 from recruiter.models import Bps,Branch
+from W2branchYearlyGross.models import (
+                     BranchPayrollLiabilitieR,
+                     BranchPayrollLiabilitieQ,
+                     EmployeeWithholdingR,
+                     EmployeeWithholdingQ
+)
+
+
+
 bps = Bps.objects.all().first().bps
 
 def calculate_annual_ahf_income(loan_break_amount,comp_plan,ahf_comission_amount):
@@ -112,23 +121,47 @@ def calculate_total_expense():
     return total_expense
 
 
-def calculate_social_security(loan_break_amount,comp_plan,commission,above_loan_break_point_ahf_commission,percentage,small_percentage):
-# Social Security = (branch gross income)-E8(branch commission for above loans limit)*92.3199268694749% (need to be input)*6.2% (need to be input)
-    branch_gross_income_num = branch_gross_income(loan_break_amount,comp_plan,commission)
-    branch_commission = above_loan_break_point_ahf_commission
-    # (((branch gross income)) - (branch commission for above loans limit) *92.3199268694749% (need to be input) * (6.2% (need to be input))
-
-    return branch_gross_income_num - branch_commission * (percentage) * small_percentage
-
-
-def calculate_medicare(branch_gross_income ):
-    N22 = (branch_gross_income - 20974) * (0.923199268694749)
-    if (N22<=  200000):
-        
-     return ((branch_gross_income - 20974) * (branch_gross_income )) * 0.014499999999999999
+# def calculate_social_security(loan_break_amount,comp_plan,commission,above_loan_break_point_ahf_commission,percentage,small_percentage):
+def calculate_social_security(branch_gross,total_expense,q22):
+    """
+        Social Security = =IF($N$22<=R24,$N$22*Q24,T24)
+        N22 = N20*Q22#({w2_branch_yearly_gross_income_data.w2_Taxable_gross_payroll)
+        R24 = 168600 (need to be input) (R24.social_security)
+        Q24 = 6.2% (need to be input) (Q24.social_security)
+        T24 = Q24*R24  (R24.social_security) (Q24.social_security)
+    """
+    N22 = math.ceil(int(branch_gross - total_expense)* q22.value/100), #w2_branch_yearly_gross_income_data.w2_Taxable_gross_payroll
+    R24 = BranchPayrollLiabilitieR.objects.all().first().Social_Security
+    Q24 = BranchPayrollLiabilitieQ.objects.all().first().Social_Security
+    T24 = (Q24 * R24)
     
+    
+    R25 = BranchPayrollLiabilitieR.objects.all().first().Medicare
+    Q25 = BranchPayrollLiabilitieQ.objects.all().first().Medicare
+   
+ 
+    Social_Security = 0
+    if R24 >= Q24:
+        Social_Security = float(N22[0]) * float(Q24/100)
+    else:
+        Social_Security = T24
+    return Social_Security #branch_gross_income_num - branch_commission * (percentage) * small_percentage
+
+
+def calculate_medicare(branch_gross,total_expense,q22):
+    """
+    N25 = IF($N$22<=R25,$N$22*Q25,T25+$U$25*($N$22-$R$25))  
+    """
+    R25 = EmployeeWithholdingR.objects.all().first().Medicare
+    Q25 = EmployeeWithholdingQ.objects.all().first().Medicare
+    U25 = (0.9 / 100)
+    T25 = R25 * Q25
+    N22 = math.ceil(int(branch_gross - total_expense)* q22.value/100),
+    
+    if (N22[0] <=  R25):
+        return (N22[0]) * (Q25 / 100)
     else :
-        return  (200000 *  0.014499999999999999) +(0.009000000000000001)*((branch_gross_income - 20974) * 0.923199268694749)-200000
+        return (T25 + U25) * (N22[0] - R25)
     
     
     
@@ -139,12 +172,14 @@ def calculate_fed_un_employ(branch_gross_income ):
     else:
         return 7000 *  0.006
     
-def calculate_CA_Unemployment(branch_gross_income):
-    N22 = (branch_gross_income - 20974) * (0.923199268694749)
-    if N22 <= 700:
-        return N22 * 0.062
-    else:
-        return 0.062 * 7000
+def calculate_CA_Unemployment(branch_gross,total_expense,q22):
+    """
+    $N$22*Q26
+    """
+   
+    Q26 = BranchPayrollLiabilitieQ.objects.all().first().CA_Unemployment
+    N22 = math.ceil(int(branch_gross - total_expense)* q22.value/100),
+    return (Q26/100) * N22[0]
         
         
 # def calculate_Employment_Training_Tax(branch_gross_income):

@@ -6,26 +6,172 @@
     <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
       <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
         <div class="overflow-hidden">
-          <table class="min-w-full text-center text-sm font-light text-surface dark:text-white">
+          <table class="min-w-full text-center text-sm font-light text-surface dark:text-white  border-collapse border">
+
+            <tr class="bg-gray-200">
+
+              <th scope="col" class="flex w-auto">
+                Employee withholding
+              </th>
+              <th scope="col" class="font-bold">
+               
+              </th>
+
+              <th scope="col" class="font-bold">
+
+              </th>
+
+              <th scope="col" class="font-bold">
+
+              </th>
+
+             
+
+              <th scope="col" colspan="2" class="px-1">
+            
+              </th>
+          
+
+              <th scope="col" colspan="2" class="px-1">
+            
+              </th>
+          
+
+              <!-- R column -->
+              <th scope="col" class="">
+               
+              </th>
+
+
+
+              <!-- R column -->
+              <th scope="col" class="">
+               
+              </th>
+            </tr>
           
             <tbody>
   
+            {% for column in ewh_columns%}
+
+            <tr class="border-b border-neutral-200 dark:border-white/10">
+              <td class="whitespace-nowrap justify-end">
+                {{column|split_word}}
+
             
-  
-  
-           
-  
-  
-              {% for column in ewh_columns%}
-  
-              <tr class="border-b border-neutral-200 dark:border-white/10">
-                <td class="whitespace-nowrap justify-end">
-                  {{column}}
-  
+              {% if column == 'Social_Security' %}
+                <td class="whitespace-nowrap">
+                {{w2_branch_yearly_gross_income_data.calculate_social_security|intcomma}}
                 </td>
-                <td class="whitespace-nowrap">{{ewh|dict_get:column|intcomma}}</td>
-              </tr>
+
+              {% elif column == 'Medicare'%}
+              <td class="whitespace-nowrap">
+
+                {{w2_branch_yearly_gross_income_data.calculate_Medicare|intcomma}}
+              </td>
+
+
+
+              {% elif column == 'CA_disability'%}
+              <td class="whitespace-nowrap"> 
+               {{w2_branch_yearly_gross_income_data.calculate_CA_Unemployment|intcomma}} 
+              </td>
+
+              {% else %}
+              <td class="whitespace-nowrap">{{total_bqlr|intcomma}}</td>
+              {% endif %}
+              <td>
+
+              </td>
+              <td>
+              
+              </td>
+
+            
+                {% if column  != 'total'%}
+                <td class="pl-2">
+                <form action="{% url 'W2branchYearlyGross:control_Q_value_for_employee_with_holding' %}" method="post">
+                  {% csrf_token %}
+                  <input 
+                    type="text"
+                    value="{{ewl_dict|dict_get:column}}"
+                    id="{{column}}"
+                    name= "value"
+                  />
+                  
+                <input 
+                type="hidden"
+                name="column"
+                value="{{column}}"
+              />
+
+              </form>
+              </td>
+                {% else  %}
+
+
+                <td class="flex">
+                  {{bplq_total}}
+                </td>
+                
+                {% endif %}
+               
+             
+
+              <td class="pl-2">
+
+                {% if column  != 'total'%}
+                <form action="{% url 'W2branchYearlyGross:control_R_value_branch_payroll_liabilities' %}" method="post">
+                  {% csrf_token %}
+                
+                {% if bplqr|dict_get:column %}
+                  <input 
+                  type="text"
+                  value="{{bplqr|dict_get:column}}"
+                  id="{{column}}"
+                  name= "value"
+                />
+
+                {% else %}
+                  <input 
+                    type="text"
+                    value="not capped"
+                    id="{{column}}"
+                    name= "value"
+                  />
+
+                {% endif %}
+                  <input 
+                    type="hidden"
+                    name="column"
+                    value="{{column}}"
+                   
+                  >
+
+                </form>
+
+                {% else %}
+                <h1 class="font-bold">
+
+                
+             {{bplr_total}}
+
+                </h1>
+
+                {% endif %}
+                
+              </td>
+
+              <td class="pr-4">
+                capped
+              </td>
+
+              <td class="pr-4">
+                $10,453
+              </td>
+            </tr>
   
+
               {% endfor %}
   
   
@@ -35,12 +181,45 @@
   
                 </td>
                 <td class="whitespace-nowrap">
+                 
+                </td>
+
+                <td class="whitespace-nowrap">
+                 
+                </td>
+
+
+                <td class="whitespace-nowrap">
+                 
+                </td>
+
+                <td class="whitespace-nowrap">
+                 
+                </td>
+                <td class="whitespace-nowrap">
+                 
+                </td>
+
+                <td class="whitespace-nowrap">
+                 
+                </td>
+
+                <td class="whitespace-nowrap">
+                 
+                </td>
+
+
+
+                <td class="whitespace-nowrap">
                   <p> {{total_expense|intcomma}}
                   <p>
                 </td>
               </tr>
   
   
+
+
+              <!-- Branch payroll liabilities dynamic data -->
               <tr class="border-b border-neutral-200 dark:border-white/10">
                 <td class="whitespace-nowrap font-medium justify-end ">
                   <p class="font-bold">Branch payroll liabilities</p>
@@ -153,6 +332,11 @@
               </tr>
   
               {% endfor %}
+
+              {% include 'includes/blank_table_row.html' %}
+              {% include 'includes/blank_table_row.html' %}
+            
+              {% include 'W2branchYearlyGross/summary.html' %}
   
   
             </tbody>
