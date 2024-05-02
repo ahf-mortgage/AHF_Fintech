@@ -74,11 +74,11 @@
 
               {% elif column == 'CA_disability'%}
               <td class="whitespace-nowrap">
-                {{w2_branch_yearly_gross_income_data.calculate_CA_Unemployment|intcomma}}
+                {{w2_branch_yearly_gross_income_data.calculate_CA_Disability|intcomma}}
               </td>
 
               {% else %}
-              <td class="whitespace-nowrap">{{total_bqlr|intcomma}}</td>
+              <td class="whitespace-nowrap"> {{total_bqlr|intcomma}}</td>
               {% endif %}
               <td>
               
@@ -93,7 +93,6 @@
                 <form action="{% url 'W2branchYearlyGross:control_Q_value_for_employee_with_holding' %}" method="post">
                   {% csrf_token %}
                   <input type="text" value="{{ewl_dict|dict_get:column}}" id="{{column}}" name="value" />
-
                   <input type="hidden" name="column" value="{{column}}" />
 
                 </form>
@@ -144,7 +143,7 @@
               </td>
 
               <td class="pr-4">
-               $10,453
+              $10,453
               </td>
 
               {% else %}
@@ -272,14 +271,17 @@
                 <form action="{% url 'W2branchYearlyGross:control_Q_value_branch_payroll_liabilities' %}" method="post">
                   {% csrf_token %}
 
-                  <input type="text" value="{{bplq_dict|dict_get:column}}" id="{{column}}" name="value" />
+                  <input 
+                  type="text"
+                  value="{{bplq_dict|dict_get:column}}"
+                   id="{{column}}" name="value" />
 
                   <input type="hidden" name="column" value="{{column}}" />
 
                 </form>
                 {% else %}
 
-                {{bplq_total}}
+              {{bplq_total}}
 
                 {% endif %}
 
@@ -299,7 +301,7 @@
                 {% else %}
                 <h1 class="font-bold">
 
-                  {{bplr_total}}
+               {{bplr_total}}
 
                 </h1>
 

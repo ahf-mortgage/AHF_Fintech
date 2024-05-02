@@ -14,6 +14,7 @@ from utils.calc_res import (
                     calculate_medicare,
                     calculate_fed_un_employ,
                     calculate_CA_Unemployment,
+                    calculate_CA_Disability,
                     net_paycheck_for_employee_with_holdings,
                     
                     calculate_social_security_payroll_liabilities,
@@ -99,12 +100,14 @@ def home(request):
     bpl_meta                = BranchPayrollLiabilities._meta
     bpl_columns             = [field.name for field in BranchPayrollLiabilities._meta.get_fields()]
     ewl_columns             = [field.name for field in EmployeeWithholding._meta.get_fields()]
+    bplq_columns            = [field.name for field in BranchPayrollLiabilitieQ._meta.get_fields()]
     bpl_columns_index       = [30 + index for index in range(1,len(bpl_columns))]
     column_and_index_dict   = {} 
     column_and_bplqs_dict   = {}
     bplqr_dict              = {}
     bplq_dict               = {}
     ewl_dict                = {}
+    bplq_dict               = {}
     
     
     
@@ -114,9 +117,15 @@ def home(request):
     for column in bpl_columns:
         bplqr_dict[column] = getattr(bplr,column)
         
+    for column in bpl_columns:
+        bplq_dict[column] = getattr(bplq,column)
         
-    for column in ewl_columns:
-        bplq_dict[column] = getattr(ewl,column)
+        
+    # for column in ewl_columns:
+    #     bplq_dict[column] = getattr(ewl,column)
+        
+        
+   
         
     for column in ewl_columns:
         ewl_dict[column] = getattr(ewlq,column)
@@ -126,7 +135,7 @@ def home(request):
         
     bpl_columns.remove('id')
     bpl = bpl.values().first()
-    
+    print("Bpl values ",bpl)
     categories = Category.objects.all()
     total_expense = calculate_total_expense()
     ewh = EmployeeWithholding.objects.all()
@@ -155,7 +164,7 @@ def home(request):
     _calculate_social_security              = calculate_social_security(branch_gross,total_expense,q22) 
     CA_Unemployment                         = calculate_CA_Unemployment(branch_gross,total_expense,q22)
     medicare                                = calculate_medicare(branch_gross,total_expense,q22)
-    bplr_total                              = _calculate_social_security + CA_Unemployment + medicare
+    bplr_total                              = _calculate_social_security + calculate_CA_Disability(branch_gross,total_expense,q22)  + medicare
     employee_with_holdings_q_columns_total  = sum(ewl_dict.values())
     balance                                 = math.ceil(branch_gross) - 611.42
     
@@ -166,19 +175,21 @@ def home(request):
     _calculate_social_security_payroll_liabilities              = calculate_social_security_payroll_liabilities(branch_gross,total_expense,q22) 
     CA_Unemployment_payroll_liabilities                         = calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22)
     medicare_payroll_liabilities                                = calculate_medicare_payroll_liabilities(branch_gross,total_expense,q22)
-  
     
+    print("***********************bplq_dict ",bplq_dict)
   
       
     w2_branch_yearly_gross_income_data = {
         'calculate_social_security'     :math.floor(_calculate_social_security),
         'calculate_fed_un_employ'       :calculate_fed_un_employ(branch_gross),
+        'calculate_CA_Disability'       :calculate_CA_Disability(branch_gross,total_expense,q22) ,
         'calculate_CA_Unemployment'     :math.floor(CA_Unemployment),
         'calculate_fed_un_employ_payroll_liabilities'       :calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22),
 
         'calculate_Medicare'            :math.floor(medicare),
         'column_and_bplqs_dict'         :column_and_bplqs_dict,
         'bplqr_dict'                    :bplqr_dict, 
+        'bplq_dict'                     :bplq_dict,
         'net_income_before_payroll'     :int(branch_gross - total_expense),
         'w2_Taxable_gross_payroll'      :math.floor(int(branch_gross - total_expense)* q22.value/100),
         'q22'                           :q22.value,
@@ -202,7 +213,7 @@ def home(request):
       
     }
 
-    
+    print("##############CA_Unemployment_payroll_liabilities ",CA_Unemployment_payroll_liabilities)
   
     context = {
 

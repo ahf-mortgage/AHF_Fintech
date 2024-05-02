@@ -159,7 +159,7 @@ def calculate_medicare(branch_gross,total_expense,q22):
     """
     R25 = EmployeeWithholdingR.objects.all().first().Medicare
     Q25 = EmployeeWithholdingQ.objects.all().first().Medicare
-    U25 = (0.9 / 100)
+    U25 = 0.009
     T25 = R25 * Q25
     N22 = math.ceil(int(branch_gross - total_expense)* q22.value/100),
     
@@ -180,12 +180,29 @@ def calculate_fed_un_employ(branch_gross_income ):
 
 def calculate_CA_Unemployment(branch_gross,total_expense,q22):
     """
+    N34 = $N$22*Q26
+    """
+    R34 = BranchPayrollLiabilitieR.objects.all().first().CA_Unemployment
+    Q34 = BranchPayrollLiabilitieQ.objects.all().first().CA_Unemployment
+    T34 = Q34 * R34
+    N22 = math.ceil(int(branch_gross - total_expense)* q22.value/100),
+    Q26 = BranchPayrollLiabilitieQ.objects.all().first().CA_Unemployment
+
+    if R34 >= N22[0]:
+        return N22[0] * Q34
+    else:
+        return T34
+
+
+def calculate_CA_Disability(branch_gross,total_expense,q22):
+    """
     $N$22*Q26
     """
    
-    Q26 = BranchPayrollLiabilitieQ.objects.all().first().CA_Unemployment
+    Q26 = EmployeeWithholdingQ.objects.all().first().CA_disability
     N22 = math.ceil(int(branch_gross - total_expense)* q22.value/100),
     return (Q26/100) * N22[0]
+
 
 
 def net_paycheck_for_employee_with_holdings(branch_gross,total_expense,q22,total):
@@ -262,7 +279,7 @@ def calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22 )
     Q33 = BranchPayrollLiabilitieQ.objects.all().first().Fed_Unemploy
     
 
-    if R33 >= N33:
+    if R33 >= N22:
         N33 =  N22 * (Q33/100)
     else:
         N33 = R33 * Q33/100

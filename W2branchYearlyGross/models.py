@@ -90,9 +90,9 @@ class BranchPayrollLiabilities(models.Model):
     Employment_Training_Tax =   models.FloatField("Employment Training Tax (ETT)")
     total 			=  models.FloatField(blank=True,null=True)
     
-    # def save(self, *args, **kwargs):
-    #     self.total = self.Social_Security + self.Medicare + self.Fed_Unemploy +  self.Employment_Training_Tax + self.CA_Unemployment 
-    #     super().save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        self.total = self.Social_Security + self.Medicare + self.Fed_Unemploy +  self.Employment_Training_Tax + self.CA_Unemployment 
+        super().save(*args, **kwargs)
         
         
     def __str__(self) -> str:
