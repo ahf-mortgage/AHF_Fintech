@@ -14,7 +14,12 @@ from utils.calc_res import (
                     calculate_medicare,
                     calculate_fed_un_employ,
                     calculate_CA_Unemployment,
-                    net_paycheck_for_employee_with_holdings
+                    net_paycheck_for_employee_with_holdings,
+                    
+                    calculate_social_security_payroll_liabilities,
+                    calculate_medicare_payroll_liabilities,
+                    calculate_fed_un_employ_payroll_liabilities,
+                    calculate_CA_Unemployment_payroll_liabilities,
 
     )
 
@@ -144,6 +149,7 @@ def home(request):
         
         
     }
+   
     
     # Employee withholding data
     _calculate_social_security              = calculate_social_security(branch_gross,total_expense,q22) 
@@ -152,12 +158,24 @@ def home(request):
     bplr_total                              = _calculate_social_security + CA_Unemployment + medicare
     employee_with_holdings_q_columns_total  = sum(ewl_dict.values())
     balance                                 = math.ceil(branch_gross) - 611.42
+    
+    
+    
+    # _payroll_liabilities
+        
+    _calculate_social_security_payroll_liabilities              = calculate_social_security_payroll_liabilities(branch_gross,total_expense,q22) 
+    CA_Unemployment_payroll_liabilities                         = calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22)
+    medicare_payroll_liabilities                                = calculate_medicare_payroll_liabilities(branch_gross,total_expense,q22)
+  
+    
   
       
     w2_branch_yearly_gross_income_data = {
         'calculate_social_security'     :math.floor(_calculate_social_security),
         'calculate_fed_un_employ'       :calculate_fed_un_employ(branch_gross),
         'calculate_CA_Unemployment'     :math.floor(CA_Unemployment),
+        'calculate_fed_un_employ_payroll_liabilities'       :calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22),
+
         'calculate_Medicare'            :math.floor(medicare),
         'column_and_bplqs_dict'         :column_and_bplqs_dict,
         'bplqr_dict'                    :bplqr_dict, 
@@ -166,6 +184,21 @@ def home(request):
         'q22'                           :q22.value,
         'balance'                       :balance,
         
+      
+    }
+    
+    print("w2_branch_yearly_gross_income_data.calculate_fed_un_employ_payroll_liabilities ",
+          w2_branch_yearly_gross_income_data.get("calculate_fed_un_employ_payroll_liabilities"))
+
+
+
+      
+    w2_branch_payroll_liabilities_data = {
+        'calculate_social_security_payroll_liabilities '     :math.floor(_calculate_social_security_payroll_liabilities),
+        'calculate_fed_un_employ_payroll_liabilities '       :calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22),
+        'calculate_CA_Unemployment_payroll_liabilities '     :math.floor(CA_Unemployment_payroll_liabilities ),
+        'calculate_Medicare_payroll_liabilities '            :math.floor(medicare_payroll_liabilities ),
+      
       
     }
 
@@ -199,6 +232,7 @@ def home(request):
         'bpl':dict(bpl),
         'bpl_columns':bpl_columns,
         'w2_branch_yearly_gross_income_data':w2_branch_yearly_gross_income_data,
+        'w2_branch_payroll_liabilities_data':w2_branch_payroll_liabilities_data,
         
         
         'E23':E23,
@@ -274,7 +308,7 @@ def change_comp_plan(request):
     comp_plan_obj = CompPlan.objects.all().first()
     if request.method == "POST":
         comp_plan = request.POST.get("comp_plan")
-        print("comp plan ",comp_plan)
+     
         comp_plan_obj.Percentage = comp_plan
         comp_plan_obj.save()
         return redirect("/")
@@ -341,7 +375,7 @@ def comp_plan_change_view(request):
 
 def change_branch_loan(request):
     if request.method == "POST":
-        # print(request.POST.get('M9'),"m9")
+        
         loan = Branch.objects.all().first()
         loan.loan_per_year = int(request.POST.get("M9"))
         loan.save()

@@ -121,6 +121,11 @@ def calculate_total_expense():
     return total_expense
 
 
+
+"""
+calculation for table Employee withholding
+"""
+
 # def calculate_social_security(loan_break_amount,comp_plan,commission,above_loan_break_point_ahf_commission,percentage,small_percentage):
 def calculate_social_security(branch_gross,total_expense,q22):
     """
@@ -190,15 +195,91 @@ def net_paycheck_for_employee_with_holdings(branch_gross,total_expense,q22,total
     N22 = int(branch_gross - total_expense)* q22.value/100
     N27 = total
     
-    print("N22 ",N22)
-    print("N27 ",N27)
-    print("N22 - N27 ",(N22 - N27))
-    
     return N22 - N27
 
 
 
-        
+ 
+ 
+ 
+ 
+"""
+calculation for table Branch payroll liabilities
+
+"""
+
+# def calculate_social_security(loan_break_amount,comp_plan,commission,above_loan_break_point_ahf_commission,percentage,small_percentage):
+def calculate_social_security_payroll_liabilities(branch_gross,total_expense,q22):
+    """
+        Social Security = =IF($N$22<=R24,$N$22*Q24,T24)
+        N22 = N20*Q22#({w2_branch_yearly_gross_income_data.w2_Taxable_gross_payroll)
+        R24 = 168600 (need to be input) (R24.social_security)
+        Q24 = 6.2% (need to be input) (Q24.social_security)
+        T24 = Q24*R24  (R24.social_security) (Q24.social_security)
+    """
+    N22 = math.ceil(int(branch_gross - total_expense)* q22.value/100), #w2_branch_yearly_gross_income_data.w2_Taxable_gross_payroll
+    R24 = BranchPayrollLiabilitieR.objects.all().first().Social_Security
+    Q24 = BranchPayrollLiabilitieQ.objects.all().first().Social_Security
+    T24 = (Q24 * R24)
+    
+    
+    R25 = BranchPayrollLiabilitieR.objects.all().first().Medicare
+    Q25 = BranchPayrollLiabilitieQ.objects.all().first().Medicare
+   
+ 
+    Social_Security = 0
+    if R24 >= Q24:
+        Social_Security = float(N22[0]) * float(Q24/100)
+    else:
+        Social_Security = T24
+    return Social_Security #branch_gross_income_num - branch_commission * (percentage) * small_percentage
+
+
+def calculate_medicare_payroll_liabilities(branch_gross,total_expense,q22):
+    """
+    N25 = IF($N$22<=R25,$N$22*Q25,T25+$U$25*($N$22-$R$25))  
+    """
+    R25 = EmployeeWithholdingR.objects.all().first().Medicare
+    Q25 = EmployeeWithholdingQ.objects.all().first().Medicare
+    U25 = (0.9 / 100)
+    T25 = R25 * Q25
+    N22 = math.ceil(int(branch_gross - total_expense)* q22.value/100),
+    
+    if (N22[0] <=  R25):
+        return (N22[0]) * (Q25 / 100)
+    else :
+        return (T25 + U25) * (N22[0] - R25)
+    
+    
+    
+def calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22 ):
+    """
+    N33=IF($N$22<=R33,$N$22*Q33,T33)
+    """
+    N22 = math.ceil(int(branch_gross - total_expense)* q22.value/100)
+    N33 = 0
+    R33 = BranchPayrollLiabilitieR.objects.all().first().Fed_Unemploy
+    Q33 = BranchPayrollLiabilitieQ.objects.all().first().Fed_Unemploy
+    
+
+    if R33 >= N33:
+        N33 =  N22 * (Q33/100)
+    else:
+        N33 = R33 * Q33/100
+    return N33
+
+
+def calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22):
+    """
+    $N$22*Q26
+    """
+   
+    Q26 = BranchPayrollLiabilitieQ.objects.all().first().CA_Unemployment
+    N22 = math.ceil(int(branch_gross - total_expense)* q22.value/100),
+    return (Q26/100) * N22[0]
+
+
+       
         
 # def calculate_Employment_Training_Tax(branch_gross_income):
     
