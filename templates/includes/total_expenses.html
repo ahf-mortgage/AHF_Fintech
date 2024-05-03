@@ -51,11 +51,12 @@
           </tr>
 
           <tbody>
+       
 
             {% for column in ewh_columns%}
 
             <tr class="border-b border-neutral-200 dark:border-white/10">
-              <td class="whitespace-nowrap justify-end">
+              <td class="font-bold whitespace-nowrap justify-end">
                 {{column|split_word}}
 
 
@@ -78,13 +79,13 @@
               </td>
 
               {% else %}
-              <td class="whitespace-nowrap"> {{total_bqlr|intcomma}}</td>
+              <td class="whitespace-nowrap">{{total_bqlr|intcomma}}</td>
               {% endif %}
               <td>
-              
+                O column
               </td>
               <td>
-              
+
               </td>
 
 
@@ -101,7 +102,7 @@
 
 
               <td class="flex">
-             
+
               </td>
 
               {% endif %}
@@ -129,7 +130,7 @@
                 <h1 class="font-bold">
 
 
-                <!-- xx  {{bplr_total}} -->
+                  <!-- xx  {{bplr_total}} -->
 
                 </h1>
 
@@ -143,16 +144,16 @@
               </td>
 
               <td class="pr-4">
-              $10,453
+                $10,453
               </td>
 
               {% else %}
               <td class="pr-4">
-              
+
               </td>
 
               <td class="pr-4">
-               
+
               </td>
 
               {% endif %}
@@ -175,7 +176,7 @@
               </td>
 
               <td class="flex whitespace-nowrap">
-               
+
               </td>
 
 
@@ -184,12 +185,12 @@
               </td>
 
               <td class="whitespace-nowrap">
-             
+
               </td>
               <td class="flex font-bold whitespace-nowrap">
                 {{net_paycheck_for_employee_with_holdings_total|intcomma}}
               </td>
-              
+
 
               <td class="whitespace-nowrap">
                 capped
@@ -202,7 +203,7 @@
 
 
               <td class="whitespace-nowrap">
-              
+
               </td>
             </tr>
 
@@ -225,24 +226,24 @@
             {% for column in bpl_columns%}
 
             <tr class="border-b border-neutral-200 dark:border-white/10">
-              <td class="whitespace-nowrap justify-end">
-                {{column|split_word}}
+              <td class="flex font-bold whitespace-nowrap">
+                {{column|split_word|title}}
 
 
                 {% if column == 'Social_Security' %}
-              <td class="whitespace-nowrap"> 
-                 {{w2_branch_yearly_gross_income_data.calculate_social_security|intcomma}}
-                
-                </td>
+              <td class="whitespace-nowrap">
+                {{w2_branch_yearly_gross_income_data.calculate_social_security|intcomma}}
+
+              </td>
 
               {% elif column == 'Medicare' %}
 
-              <td class="whitespace-nowrap"> 
+              <td class="whitespace-nowrap">
                 {{w2_branch_yearly_gross_income_data.calculate_Medicare|intcomma}}
               </td>
 
 
-              
+
               {% elif column == 'Fed_Unemploy'%}
               <td class="whitespace-nowrap">
                 {{w2_branch_yearly_gross_income_data.calculate_fed_un_employ_payroll_liabilities|intcomma}}
@@ -250,42 +251,45 @@
 
               {% elif column == 'CA_Unemployment'%}
               <td class="whitespace-nowrap">
-                {{w2_branch_payroll_liabilities_data.calculate_CA_Unemployment|intcomma}}
+                {{w2_branch_payroll_liabilities_data.CA_Unemployment_payroll_liabilities|intcomma}}
+              </td>
+
+              {% elif column == 'total'%}
+              <td class="whitespace-nowrap">
+               {{branch_payroll_liabilities_total}}
               </td>
 
               {% else %}
-              <td class="whitespace-nowrap"> {{bpl|dict_get:column|intcomma}}</td>
+              <td class="font-bold whitespace-nowrap"> {{bpl|dict_get:column|intcomma}}</td>
+
               {% endif %}
+             
               <td>
 
               </td>
-              <td>
 
-              </td>
-
-              <p>
-
-              </p>
+           
+            {% if column != 'total'%}
               <td class="pl-2">
-                {% if column != 'total'%}
+            
                 <form action="{% url 'W2branchYearlyGross:control_Q_value_branch_payroll_liabilities' %}" method="post">
                   {% csrf_token %}
 
-                  <input 
-                  type="text"
-                  value="{{bplq_dict|dict_get:column}}"
-                   id="{{column}}" name="value" />
+                  <input type="text" value="{{bplq_dict|dict_get:column}}" id="{{column}}" name="value" />
 
                   <input type="hidden" name="column" value="{{column}}" />
 
                 </form>
+              </td>
                 {% else %}
 
-              {{bplq_total}}
+              <td class="flex">
+                  {{branch_payroll_liabilities_percentate_total}}
+              </td>
 
                 {% endif %}
 
-              </td>
+            
 
               <td class="pl-2">
 
@@ -301,7 +305,7 @@
                 {% else %}
                 <h1 class="font-bold">
 
-               {{bplr_total}}
+                {{bplr_total}}
 
                 </h1>
 

@@ -235,8 +235,8 @@ def calculate_social_security_payroll_liabilities(branch_gross,total_expense,q22
         T24 = Q24*R24  (R24.social_security) (Q24.social_security)
     """
     N22 = math.ceil(int(branch_gross - total_expense)* q22.value/100), #w2_branch_yearly_gross_income_data.w2_Taxable_gross_payroll
-    R24 = BranchPayrollLiabilitieR.objects.all().first().Social_Security
-    Q24 = BranchPayrollLiabilitieQ.objects.all().first().Social_Security
+    R24 = EmployeeWithholdingR.objects.all().first().Social_Security
+    Q24 = EmployeeWithholdingQ.objects.all().first().Social_Security
     T24 = (Q24 * R24)
     
     
@@ -288,12 +288,21 @@ def calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22 )
 
 def calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22):
     """
-    $N$22*Q26
+    N34=IF($N$22<=R34,$N$22*Q34,T34)
     """
    
-    Q26 = BranchPayrollLiabilitieQ.objects.all().first().CA_Unemployment
-    N22 = math.ceil(int(branch_gross - total_expense)* q22.value/100),
-    return (Q26/100) * N22[0]
+    N22 = math.ceil(int(branch_gross - total_expense)* q22.value/100)
+    
+    R34 = BranchPayrollLiabilitieR.objects.all().first().CA_Unemployment
+    Q34 = BranchPayrollLiabilitieQ.objects.all().first().CA_Unemployment / 100
+    T34 = R34 * Q34
+   
+    if N22 <= R34:
+        return N22 * Q34
+    else:
+        return T34
+   
+  
 
 
        

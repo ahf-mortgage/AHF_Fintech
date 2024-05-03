@@ -5,51 +5,52 @@
   <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
     <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
       <div class="overflow-hidden">
-        <table id="gross" class="min-w-full text-center text-sm font-light text-surface dark:text-white border-collapse border">
+        <table id="gross"
+          class="min-w-full text-center text-sm font-light text-surface dark:text-white border-collapse border">
           <thead class="border-b border-neutral-200 font-medium dark:border-white/10">
 
-            <tr class="bg-gray-200" style="height:20px;margin-bottom: 50px;">
-              <th scope="col" class="">
 
-              </th>
-              <th scope="col" class=""></th>
-              <th scope="col" class=""></th>
-          
-              <th  scope="col" colspan="2" class="px-8"></th>
-              <th  scope="col" colspan="2" class="px-8"></th>
-
-            </tr>
-
-
-            <tr class="py-4 bg-gray-200">
+            <tr class="bg-gray-200 py-8">
 
               <th scope="col" class="flex w-auto">
-                W2 Branch Yearly Gross Income
+              W2 Branch Yearly Gross Income
               </th>
               <th scope="col" class="font-bold">
                 ${{ahf_annual_cap_data.branch_gross_income|intcomma}}
               </th>
-
+  
               <th scope="col" class="font-bold">
-
+  
               </th>
-
+  
               <th scope="col" class="font-bold">
-
+  
               </th>
-
-             
-
+  
+  
+  
               <th scope="col" colspan="2" class="px-1">
-                Number of Loans 
+  
               </th>
-          
-
+  
+  
+              <th scope="col" colspan="2" class="px-1">
+  
+              </th>
+  
+  
               <!-- R column -->
+              <th scope="col" colspan="2" class="px-1">
+                Number of Loans
+              </th>
+
               <th scope="col" class="">
                 {{loan_per_year}}
               </th>
             </tr>
+
+ 
+
 
           </thead>
 
@@ -60,8 +61,8 @@
 
             <tr class="flex  dark:border-white/10 ">
 
-              <td class="whitespace-nowrap px-6 font-medium">
-              testing   {{category}}
+              <td class="flex whitespace-nowrap px-6 font-bold">
+                {{category}}
               </td>
               <td class="whitespace-nowrap">
               </td>
@@ -90,7 +91,8 @@
               <td class="px-4">
 
 
-                <form action="{% url 'W2branchYearlyGross:control_expense' %}" method="post" class="flex flex-col items-center">
+                <form action="{% url 'W2branchYearlyGross:control_expense' %}" method="post"
+                  class="flex flex-col items-center">
                   {% csrf_token %}
                   <div class="relative mb-3" data-twe-input-wrapper-init>
                     <input type="text"
@@ -112,79 +114,67 @@
 
             <!--     Total Expense row  -->
             <tr class="border-b border-neutral-200 dark:border-white/10 py-4">
-              <td class="flex font-bold">
+              <td class="flex px-4 font-bold">
                 Total Expense
               </td>
 
+              <td class="flex justify-around align-center px-6">
+                {{total_expense|intcomma}}
+              </td>
 
-              <td class="">
-                 {{total_expense|intcomma}}
+              <td class="px-4">
+
+              </td>
+              <td>
+
               </td>
 
 
-              <td class="whitespace-nowrap">
+              <td class="px-4">
 
               </td>
 
-              <td class="whitespace-nowrap">
+
+              <td class="px-4">
 
               </td>
 
-              <td class="whitespace-nowrap font-bold">
+              <td class="px-4">
+
+              </td>
+
+              <td class="px-4">
 
               </td>
             </tr>
-          <!--  blank table row -->
-          {% include 'includes/blank_table_row.html' %}
-        
-
-            <!--  Net income before payroll -->
-            <tr class="border-b border-neutral-200 dark:border-white/10 py-4 my-4">
-                    <td class="flex font-bold">
-                      Net income before payroll
-                    </td>
-      
-      
-                    <td class="">
-                      {{w2_branch_yearly_gross_income_data.net_income_before_payroll|intcomma}}
-                    </td>
-      
-      
-                    <td class="whitespace-nowrap">
-      
-                    </td>
-      
-                    <td class="whitespace-nowrap">
-      
-                    </td>
-      
-                    <td class="whitespace-nowrap font-bold">
-      
-                    </td>
-            </tr>
-        
             <!--  blank table row -->
             {% include 'includes/blank_table_row.html' %}
-        
-  
+
+
+            <!--  Net income before payroll -->
+            {% include 'components/net_income_before_payroll.html' %}
+            <!--  blank table row -->
+            {% include 'includes/blank_table_row.html' %}
+
+
             <!-- Taxable Gross Payroll  -->
-            <tr class="border-b border-neutral-200 dark:border-white/10 bg-gray-400">
-              <td class="flex whitespace-nowrap font-medium py-2">
+            <tr class="flex min-w-full border-b border-neutral-200 dark:border-white/10 bg-gray-400">
+              <td class="px-2 whitespace-nowrap font-medium py-2">
                 <p class="font-bold">W2 Taxable Gross Payroll </p>
 
               </td>
-              <td class="whitespace-nowrap">
+              <td class="px-4 font-bold whitespace-nowrap">
                 <p>
                   {{w2_branch_yearly_gross_income_data.w2_Taxable_gross_payroll|intcomma}}
                 <p>
               </td>
 
 
-              <td class="whitespace-nowrap">
-               
+              <td class="px-4 whitespace-nowrap">
+                {{w2_branch_yearly_gross_income_data.w2_Taxable_gross_payroll|intcomma}}
               </td>
 
-              <td class="whitespace-nowrap">
+              <td class="fwhitespace-nowrap">
                 <form action="{% url 'W2branchYearlyGross:control_Q22_value' %}" method="post">
                   {% csrf_token %}
                   <p>
@@ -197,7 +187,7 @@
 
               </td>
 
-              <td class="whitespace-nowrap font-bold" colspan="2">
+              <td class="px-4 whitespace-nowrap font-bold" colspan="2">
                 <p>
                   {{w2_branch_yearly_gross_income_data.w2_Taxable_gross_payroll|safe_divide}}
                 <p>
@@ -209,6 +199,15 @@
                   per month
                 <p>
               </td>
+
+
+              <td class="whitespace-nowrap font-bold" colspan="2">
+                <p>
+                
+                <p>
+              </td>
+
+
             </tr>
 
 

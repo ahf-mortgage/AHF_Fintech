@@ -3,6 +3,12 @@ import math
 register = template.Library()
 
 
+
+
+@register.filter(name='sum_list')
+def sum_list(numbers):
+    return sum(numbers)
+
 @register.filter(name='safe_divide')
 def  safe_divide(value):
     return math.ceil(int(value)/12)
