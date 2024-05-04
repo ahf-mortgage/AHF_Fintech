@@ -23,9 +23,6 @@ def  divide_by_10(value):
  
 @register.filter(name='mul')
 def  mul(value1,value2):
-    # return float(value1) * float(value2)
-    print("value 1",value1)
-    print("valu2 ",value2)
     return value1
 
 

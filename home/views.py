@@ -183,15 +183,7 @@ def home(request):
         + _calculate_ett),2
         
     )
-    
-    print("total ",total_expense)
-    print("total_employee_with_holding_expense ",total_employee_with_holding_expense)
-    print("branch_payroll_liabilities_total ",branch_payroll_liabilities_total)
-
-
     debit =   total_expense  + total_employee_with_holding_expense + branch_payroll_liabilities_total 
-    
-
     branch_payroll_liabilities_percentate_total = bplq.Social_Security + bplq.Medicare +bplq.CA_Unemployment + bplq.Fed_Unemploy + bplq.Employment_Training_Tax
       
     w2_branch_yearly_gross_income_data = {
@@ -225,9 +217,33 @@ def home(request):
       
     }
 
+    # Above  loan break points data
+    # range of numbers from 50 to 250 within 50 interval
+    #gci =IF(B10>0,$C$8/B10*10000,0 )
+    bps_from_50_to_250          = [50,100] + [num for num in range(100,250,25)]+[250]
+    gci_for_bps_from_50_to_250  = [gci/(num) * 10000 for num in bps_from_50_to_250] 
+    ahf_for_bps_from_50_to_250  = [(1 - branch.commission) * num for num in bps_from_50_to_250] 
+    branch_for_bps_from_50_to_250 = [branch.commission* num for num in bps_from_50_to_250]
+    bps_to_gci_dict             = {}
+    bps_to_ahf_commission_dict  = {}
+    bps_to_branch_commission_dict = {}
+    
+    for key,value in zip(bps_from_50_to_250,gci_for_bps_from_50_to_250):
+        bps_to_gci_dict[key] = value
+        
+    for key,value in zip(bps_from_50_to_250,ahf_for_bps_from_50_to_250):
+        bps_to_ahf_commission_dict[key] = value
+        
+    for key,value in zip(bps_from_50_to_250,branch_for_bps_from_50_to_250):
+        bps_to_branch_commission_dict[key] = value
+        
+        
   
     context = {
-
+        'bps_from_50_to_250':bps_from_50_to_250,
+        'bps_to_gci_dict':bps_to_gci_dict,
+        'bps_to_ahf_commission_dict':bps_to_ahf_commission_dict,
+        'bps_to_branch_commission_dict':bps_to_branch_commission_dict,
         'categories':categories,
         'total_expense':int(total_expense),
         'min_compesate':comp_plan.Maximum_Compensation / 1000,
@@ -280,7 +296,7 @@ def home(request):
         'bps':int(bps.bps) if bps.bps > 0 else None,
         'loan_break_point': math.ceil(loan_break_point.loan_break_point) ,# if loan_break_point >0 else None,
         'comp_plan':comp_plan.Flat_Fee if comp_plan.Flat_Fee > 0 else None,
-        'gci': math.ceil(gci),
+        'gci': round(gci,2),
         'ahf_commission': math.ceil(ahf_commission) if ahf_commission > 0 else None,
         'ahf_commission_amount':  1 - float(branch.commission) if branch.commission > 0 else None ,#ahf_amount, # ahf.commission,
         'branch_commission': math.ceil(branch_commission) if branch_commission > 0 else None,
