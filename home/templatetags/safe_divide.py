@@ -20,6 +20,16 @@ def  divide_by_10(value):
     return round(int(value)/10,2)
 
 
+ 
+@register.filter(name='mul')
+def  mul(value1,value2):
+    # return float(value1) * float(value2)
+    print("value 1",value1)
+    print("valu2 ",value2)
+    return value1
+
+
+
 
 @register.filter(name='divide_by_12')
 def  divide_by_12(value):
@@ -36,6 +46,5 @@ def dict_get(dictionary, key):
 
 @register.filter("split_word")
 def split_words(value):
-    print("split words",value, " ".join(value.split("_")))
     return " ".join(value.split("_"))
   

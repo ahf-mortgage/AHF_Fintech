@@ -68,21 +68,18 @@
               {% elif column == 'Medicare'%}
               <td class="whitespace-nowrap">
 
-                {{w2_branch_yearly_gross_income_data.calculate_Medicare|intcomma}}
+                {{w2_branch_yearly_gross_income_data.calculate_Medicare|floatformat:"2"|intcomma}}
               </td>
-
-
-
               {% elif column == 'CA_disability'%}
               <td class="whitespace-nowrap">
-                {{w2_branch_yearly_gross_income_data.calculate_CA_Disability|intcomma}}
+                {{w2_branch_yearly_gross_income_data.calculate_CA_Disability|floatformat:"2"}}
               </td>
 
               {% else %}
-              <td class="whitespace-nowrap">{{total_bqlr|intcomma}}</td>
+              <td class="whitespace-nowrap">{{total_bqlr|floatformat:"2"|intcomma}}</td>
               {% endif %}
               <td>
-                O column
+               
               </td>
               <td>
 
@@ -144,7 +141,7 @@
               </td>
 
               <td class="pr-4">
-                $10,453
+               {{bplqr|dict_get:column}}
               </td>
 
               {% else %}
@@ -246,18 +243,28 @@
 
               {% elif column == 'Fed_Unemploy'%}
               <td class="whitespace-nowrap">
-                {{w2_branch_yearly_gross_income_data.calculate_fed_un_employ_payroll_liabilities|intcomma}}
+                {{w2_branch_yearly_gross_income_data.calculate_fed_un_employ_payroll_liabilities|floatformat:"2"|intcomma}}
               </td>
 
               {% elif column == 'CA_Unemployment'%}
               <td class="whitespace-nowrap">
-                {{w2_branch_payroll_liabilities_data.CA_Unemployment_payroll_liabilities|intcomma}}
+                {{w2_branch_payroll_liabilities_data.CA_Unemployment_payroll_liabilities|floatformat:"2"|intcomma}}
               </td>
+
+              {% elif column == 'Employment_Training_Tax'%}
+              <td class="whitespace-nowrap">
+                {{calculate_ett_num|floatformat:"2"|intcomma}}
+
+              </td>
+
+             
 
               {% elif column == 'total'%}
               <td class="whitespace-nowrap">
                {{branch_payroll_liabilities_total}}
               </td>
+
+          
 
               {% else %}
               <td class="font-bold whitespace-nowrap"> {{bpl|dict_get:column|intcomma}}</td>
@@ -318,7 +325,8 @@
               </td>
 
               <td class="pr-4">
-                $10,453
+          
+               ${{bplqr|dict_get:column|mul:10}}
               </td>
             </tr>
 

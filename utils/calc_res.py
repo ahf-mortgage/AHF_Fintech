@@ -49,8 +49,6 @@ def gross_ahf_income(loan_break_amount,comp_plan,ahf_comission_amount):
     return   M9*(275 * loan_break_amount.loan_break_point /10000 + comp_plan.Flat_Fee) * 0.3 if M9 <= J9 else   calculate_annual_ahf_income(loan_break_amount,comp_plan,ahf_comission_amount)
 
 def branch_gross_income(loan_break_amount,comp_plan,commission):
-     #275 *  loan_amount_break. loan_amount_break/10000 + comp_plan.Flat_FEE  * M9
-    # return ((275 * loan_break_amount.loan_break_point )/ 10000 + comp_plan.Flat_Fee )  * 48
     loans_per_year = Branch.objects.all().first().loan_per_year
     annual_cap = AHF.objects.all().first().loan_per_year
     
@@ -65,11 +63,7 @@ def branch_gross_income(loan_break_amount,comp_plan,commission):
     
                        
                        
-    # if branch_loans_per_year > annual_cap:  
-    #     return (bps*loan_break_amount.loan_break_point/10000) * (branch_loans_per_year - annual_cap)  + annual_cap * (bps*loan_break_amount.loan_break_point/10000)*commission 
-    # else:
-    #      return (bps*loan_break_amount.loan_break_point/10000)*commission * branch_loans_per_year 
-
+ 
 
 
 def get_gci_result(comp_plan,num):
@@ -266,6 +260,24 @@ def calculate_medicare_payroll_liabilities(branch_gross,total_expense,q22):
         return (N22[0]) * (Q25 / 100)
     else :
         return (T25 + U25) * (N22[0] - R25)
+    
+def calculate_ett(branch_gross,total_expense,q22):
+    """
+    N35 = if N22 <= R35,N22*Q35,T35 
+    """
+    R35 = BranchPayrollLiabilitieR.objects.all().first().Employment_Training_Tax
+    Q35 = BranchPayrollLiabilitieQ.objects.all().first().Employment_Training_Tax/100
+    T35 = R35 * Q35
+    N22 = (int(branch_gross - total_expense)* q22.value/100)
+
+    if N22 <= R35:
+        return N22 * Q35
+    else:
+        return T35
+    
+
+    
+    
     
     
     
