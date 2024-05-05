@@ -1,5 +1,6 @@
 
 
+
     let input_fieldKeyPressed = true;
     const btn_save = document.getElementById("btn-save")
     const loan_break_point = document.getElementById("loan_break_point")
@@ -25,4 +26,6 @@
         });
 
     }
+
+console.log("Hello world drag and drop functinlity")
 

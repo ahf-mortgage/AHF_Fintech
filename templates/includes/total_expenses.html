@@ -62,7 +62,7 @@
 
                 {% if column == 'Social_Security' %}
               <td class="whitespace-nowrap">
-                {{w2_branch_yearly_gross_income_data.calculate_social_security|intcomma}}
+                {{w2_branch_yearly_gross_income_data.calculate_social_security|floatformat:"2"|intcomma}}
               </td>
 
               {% elif column == 'Medicare'%}
@@ -76,7 +76,9 @@
               </td>
 
               {% else %}
-              <td class="whitespace-nowrap">{{total_bqlr|floatformat:"2"|intcomma}}</td>
+              <td class="whitespace-nowrap">
+                {{bplr_total|floatformat:"2"|intcomma}}
+              </td>
               {% endif %}
               <td>
                
@@ -163,7 +165,7 @@
             {% endfor %}
 
 
-            <tr class="w-full border-b border-neutral-200 dark:border-white/10 bg-gray-500">
+            <tr class="w-full border-b border-neutral-200 dark:border-white/10 bg-gray-200">
               <td class="whitespace-nowrap font-medium justify-end ">
                 <p class="font-bold"> Net paycheck </p>
 

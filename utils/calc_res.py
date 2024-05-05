@@ -131,8 +131,10 @@ def calculate_social_security(branch_gross,total_expense,q22):
     """
     N22 = math.ceil(int(branch_gross - total_expense)* q22.value/100), #w2_branch_yearly_gross_income_data.w2_Taxable_gross_payroll
     R24 = BranchPayrollLiabilitieR.objects.all().first().Social_Security
-    Q24 = BranchPayrollLiabilitieQ.objects.all().first().Social_Security
+    Q24 = BranchPayrollLiabilitieQ.objects.all().first().Social_Security/100
+    
     T24 = (Q24 * R24)
+   
     
     
     R25 = BranchPayrollLiabilitieR.objects.all().first().Medicare
@@ -140,8 +142,8 @@ def calculate_social_security(branch_gross,total_expense,q22):
    
  
     Social_Security = 0
-    if R24 >= Q24:
-        Social_Security = float(N22[0]) * float(Q24/100)
+    if N22[0] < R24:
+        Social_Security = float(N22[0]) * float(Q24)
     else:
         Social_Security = T24
     return Social_Security #branch_gross_income_num - branch_commission * (percentage) * small_percentage
@@ -150,17 +152,40 @@ def calculate_social_security(branch_gross,total_expense,q22):
 def calculate_medicare(branch_gross,total_expense,q22):
     """
     N25 = IF($N$22<=R25,$N$22*Q25,T25+$U$25*($N$22-$R$25))  
+ 
+    
+    N22 = N20*Q2
+    N20 = N2-O17
+    Q2 = branch_loan_per_year
+    
+    N22 = (N2-O17)*(Q2)
+    N2 = branch_gross_income
+    O17 = total_expense_epw
+    N22 = (branch_gross_income - total_expense_epw) * branch_loan_per_year
+    
     """
     R25 = EmployeeWithholdingR.objects.all().first().Medicare
-    Q25 = EmployeeWithholdingQ.objects.all().first().Medicare
+    Q25 = EmployeeWithholdingQ.objects.all().first().Medicare /100
     U25 = 0.009
-    T25 = R25 * Q25
-    N22 = math.ceil(int(branch_gross - total_expense)* q22.value/100),
+    T25 = R25 * Q25 # 2900
     
+    N22 = math.ceil(int(branch_gross - total_expense)* q22.value/100), 
+    
+
+    
+    # print("[correct] R25 ",R25)
+    # print("[correct] Q25 ",Q25)
+    # print("[correct] u25 ",U25)
+    # print("[correct] T25 ",T25)
+    # print("[not correct] N25 ",N22)
+    
+    # N25=IF($N$22<=R25,$N$22*Q25,T25+$U$25*($N$22-$R$25))
     if (N22[0] <=  R25):
-        return (N22[0]) * (Q25 / 100)
+        return (N22[0]) * (Q25)
     else :
-        return (T25 + U25) * (N22[0] - R25)
+        return T25 + U25 * (N22[0] - R25)
+    
+    
     
     
     

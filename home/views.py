@@ -77,6 +77,8 @@ def home(request):
     gross_ahf_income = calculate_gross_ahf_income(loan_break_point,comp_plan,float(branch.commission))
     gross_income = calculate_gross_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
     branch_gross = branch_gross_income(loan_break_point,comp_plan,float(branch.commission))
+    
+    print(" branch_gross ",branch_gross)
     flat_fee_gci = int((comp_plan.Percentage * 100) * loan_break_point.loan_break_point / 10000) 
     above_loan_break_point_ahf_commission = int(flat_fee_gci * (branch.commission))
   
@@ -158,9 +160,14 @@ def home(request):
     _calculate_social_security              = calculate_social_security(branch_gross,total_expense,q22) 
     CA_Unemployment                         = calculate_CA_Unemployment(branch_gross,total_expense,q22)
     medicare                                = calculate_medicare(branch_gross,total_expense,q22)
+    
     bplr_total                              = _calculate_social_security + calculate_CA_Disability(branch_gross,total_expense,q22)  + medicare
+    print(" ***bplr_total ",bplr_total)
+    
+    
     employee_with_holdings_q_columns_total  = sum(ewl_dict.values())
     total_employee_with_holding_expense     = round((branch_gross - total_expense)* q22.value/100 ,2)
+  
     
    
 
@@ -173,16 +180,27 @@ def home(request):
     medicare_payroll_liabilities                                = calculate_medicare_payroll_liabilities(branch_gross,total_expense,q22)
     _calculate_CA_Disability                                    = calculate_CA_Disability(branch_gross,total_expense,q22) 
     calcuate_Fed_Unemploy                                       = calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22)
+    
+    
     _calculate_ett                                              = calculate_ett(branch_gross,total_expense,q22)
     
-    branch_payroll_liabilities_total                            =  round((
-        _calculate_social_security_payroll_liabilities 
-        + medicare_payroll_liabilities
+    branch_payroll_liabilities_total                            =  (
+        _calculate_social_security 
+        + medicare
         + CA_Unemployment_payroll_liabilities 
         + calcuate_Fed_Unemploy
-        + _calculate_ett),2
+        + _calculate_ett
         
     )
+    print("branch_payroll_liabilities_total ",branch_payroll_liabilities_total)
+    print("_calculate_social_security_payroll_liabilities ",_calculate_social_security_payroll_liabilities)
+    print("medicare_payroll_liabilities ",medicare)
+    print("CA_Unemployment_payroll_liabilities ",CA_Unemployment_payroll_liabilities)
+    print("calcuate_Fed_Unemploy ",calcuate_Fed_Unemploy)
+    print("_calculate_ett ",_calculate_ett)
+    
+    # print(_calculate_social_security_payroll_liabilities  medicare_payroll_liabilities,CA_Unemployment_payroll_liabilities ,branch_payroll_liabilities_total)
+    print("_calculate_ett ",_calculate_ett)
     debit =   total_expense  + total_employee_with_holding_expense + branch_payroll_liabilities_total 
     branch_payroll_liabilities_percentate_total = bplq.Social_Security + bplq.Medicare +bplq.CA_Unemployment + bplq.Fed_Unemploy + bplq.Employment_Training_Tax
       
@@ -198,12 +216,19 @@ def home(request):
         'bplqr_dict'                    :bplqr_dict, 
         'bplq_dict'                     :bplq_dict,
         'net_income_before_payroll'     :round(branch_gross - total_expense,2),
-        'w2_Taxable_gross_payroll'      :round((branch_gross - total_expense) * q22.value/100,2),
+        
+        
+        'w2_Taxable_gross_payroll'      :(branch_gross - total_expense) * q22.value/100,
+        
+        
+        
         'q22'                           :q22.value,
       
         
       
     }
+    
+    print("N20= ",(branch_gross - total_expense))
     
       
     w2_branch_payroll_liabilities_data = {
@@ -264,7 +289,7 @@ def home(request):
         'ewl_dict':ewl_dict,
         'bplr_total': sum(bplqr_dict.values()),
         'bplq_total': sum(bplq_dict.values()),
-        'total_bqlr': math.floor(bplr_total),
+        'bplr_total': bplr_total,
         'debit':math.floor(debit),
         'balance':branch_gross- math.floor(debit),
         'employee_with_holdings_q_columns_total':employee_with_holdings_q_columns_total,
