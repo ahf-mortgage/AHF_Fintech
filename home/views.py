@@ -78,7 +78,7 @@ def home(request):
     gross_income = calculate_gross_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
     branch_gross = branch_gross_income(loan_break_point,comp_plan,float(branch.commission))
     
-    print(" branch_gross ",branch_gross)
+
     flat_fee_gci = int((comp_plan.Percentage * 100) * loan_break_point.loan_break_point / 10000) 
     above_loan_break_point_ahf_commission = int(flat_fee_gci * (branch.commission))
   
@@ -87,8 +87,9 @@ def home(request):
     
     E23 = (bps.bps * loan_break_point.loan_break_point )/ 10000 + comp_plan.Flat_Fee 
     nums_loans = [math.ceil(get_gci_result(comp_plan, num) * float((1-branch.commission))) for num in loan_below_limits]
-    annual_ahf_to_gci_result = [int(annual_ahf_cap)// num for num in  nums_loans]
-    
+    annual_ahf_to_gci_result = [int(gross_income)// num for num in  nums_loans]
+       
+  
     revenue_share = round((branch.loan_per_year / ahf.loan_per_year) * 100,2) if (branch.loan_per_year / ahf.loan_per_year) < 1 else 100
     
     
@@ -192,6 +193,8 @@ def home(request):
         + _calculate_ett
         
     )
+    
+    print("branch_gross - total_expense ",branch_gross,total_expense)
 
 
   
@@ -347,140 +350,6 @@ def home(request):
     # print("+++++++++++++w2_branch_payroll_liabilities_data.calculate_CA_Uenemployment ",w2_branch_payroll_liabilities_data.CA_Unemployment_payroll_liabilities)
     return render(request,"home/index2.html",context)
 
-
-
-
-
-# toggle a branch amout 
-def change_branch_amount(request):
-    branch = Branch.objects.all().first()
-   
-    if request.method == "POST":
-        branch_amount = request.POST.get("branch_amount")
-        branch_amount = int(branch_amount) / 100
-        branch.commission = branch_amount
-        branch.save()
-        return redirect("/")
-    
-    context = {
-        
-    }
-    return render(request,"home/index2.html",context)
-
-
-# toggle a comp plan gci max
-def change_comp_plan_max_gci(request):
-    comp_plan = CompPlan.objects.all().first()
-   
-    if request.method == "POST":
-        max_gci = request.POST.get('max_gci',None)
-        comp_plan.MAX_GCI = max_gci
-        comp_plan.save()
-       
-        return redirect("/")
-    
-    context = {
-        
-    }
-    return render(request,"home/index2.html",context)
-
-
-
-
-# toggle a comp plan
-def change_comp_plan(request):
-    comp_plan_obj = CompPlan.objects.all().first()
-    if request.method == "POST":
-        comp_plan = request.POST.get("comp_plan")
-     
-        comp_plan_obj.Percentage = comp_plan
-        comp_plan_obj.save()
-        return redirect("/")
-    
-    context = {
-        
-    }
-    return render(request,"home/index2.html",context)
-
-
-
-def loan_break_point(request):
-    loan_break_point = LoanBreakPoint.objects.all().first()
-    
-
-
-    if request.method == "POST":
-        loan_break= request.POST.get("loan_break_point")
-        loan_break_point.loan_break_point = int(loan_break)
-        loan_break_point.save()
-        return redirect("/")
-    
-    context = {
-        
-    }
-    return render(request,"home/index2.html",context)
-
-
-def comp_plan_change_view(request):
-    """
-        This function handle comp plane changes
-
-    """
-    
-    
-    loan_break_point = LoanBreakPoint.objects.all().first()
-    comp_plan_obj = CompPlan.objects.all().first()
-    branch = Branch.objects.all().first()
-
-    if request.method == "POST":
-        max_gci = request.POST.get('max_gci',None)
-        comp_plan = request.POST.get("comp_plan")
-        loan_break= request.POST.get("loan_break_point")
-        branch_amount = request.POST.get("branch_amount")
-        
-        if True:
-            comp_plan_obj.MAX_GCI = max_gci
-            comp_plan_obj.Percentage = float(comp_plan)
-            loan_break_point.loan_break_point = int(loan_break)
-            branch_amount = int(branch_amount) / 100
-            branch.commission = branch_amount
-            branch.save()
-            loan_break_point.save()
-            comp_plan_obj.save()
-            return redirect("/")
-            
-        else:
-            return redirect("/")
-  
-    context = {
-        
-    }
-    return render(request,"home/index2.html",context)
-
-def change_branch_loan(request):
-    if request.method == "POST":
-        
-        loan = Branch.objects.all().first()
-        loan.loan_per_year = int(request.POST.get("M9"))
-        loan.save()
-        return  redirect("/")
-    context = {
-        
-    }
-    return render(request,"home/index2.html",context)
-
-
-def change_ahf_loan(request):
-    if request.method == "POST":
-        loan = AHF.objects.all().first()
-        loan.loan_per_year = int(request.POST.get("H10"))
-        loan.save()
-        return  redirect("/")
-    context = {
-        
-    }
-    return render(request,"home/index2.html",context)
-    
 
 
 

@@ -58,7 +58,7 @@ def branch_gross_income(loan_break_amount,comp_plan,commission):
     if loans_per_year > annual_cap:
         return annual_cap * branch_commission + total_commission * (loans_per_year - annual_cap)
     else:
-        return loans_per_year * branch_commission + 0.6
+        return  loans_per_year * branch_commission
     
                        
                        
@@ -229,8 +229,6 @@ def net_paycheck_for_employee_with_holdings(branch_gross,total_expense,q22,total
     """
     N22 = int(branch_gross - total_expense)* q22.value/100
     N27 = total
-    print("N27 ",N27)
-    print("N22 ",N22)
     return N22 - N27
 
 

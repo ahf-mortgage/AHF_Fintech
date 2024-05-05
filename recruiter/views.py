@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import MLO,Company,Loan
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404,redirect
+from recruiter.models import Bps,LoanBreakPoint,CompPlan,AHF,Branch
 
 
 def calculate_commission_above_million(loan_id,mlo_id):
@@ -56,6 +57,137 @@ def calculate_commission(loan_id,mlo_id,company_id):
 	return mlo
 
 
+
+# toggle a branch amout 
+def change_branch_amount(request):
+    branch = Branch.objects.all().first()
+   
+    if request.method == "POST":
+        branch_amount = request.POST.get("branch_amount")
+        branch_amount = int(branch_amount) / 100
+        branch.commission = branch_amount
+        branch.save()
+        return redirect("/")
+    
+    context = {
+        
+    }
+    return render(request,"home/index2.html",context)
+
+
+# toggle a comp plan gci max
+def change_comp_plan_max_gci(request):
+    comp_plan = CompPlan.objects.all().first()
+   
+    if request.method == "POST":
+        max_gci = request.POST.get('max_gci',None)
+        comp_plan.MAX_GCI = max_gci
+        comp_plan.save()
+       
+        return redirect("/")
+    
+    context = {
+        
+    }
+    return render(request,"home/index2.html",context)
+
+
+
+
+# toggle a comp plan
+def change_comp_plan(request):
+    comp_plan_obj = CompPlan.objects.all().first()
+    if request.method == "POST":
+        comp_plan = request.POST.get("comp_plan")
+     
+        comp_plan_obj.Percentage = comp_plan
+        comp_plan_obj.save()
+        return redirect("/")
+    
+    context = {
+        
+    }
+    return render(request,"home/index2.html",context)
+
+
+
+def loan_break_point(request):
+    loan_break_point = LoanBreakPoint.objects.all().first()
+    
+
+
+    if request.method == "POST":
+        loan_break= request.POST.get("loan_break_point")
+        loan_break_point.loan_break_point = int(loan_break)
+        loan_break_point.save()
+        return redirect("/")
+    
+    context = {
+        
+    }
+    return render(request,"home/index2.html",context)
+
+
+def comp_plan_change_view(request):
+    """
+        This function handle comp plane changes
+
+    """
+    
+    
+    loan_break_point = LoanBreakPoint.objects.all().first()
+    comp_plan_obj = CompPlan.objects.all().first()
+    branch = Branch.objects.all().first()
+
+    if request.method == "POST":
+        max_gci = request.POST.get('max_gci',None)
+        comp_plan = request.POST.get("comp_plan")
+        loan_break= request.POST.get("loan_break_point")
+        branch_amount = request.POST.get("branch_amount")
+        
+        if True:
+            comp_plan_obj.MAX_GCI = max_gci
+            comp_plan_obj.Percentage = float(comp_plan)
+            loan_break_point.loan_break_point = int(loan_break)
+            branch_amount = int(branch_amount) / 100
+            branch.commission = branch_amount
+            branch.save()
+            loan_break_point.save()
+            comp_plan_obj.save()
+            return redirect("/")
+            
+        else:
+            return redirect("/")
+  
+    context = {
+        
+    }
+    return render(request,"home/index2.html",context)
+
+def change_branch_loan(request):
+    if request.method == "POST":
+        
+        loan = Branch.objects.all().first()
+        loan.loan_per_year = int(request.POST.get("M9"))
+        loan.save()
+        return  redirect("/")
+    context = {
+        
+    }
+    return render(request,"home/index2.html",context)
+
+
+def change_ahf_loan(request):
+    if request.method == "POST":
+        loan = AHF.objects.all().first()
+        loan.loan_per_year = int(request.POST.get("H10"))
+        loan.save()
+        return  redirect("/")
+    context = {
+        
+    }
+    return render(request,"home/index2.html",context)
+    
 
 
 
