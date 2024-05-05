@@ -118,14 +118,14 @@ def home(request):
         column_and_index_dict[column] = index
         
     for column in bpl_columns:
-        bplqr_dict[column] = round(getattr(bplr,column),2)
+        bplqr_dict[column] = getattr(bplr,column)
         
     for column in bpl_columns:
-        bplq_dict[column] = round(getattr(bplq,column),2)
+        bplq_dict[column] = getattr(bplq,column)
         
         
     for column in ewl_columns:
-        ewl_dict[column] = round(getattr(ewlq,column),2)
+        ewl_dict[column] = getattr(ewlq,column)
         
  
         
@@ -166,7 +166,7 @@ def home(request):
     
     
     employee_with_holdings_q_columns_total  = sum(ewl_dict.values())
-    total_employee_with_holding_expense     = round((branch_gross - total_expense)* q22.value/100 ,2)
+    total_employee_with_holding_expense     = (branch_gross - total_expense)* q22.value/100
   
     
    
@@ -192,30 +192,24 @@ def home(request):
         + _calculate_ett
         
     )
-    print("branch_payroll_liabilities_total ",branch_payroll_liabilities_total)
-    print("_calculate_social_security_payroll_liabilities ",_calculate_social_security_payroll_liabilities)
-    print("medicare_payroll_liabilities ",medicare)
-    print("CA_Unemployment_payroll_liabilities ",CA_Unemployment_payroll_liabilities)
-    print("calcuate_Fed_Unemploy ",calcuate_Fed_Unemploy)
-    print("_calculate_ett ",_calculate_ett)
-    
-    # print(_calculate_social_security_payroll_liabilities  medicare_payroll_liabilities,CA_Unemployment_payroll_liabilities ,branch_payroll_liabilities_total)
-    print("_calculate_ett ",_calculate_ett)
+
+
+  
     debit =   total_expense  + total_employee_with_holding_expense + branch_payroll_liabilities_total 
     branch_payroll_liabilities_percentate_total = bplq.Social_Security + bplq.Medicare +bplq.CA_Unemployment + bplq.Fed_Unemploy + bplq.Employment_Training_Tax
       
     w2_branch_yearly_gross_income_data = {
-        'calculate_social_security'     :round(_calculate_social_security,2),
+        'calculate_social_security'     :_calculate_social_security,
         'calculate_fed_un_employ'       :calculate_fed_un_employ(branch_gross),
         'calculate_CA_Disability'       :_calculate_CA_Disability,
-        'calculate_CA_Unemployment'     :round(CA_Unemployment,2),
+        'calculate_CA_Unemployment'     :CA_Unemployment,
         'calculate_fed_un_employ_payroll_liabilities'       :calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22),
 
-        'calculate_Medicare'            :round(medicare,2),
+        'calculate_Medicare'            :medicare,
         'column_and_bplqs_dict'         :column_and_bplqs_dict,
         'bplqr_dict'                    :bplqr_dict, 
         'bplq_dict'                     :bplq_dict,
-        'net_income_before_payroll'     :round(branch_gross - total_expense,2),
+        'net_income_before_payroll'     :branch_gross - total_expense,
         
         
         'w2_Taxable_gross_payroll'      :(branch_gross - total_expense) * q22.value/100,
@@ -228,7 +222,7 @@ def home(request):
       
     }
     
-    print("N20= ",(branch_gross - total_expense))
+
     
       
     w2_branch_payroll_liabilities_data = {
@@ -264,6 +258,13 @@ def home(request):
         bps_to_branch_commission_dict[key] = value
         
         
+    print("branch_gross,total_expense,q22,bplr_total")
+    print(branch_gross,total_expense,q22.value/100,bplr_total)
+    
+    # branch_gross,total_expense,q22,bplr_total
+    # 528000.0 20793.88 0.5 16625.260000000002
+
+        
         
         
 
@@ -293,15 +294,20 @@ def home(request):
         'debit':math.floor(debit),
         'balance':branch_gross- math.floor(debit),
         'employee_with_holdings_q_columns_total':employee_with_holdings_q_columns_total,
-        'net_paycheck_for_employee_with_holdings_total':round(net_paycheck_for_employee_with_holdings(
+        
+        
+        'net_paycheck_for_employee_with_holdings_total':net_paycheck_for_employee_with_holdings(
             branch_gross,
-            total_expense,
+            math.ceil(total_expense),
             q22,
             bplr_total
-            ),2),
+            ),
+        
+        
+        
         "calculate_ett_num":_calculate_ett,
         "branch_payroll_liabilities_percentate_total":branch_payroll_liabilities_percentate_total,
-        "branch_payroll_liabilities_total":round(branch_payroll_liabilities_total,2),
+        "branch_payroll_liabilities_total":branch_payroll_liabilities_total,
         
         'ewh':dict(ewh),
         'ewh_columns':ewh_columns,
@@ -330,7 +336,7 @@ def home(request):
         'bps':int(bps.bps) if bps.bps > 0 else None,
         'loan_break_point': math.ceil(loan_break_point.loan_break_point) ,# if loan_break_point >0 else None,
         'comp_plan':comp_plan.Flat_Fee if comp_plan.Flat_Fee > 0 else None,
-        'gci': round(gci,2),
+        'gci': gci,
         'ahf_commission': math.ceil(ahf_commission) if ahf_commission > 0 else None,
         'ahf_commission_amount':  1 - float(branch.commission) if branch.commission > 0 else None ,#ahf_amount, # ahf.commission,
         'branch_commission': math.ceil(branch_commission) if branch_commission > 0 else None,
