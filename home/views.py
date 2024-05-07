@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from recruiter.models import Bps,LoanBreakPoint,CompPlan,AHF,Branch
 import math
+import logging
 from  django.shortcuts import redirect
 from utils.calc_res import (
                     calculate_annual_ahf_income,
@@ -17,7 +18,6 @@ from utils.calc_res import (
                     calculate_CA_Unemployment,
                     calculate_CA_Disability,
                     net_paycheck_for_employee_with_holdings,
-                    
                     calculate_social_security_payroll_liabilities,
                     calculate_medicare_payroll_liabilities,
                     calculate_fed_un_employ_payroll_liabilities,
@@ -49,25 +49,54 @@ def home(request):
     """
         This function display comp plan,loan above limit and loan below limit
     """
-    bps              = Bps.objects.all().first()
-    loan_break_point = LoanBreakPoint.objects.all().first()
-    comp_plan        = CompPlan.objects.all().first()
-    ahf              = AHF.objects.all().first() 
-    branch           = Branch.objects.all().first() 
-    gci              = (comp_plan.Percentage * 100) * loan_break_point.loan_break_point/10000  #+ comp_plan.Flat_Fee
+    try:
+        bps              = Bps.objects.all().first()
+    except Bps.DoesNotExist as e:
+        raise e
+        
+    try:
+        loan_break_point = LoanBreakPoint.objects.all().first()
+    except LoanBreakPoint.DoesNotExist as e:
+        raise e
+    
+    try:
+        comp_plan        = CompPlan.objects.all().first()
+    except CompPlan.DoesNotExist as e:
+        raise e
+    
+    try:
+        ahf              = AHF.objects.all().first() 
+    except AHF.DoesNotExist as e:
+        raise e
+    try:
+        
+        branch           = Branch.objects.all().first() 
+    except Branch.DoesNotExist as e:
+        raise e
+    
+    
+    logging.basicConfig(level=logging.DEBUG)  
+    logger = logging.getLogger(__name__)
+
+    
+    
+    bpl                     = BranchPayrollLiabilities.objects.all()
+    bplq                    = BranchPayrollLiabilitieQ.objects.all().first()
+    ewl                     = EmployeeWithholding.objects.all().first()
+    ewlq                    = EmployeeWithholdingQ.objects.all().first()
+    bplr                    = BranchPayrollLiabilitieR.objects.all().first()
+    
+    gci                    = (comp_plan.Percentage * 100) * loan_break_point.loan_break_point/10000  #+ comp_plan.Flat_Fee
+    branch_commission   = gci * float(branch.commission)
+    ahf_commission      = gci * (1 - float(branch.commission))
+    ahf_amount          = 100 - branch.commission * 100
     
     
     
-    branch_commission = gci * float(branch.commission)
-    ahf_commission = gci * (1 - float(branch.commission))
-    ahf_amount =  100 - branch.commission * 100
-    
-    
-    
-    min_loan = 100000 
+    MIN_LOAN = 100000 
     rows = [50] +  [num for num in range(100,275,25)]
     row_counter = [i-7 for i in range(7,7+ len(rows))]
-    loan_below_limits = [num for num in range(int(loan_break_point.loan_break_point),min_loan - min_loan,-min_loan)]
+    loan_below_limits = [num for num in range(int(loan_break_point.loan_break_point),MIN_LOAN - MIN_LOAN,-MIN_LOAN)]
     
     
 
@@ -99,11 +128,7 @@ def home(request):
     
     
         
-    bpl                     = BranchPayrollLiabilities.objects.all()
-    bplq                    = BranchPayrollLiabilitieQ.objects.all().first()
-    ewl                     = EmployeeWithholding.objects.all().first()
-    ewlq                    = EmployeeWithholdingQ.objects.all().first()
-    bplr                    = BranchPayrollLiabilitieR.objects.all().first()
+
     q22                     = Q22.objects.all().first()
     bpl_meta                = BranchPayrollLiabilities._meta
     bpl_columns             = [field.name for field in BranchPayrollLiabilities._meta.get_fields()]
@@ -161,71 +186,151 @@ def home(request):
     }
   
    
-    q22.value = 90
+    # q22 range(1-90) increment 1 
+    # q22 range(90 - 100) increment x
+    q22.value = 95
     balance = calculate_balance(branch_gross,total_expense,q22)
    
     increment = 1
     j = 0
   
-    while abs(balance) > 0.001 and j < 5:
-        print("j= ",j)
-        print("========================================")
+    # while abs(balance) > 0.001 and j < 60:
+    #     print("j= ",j)
+    #     print("========================================")
 
-        print("q22= ",q22.value)
-        print("balance= ",balance)
-        print("increment= ",increment)
-        i = 0
-        print("i= ",i)
+    #     print("q22a= ",q22.value)
+    #     print("balance= ",balance)
+    #     print("incrementa= ",increment)
+    #     i = 0
+    #     print("i= ",i)
 
-        print("increment= ",increment)
-        print("q22= ",q22.value)
-        print("balance ",balance)
+    #     print("incrementb= ",increment)
+    #     print("q22b= ",q22.value)
+    #     print("balance ",balance)
 
-        print("+++++++++++++++++++++++++++++++++++++++++++")
-        # balance is too low, need to raise to q22
-        while balance > 0 and i < 15:
-            q22.value = q22.value + increment
-            # increment = 
-            # print("increment= ",increment)
-            balance = calculate_balance(branch_gross,total_expense,q22)
+    #     print("+++++++++++++++++++++++++++++++++++++++++++")
+    #     # balance is too low, need to raise to q22
+    #     while balance > 0 and i < 10:
+    #         q22.value = q22.value + increment
+    #         # increment = 
+    #         # print("increment= ",increment)
+    #         balance = calculate_balance(branch_gross,total_expense,q22)
 
-            print("increment= ",increment)
-            print("q22= ",q22.value)
-            print("balance ",balance)
+    #         print("incrementc= ",increment)
+    #         print("q22c= ",q22.value)
+    #         print("balance ",balance)
 
-            i = i + 1
-        #balance is too high,need to lower q22
-        i = 0
-        while balance < 0 and i < 15:
-            q22.value = q22.value - increment + increment/2
-            increment = increment / 10
-            break
-            print("increment= ",increment)
-            balance = calculate_balance(branch_gross,total_expense,q22)
-            print("q22 ",q22.value)
-            print("balance ",balance)
-            i = i + 1
-        # balance is still too high , need to lower q22 by current increment
-        p = 0 
-    
-        while balance < 0 and p < 15:
-            q22.value = q22.value - increment
-            balance = calculate_balance(branch_gross,total_expense,q22)
-
-            print("increment= ",increment)
-            print("q22= ",q22.value)
-            print("balance ",balance)
-
-
+    #         i = i + 1
             
-            p = p + 1
-        j = j + 1
+    #     # balance is still too low, need to raise to q22
+    #     k = 0
+    #     while balance > 0 and k < 10:
+    #         increment = increment /10
+    #         print("incrementK= ",increment)
+    #         q22.value = q22.value + increment
+    #         balance = calculate_balance(branch_gross,total_expense,q22)
+    #         print("incrementK= ",increment)
+    #         print("q22c= ",q22.value)
+    #         print("balance ",balance)
+    #         k = k + 1
+    #         # balance is too low we need to increase q22 
+    #         print("++++++++++++++++++++++++++++++++++++++++++++++")
+            
+            
+    #     # balance is too high,need to lower q22
+    #     i = 0
+    #     while balance < 0 and i < 160:
+    #         q22.value = q22.value - increment + increment/2
+    #         increment = increment / 10
+    #         print("incrementd= ",increment)
+    #         balance = calculate_balance(branch_gross,total_expense,q22)
+    #         print("q22 ",q22.value)
+    #         print("balance ",balance)
+    #         i = i + 1
+        
+        
+    #     # balance is still too high , need to lower q22 by current increment
+    #     p = 0 
+    #     while balance < 0 and p < 160:
+    #         q22.value = q22.value - increment
+    #         balance = calculate_balance(branch_gross,total_expense,q22)
+
+    #         print("incremente= ",increment)
+    #         print("q22d= ",q22.value)
+    #         print("balance ",balance)
+
+    #         p = p + 1
+    #     j = j + 1
       
 
 
 
         
-        
+    while abs(balance) > 0.001 and j < 10:
+        print("j= ",j)
+        print("========================================")
+
+        print("q22a= ",q22.value)
+        print("balance= ",balance)
+        print("incrementa= ",increment)
+        i = 0
+        print("i= ",i)
+
+        print("incrementb= ",increment)
+        print("q22b= ",q22.value)
+        print("balance ",balance)
+
+        print("+++++++++++++++++++++++++++++++++++++++++++")
+        # balance is too low, need to raise to q22
+        while balance > 0 and i < 160:
+            q22.value = q22.value + increment
+            # increment = 
+            # print("increment= ",increment)
+            balance = calculate_balance(branch_gross,total_expense,q22)
+
+            print("incrementc= ",increment)
+            print("q22c= ",q22.value)
+            print("balance ",balance)
+            k = 0
+            # balance is still too low need to raise q22
+            while balance > 0 and k < 80:
+                q22.value = q22.value + increment
+                print("q22K= ",q22.value)
+                balance = calculate_balance(branch_gross,total_expense,q22)
+                print("balanceK= ",balance)
+                
+                k = k + 1
+
+            i = i + 1
+        #balance is too high,need to lower q22
+        i = 0
+        while balance < 0 and i < 80:
+            q22.value = q22.value - increment + increment/2
+            increment = increment / 10
+            print("incrementd= ",increment)
+            if increment < 0.0001:
+                print("increment < 0.0001")
+                break
+            balance = calculate_balance(branch_gross,total_expense,q22)
+            print("q22F ",q22.value)
+            print("balance ",balance)
+            
+            # balance is still too high , need to lower q22 by current increment
+            p = 0 
+            while balance < 0 and p < 40:
+                q22.value = q22.value - increment
+                balance = calculate_balance(branch_gross,total_expense,q22)
+
+                print("incremente= ",increment)
+                print("q22d= ",q22.value)
+                print("balance ",balance)
+
+                p = p + 1
+            i = i + 1
+
+        j = j + 1
+      
+
         
         
 
@@ -253,28 +358,23 @@ def home(request):
     
     branch_payroll_liabilities_total                            = calculate_branch_payroll_liabilities_total(branch_gross,total_expense,q22)
     debit                                                       = calculate_debit(branch_gross,total_expense,q22) # total_expense  + total_employee_with_holding_expense + branch_payroll_liabilities_total 
-    branch_payroll_liabilities_percentate_total = bplq.Social_Security + bplq.Medicare +bplq.CA_Unemployment + bplq.Fed_Unemploy + bplq.Employment_Training_Tax
+    branch_payroll_liabilities_percentate_total                 = bplq.Social_Security + bplq.Medicare +bplq.CA_Unemployment + bplq.Fed_Unemploy + bplq.Employment_Training_Tax
+   
+   
     w2_branch_yearly_gross_income_data = {
         'calculate_social_security'     :_calculate_social_security,
         'calculate_fed_un_employ'       :calculate_fed_un_employ(branch_gross),
         'calculate_CA_Disability'       :_calculate_CA_Disability,
         'calculate_CA_Unemployment'     :CA_Unemployment,
         'calculate_fed_un_employ_payroll_liabilities'       :calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22),
-
         'calculate_Medicare'            :medicare,
         'column_and_bplqs_dict'         :column_and_bplqs_dict,
         'bplqr_dict'                    :bplqr_dict, 
         'bplq_dict'                     :bplq_dict,
         'net_income_before_payroll'     :branch_gross - total_expense,
-        
-        
         'w2_Taxable_gross_payroll'      :(branch_gross - total_expense) * q22.value/100,
-        
-        
-        
         'q22'                           :q22.value,
-      
-        
+       
       
     }
     
@@ -384,7 +484,6 @@ def home(request):
         'ahf_annual_cap_data':ahf_annual_cap_data,
 
     }
-    # print("+++++++++++++w2_branch_payroll_liabilities_data.calculate_CA_Uenemployment ",w2_branch_payroll_liabilities_data.CA_Unemployment_payroll_liabilities)
     return render(request,"home/index2.html",context)
 
 
