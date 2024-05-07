@@ -138,7 +138,7 @@ def home(request):
     bpl_columns.remove('id')
     bpl = bpl.values().first()
     categories = Category.objects.all()
-    total_expense = calculate_total_expense()
+    total_expense = calculate_total_expense(branch,annual_ahf_cap)
     ewh = EmployeeWithholding.objects.all()
   
     ewh_meta = EmployeeWithholding._meta

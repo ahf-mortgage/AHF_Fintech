@@ -104,14 +104,19 @@ increment = 0.5
 
 
 from W2branchYearlyGross.models import Category
-def calculate_total_expense():
+def calculate_total_expense(_branch_commission,_gross_ahf_income):
+    """
+    O17=IF(N2>=E8*2, SUM(N9:N17),0)
+    """
     total_expense = 0
     categories = Category.objects.all()
-    for cat in categories:
-        for expense in cat.expense.all():
-            total_expense += expense.expense
-
-    return total_expense
+    if _branch_commission > 2 * _gross_ahf_income:
+        for cat in categories:
+            for expense in cat.expense.all():
+                total_expense += expense.expense
+        return total_expense
+    else:
+        return total_expense
 
 
 
@@ -350,7 +355,7 @@ def calculate_total_employee_with_holding_expense(branch_gross,total_expense,q22
     return (branch_gross - total_expense)* q22.value/100
 
 def calculate_debit(branch_gross,total_expense,q22):
-    debit =   calculate_total_expense()  + calculate_total_employee_with_holding_expense(branch_gross,total_expense,q22) + calculate_branch_payroll_liabilities_total(branch_gross,total_expense,q22) 
+    debit =   calculate_total_expense(branch_gross,total_expense)  + calculate_total_employee_with_holding_expense(branch_gross,total_expense,q22) + calculate_branch_payroll_liabilities_total(branch_gross,total_expense,q22) 
     return debit
 
 
