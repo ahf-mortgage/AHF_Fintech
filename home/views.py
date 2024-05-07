@@ -138,7 +138,7 @@ def home(request):
     bpl_columns.remove('id')
     bpl = bpl.values().first()
     categories = Category.objects.all()
-    total_expense = calculate_total_expense(branch,annual_ahf_cap)
+    total_expense = calculate_total_expense(branch_gross,gross_ahf_income)
     ewh = EmployeeWithholding.objects.all()
   
     ewh_meta = EmployeeWithholding._meta
@@ -151,25 +151,82 @@ def home(request):
     
     
     ahf_annual_cap_data = {
-        'annual_ahf_cap'            :math.ceil(annual_ahf_cap),
-        'gross_ahf_income'          :math.ceil(gross_ahf_income),
-        'gross_income'              :math.ceil(gross_income),
-        'branch_gross_income'       :math.ceil(branch_gross),
+        'annual_ahf_cap'            :annual_ahf_cap,
+        'gross_ahf_income'          :gross_ahf_income,
+        'gross_income'              :gross_income,
+        'branch_gross_income'       :branch_gross,
         'annual_ahf_to_gci_result'  :annual_ahf_to_gci_result,
         
         
     }
+  
    
-    q22.value = 83
+    q22.value = 90
     balance = calculate_balance(branch_gross,total_expense,q22)
+   
     increment = 1
-    i = 0
-    while balance > 0 and i < 15:
-        q22.value = q22.value + 1
-        balance = calculate_balance(branch_gross,total_expense,q22)
-        print("q22 ",q22)
+    j = 0
+  
+    while abs(balance) > 0.001 and j < 5:
+        print("j= ",j)
+        print("========================================")
+
+        print("q22= ",q22.value)
+        print("balance= ",balance)
+        print("increment= ",increment)
+        i = 0
+        print("i= ",i)
+
+        print("increment= ",increment)
+        print("q22= ",q22.value)
         print("balance ",balance)
-        i = i + 1
+
+        print("+++++++++++++++++++++++++++++++++++++++++++")
+        # balance is too low, need to raise to q22
+        while balance > 0 and i < 15:
+            q22.value = q22.value + increment
+            # increment = 
+            # print("increment= ",increment)
+            balance = calculate_balance(branch_gross,total_expense,q22)
+
+            print("increment= ",increment)
+            print("q22= ",q22.value)
+            print("balance ",balance)
+
+            i = i + 1
+        #balance is too high,need to lower q22
+        i = 0
+        while balance < 0 and i < 15:
+            q22.value = q22.value - increment + increment/2
+            increment = increment / 10
+            break
+            print("increment= ",increment)
+            balance = calculate_balance(branch_gross,total_expense,q22)
+            print("q22 ",q22.value)
+            print("balance ",balance)
+            i = i + 1
+        # balance is still too high , need to lower q22 by current increment
+        p = 0 
+    
+        while balance < 0 and p < 15:
+            q22.value = q22.value - increment
+            balance = calculate_balance(branch_gross,total_expense,q22)
+
+            print("increment= ",increment)
+            print("q22= ",q22.value)
+            print("balance ",balance)
+
+
+            
+            p = p + 1
+        j = j + 1
+      
+
+
+
+        
+        
+        
         
 
     
@@ -192,13 +249,11 @@ def home(request):
     medicare_payroll_liabilities                                = calculate_medicare_payroll_liabilities(branch_gross,total_expense,q22)
     _calculate_CA_Disability                                    = calculate_CA_Disability(branch_gross,total_expense,q22) 
     calcuate_Fed_Unemploy                                       = calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22)
-    
-    
     _calculate_ett                                              = calculate_ett(branch_gross,total_expense,q22)
+    
     branch_payroll_liabilities_total                            = calculate_branch_payroll_liabilities_total(branch_gross,total_expense,q22)
     debit                                                       = calculate_debit(branch_gross,total_expense,q22) # total_expense  + total_employee_with_holding_expense + branch_payroll_liabilities_total 
     branch_payroll_liabilities_percentate_total = bplq.Social_Security + bplq.Medicare +bplq.CA_Unemployment + bplq.Fed_Unemploy + bplq.Employment_Training_Tax
-      
     w2_branch_yearly_gross_income_data = {
         'calculate_social_security'     :_calculate_social_security,
         'calculate_fed_un_employ'       :calculate_fed_un_employ(branch_gross),
@@ -228,10 +283,10 @@ def home(request):
       
     w2_branch_payroll_liabilities_data = {
         
-        'calculate_social_security_payroll_liabilities '     :math.floor(_calculate_social_security_payroll_liabilities),
+        'calculate_social_security_payroll_liabilities '     :_calculate_social_security_payroll_liabilities,
         'calculate_fed_un_employ_payroll_liabilities '       :calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22),
-        'CA_Unemployment_payroll_liabilities'                :math.floor(CA_Unemployment_payroll_liabilities),
-        'calculate_Medicare_payroll_liabilities '            :math.floor(medicare_payroll_liabilities ),
+        'CA_Unemployment_payroll_liabilities'                :CA_Unemployment_payroll_liabilities,
+        'calculate_Medicare_payroll_liabilities '            :medicare_payroll_liabilities,
        
       
       
@@ -276,8 +331,8 @@ def home(request):
         'bplr_total': sum(bplqr_dict.values()),
         'bplq_total': sum(bplq_dict.values()),
         'bplr_total': bplr_total,
-        'debit':math.floor(debit),
-        'balance':branch_gross- math.floor(debit),
+        'debit':debit,
+        'balance':branch_gross- debit,
         'employee_with_holdings_q_columns_total':employee_with_holdings_q_columns_total,
         
         
@@ -314,17 +369,17 @@ def home(request):
         'loan_below_limits':loan_below_limits,
         'loan_per_year':int(branch.loan_per_year),
         'comp_plan_for_lower_limit':comp_plan,
-        'ahf_amount': math.ceil(ahf_amount) if ahf_amount > 0 else None,
+        'ahf_amount': ahf_amount if ahf_amount > 0 else None,
         'rows':rows,
         'rows_counter':row_counter,
-        'branch_amount': math.ceil(branch.commission * 100) if branch.commission > 0 else None,
+        'branch_amount': branch.commission * 100 if branch.commission > 0 else None,
         'bps':int(bps.bps) if bps.bps > 0 else None,
-        'loan_break_point': math.ceil(loan_break_point.loan_break_point) ,# if loan_break_point >0 else None,
+        'loan_break_point': loan_break_point.loan_break_point ,# if loan_break_point >0 else None,
         'comp_plan':comp_plan.Flat_Fee if comp_plan.Flat_Fee > 0 else None,
         'gci': gci,
-        'ahf_commission': math.ceil(ahf_commission) if ahf_commission > 0 else None,
+        'ahf_commission': ahf_commission if ahf_commission > 0 else None,
         'ahf_commission_amount':  1 - float(branch.commission) if branch.commission > 0 else None ,#ahf_amount, # ahf.commission,
-        'branch_commission': math.ceil(branch_commission) if branch_commission > 0 else None,
+        'branch_commission': branch_commission if branch_commission > 0 else None,
         'branch_commission_amount':branch.commission if branch.commission > 0 else None,
         'ahf_annual_cap_data':ahf_annual_cap_data,
 

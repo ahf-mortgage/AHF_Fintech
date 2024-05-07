@@ -133,7 +133,7 @@ def calculate_social_security(branch_gross,total_expense,q22):
         Q24 = 6.2% (need to be input) (Q24.social_security)
         T24 = Q24*R24  (R24.social_security) (Q24.social_security)
     """
-    N22 = math.ceil(int(branch_gross - total_expense)* q22.value/100), #w2_branch_yearly_gross_income_data.w2_Taxable_gross_payroll
+    N22 = int(branch_gross - total_expense)* q22.value/100 #w2_branch_yearly_gross_income_data.w2_Taxable_gross_payroll
     R24 = BranchPayrollLiabilitieR.objects.all().first().Social_Security
     Q24 = BranchPayrollLiabilitieQ.objects.all().first().Social_Security/100
     
@@ -146,8 +146,8 @@ def calculate_social_security(branch_gross,total_expense,q22):
    
  
     Social_Security = 0
-    if N22[0] < R24:
-        Social_Security = float(N22[0]) * float(Q24)
+    if N22 < R24:
+        Social_Security = float(N22) * float(Q24)
     else:
         Social_Security = T24
     return Social_Security #branch_gross_income_num - branch_commission * (percentage) * small_percentage
@@ -343,23 +343,26 @@ def calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22
         return T34
     
 def calculate_branch_payroll_liabilities_total(branch_gross,total_expense,q22):
+    
 
     return (
         calculate_social_security_payroll_liabilities(branch_gross,total_expense,q22)+
         calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22)+
         calculate_medicare_payroll_liabilities(branch_gross,total_expense,q22)+
-        calculate_CA_Disability(branch_gross,total_expense,q22)+
+       # calculate_CA_Disability(branch_gross,total_expense,q22)+
         calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22))
     
 def calculate_total_employee_with_holding_expense(branch_gross,total_expense,q22):
     return (branch_gross - total_expense)* q22.value/100
 
 def calculate_debit(branch_gross,total_expense,q22):
-    debit =   calculate_total_expense(branch_gross,total_expense)  + calculate_total_employee_with_holding_expense(branch_gross,total_expense,q22) + calculate_branch_payroll_liabilities_total(branch_gross,total_expense,q22) 
+    
+    debit =   calculate_total_employee_with_holding_expense(branch_gross,total_expense,q22) + calculate_branch_payroll_liabilities_total(branch_gross,total_expense,q22) #calculate_total_expense(branch_gross,total_expense) 
     return debit
 
 
 def calculate_balance(branch_gross,total_expense,q22):
+  
     return branch_gross - calculate_debit(branch_gross,total_expense,q22)
 
    
