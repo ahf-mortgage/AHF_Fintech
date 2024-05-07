@@ -66,8 +66,7 @@ INSTALLED_APPS = [
     'django_otp.plugins.otp_static',
     
     
-    'allauth_2fa',
-    'allauth.socialaccount',
+
 
 ]
 

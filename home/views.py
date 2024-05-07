@@ -22,6 +22,10 @@ from utils.calc_res import (
                     calculate_medicare_payroll_liabilities,
                     calculate_fed_un_employ_payroll_liabilities,
                     calculate_CA_Unemployment_payroll_liabilities,
+                    calculate_branch_payroll_liabilities_total,
+                    calculate_total_employee_with_holding_expense,
+                    calculate_debit,
+                    calculate_balance
 
     )
 
@@ -156,6 +160,18 @@ def home(request):
         
     }
    
+    q22.value = 83
+    balance = calculate_balance(branch_gross,total_expense,q22)
+    increment = 1
+    i = 0
+    while balance > 0 and i < 15:
+        q22.value = q22.value + 1
+        balance = calculate_balance(branch_gross,total_expense,q22)
+        print("q22 ",q22)
+        print("balance ",balance)
+        i = i + 1
+        
+
     
     # Employee withholding data
     _calculate_social_security              = calculate_social_security(branch_gross,total_expense,q22) 
@@ -163,17 +179,12 @@ def home(request):
     medicare                                = calculate_medicare(branch_gross,total_expense,q22)
     
     bplr_total                              = _calculate_social_security + calculate_CA_Disability(branch_gross,total_expense,q22)  + medicare
-    print(" ***bplr_total ",bplr_total)
+   
     
     
     employee_with_holdings_q_columns_total  = sum(ewl_dict.values())
-    total_employee_with_holding_expense     = (branch_gross - total_expense)* q22.value/100
+    total_employee_with_holding_expense     = calculate_total_employee_with_holding_expense(branch_gross,total_expense,q22) #(branch_gross - total_expense)* q22.value/100
   
-    
-   
-
-    
-    
     
     # _payroll_liabilities
     _calculate_social_security_payroll_liabilities              = calculate_social_security_payroll_liabilities(branch_gross,total_expense,q22) 
@@ -184,21 +195,8 @@ def home(request):
     
     
     _calculate_ett                                              = calculate_ett(branch_gross,total_expense,q22)
-    
-    branch_payroll_liabilities_total                            =  (
-        _calculate_social_security 
-        + medicare
-        + CA_Unemployment_payroll_liabilities 
-        + calcuate_Fed_Unemploy
-        + _calculate_ett
-        
-    )
-    
-    print("branch_gross - total_expense ",branch_gross,total_expense)
-
-
-  
-    debit =   total_expense  + total_employee_with_holding_expense + branch_payroll_liabilities_total 
+    branch_payroll_liabilities_total                            = calculate_branch_payroll_liabilities_total(branch_gross,total_expense,q22)
+    debit                                                       = calculate_debit(branch_gross,total_expense,q22) # total_expense  + total_employee_with_holding_expense + branch_payroll_liabilities_total 
     branch_payroll_liabilities_percentate_total = bplq.Social_Security + bplq.Medicare +bplq.CA_Unemployment + bplq.Fed_Unemploy + bplq.Employment_Training_Tax
       
     w2_branch_yearly_gross_income_data = {
@@ -259,22 +257,6 @@ def home(request):
         
     for key,value in zip(bps_from_50_to_250,branch_for_bps_from_50_to_250):
         bps_to_branch_commission_dict[key] = value
-        
-        
-    print("branch_gross,total_expense,q22,bplr_total")
-    print(branch_gross,total_expense,q22.value/100,bplr_total)
-    
-    # branch_gross,total_expense,q22,bplr_total
-    # 528000.0 20793.88 0.5 16625.260000000002
-
-        
-        
-        
-
-        
-        
-        
-        
         
   
     context = {
