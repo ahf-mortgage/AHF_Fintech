@@ -1,24 +1,30 @@
 
+def calculate_balance_percentage(rate, initial_balance):
+    """
+    Calculates the percentage at which the balance becomes zero.
 
-def get_percentage_recurssion():
-    balance = float("inf") 
-    break_point = 0.001   
-    percentage = 0
-    increment = 0.5
+    Arguments:
+    rate -- The interest rate as a decimal (e.g., 0.05 for 5%).
+    initial_balance -- The initial balance.
 
-    if balance < break_point:
-        return percentage
-    if balance < 0:#if R39 is negative then S21 = S21 - increment
-        increment = increment/10
-        percentage -= increment
-        get_percentage_recurssion()
-        
-    else:
-        increment = increment/ 10
-        percentage += increment
-        get_percentage_recurssion()
-        
-        
-print(get_percentage_recurssion())
-        
+    Returns:
+    percentage -- The percentage at which the balance becomes zero.
+    """
+
+    percentage = 0  # Initial percentage
+    balance = initial_balance
+
+    while balance > 0:
+        print("balance ",balance)
+        balance *= (1 + rate)
+        percentage += 1
+
+    return percentage
+
+# Example usage
+rate = 0.05  # 5% interest rate
+initial_balance = 1000
+percentage = calculate_balance_percentage(rate, initial_balance)
+
+print("Percentage at which balance becomes zero:", percentage)
         
