@@ -11,6 +11,12 @@ from W2branchYearlyGross.models import (
 
 bps = Bps.objects.all().first().bps
 
+
+def calculate_above_loan_break_point_ahf_commission(loan_break_point,comp_plan,branch):
+    return float(comp_plan.Percentage * 100) * float(loan_break_point.loan_break_point / 10000)  * float(branch.commission)
+
+
+
 def calculate_annual_ahf_income(loan_break_amount,comp_plan,ahf_comission_amount):
     """
        annual income commission 
@@ -18,27 +24,73 @@ def calculate_annual_ahf_income(loan_break_amount,comp_plan,ahf_comission_amount
     return( (275 * loan_break_amount.loan_break_point )/ 10000 + comp_plan.Flat_Fee )* ahf_comission_amount * 21
 
 
-# branch_amount =  275 * loan_amout_break / 10000 + comp.Flat_Fee * branch.commission*  21
+
 from recruiter.models import AHF
 def calculate_gross_ahf_income(loan_break_amount,comp_plan,commission,value = 275):
     """
         ahf gross income commission 
+      
+        K8=IF(K10<=H10,E8*K10,H8+$C8*(K10-H$10))
+    """
+    ahf     = AHF.objects.all().first()   # left side table
+    branch  = Branch.objects.all().first() # right side table
+    loans_per_year = ahf.loan_per_year
+    total =  ((value * loan_break_amount.loan_break_point )/ 10000 + comp_plan.Flat_Fee)* commission * loans_per_year
+    return total
+
+
+
+
+
+
+
+
+
+from recruiter.models import AHF
+def calculate_gross_branch_income(loan_break_amount,comp_plan,commission,value = 275):
+    """
+        ahf gross income commission 
+        IF(K10<=H10,K10*D8,G8)
+    """
+    ahf     = AHF.objects.all().first()   # left side table
+    branch  = Branch.objects.all().first() # right side table
+    # if branch.loan_per_year <= ahf.loan_per_year:
+    #     # branch.loan_per_year 
+    
+    loans_per_year = ahf.loan_per_year
+    total = ((value * loan_break_amount.loan_break_point )/ 10000 + comp_plan.Flat_Fee)* commission * loans_per_year
+    return  total
+
+
+
+# branch_amount =  275 * loan_amout_break / 10000 + comp.Flat_Fee * branch.commission*  21
+from recruiter.models import Branch
+def calculate_branch_gross_ahf_income(loan_break_amount,comp_plan,commission,value = 275):
+    """
+        ahf gross income commission 
+        =IF(K10<=H10,K10*D8,G8)
     """
     
+    # 
+    ahf     = AHF.objects.all().first()   # left side table
+    branch  = Branch.objects.all().first() # right side table
+    D8 = ((value * loan_break_amount.loan_break_point )/ 10000 + comp_plan.Flat_Fee)* commission 
+    print("D8 ",D8)
+    print("ahf    ",ahf.loan_per_year)
+    print("branch ",branch.loan_per_year)
+    if branch.loan_per_year <= ahf.loan_per_year:
+        return D8 * branch.loan_per_year
     
-    # return ((275 * loan_break_amount.loan_break_point )/ 10000 + comp_plan.Flat_Fee )* commission 
-    # return loan_break_amount.loan_break_point * commission
+    loans_per_year = branch.loan_per_year
+    return  calculate_gross_ahf_income(loan_break_amount,comp_plan,commission,value = 275)
     
-    # (275(need to be input variable)*loans_break_amount/10000+ Flat_fee) * branch_commission_spilit * loans_per_year
-    loans_per_year = AHF.objects.all().first().loan_per_year
-    return  ((value * loan_break_amount.loan_break_point )/ 10000 + comp_plan.Flat_Fee)* commission * loans_per_year
     
 
 
 
 # branch_amount =  275 * loan_amout_break / 10000 + comp.Flat_Fee * branch.commission*  21
 
-def gross_ahf_income(loan_break_amount,comp_plan,ahf_comission_amount):
+def gross_ahf_income(loan_break_amount,comp_plan,ahf_commission_amount):
     """
         ahf gross income commission 
     """
@@ -176,12 +228,6 @@ def calculate_medicare(branch_gross,total_expense,q22):
     N22 = math.ceil(int(branch_gross - total_expense)* q22.value/100), 
     
 
-    
-    # print("[correct] R25 ",R25)
-    # print("[correct] Q25 ",Q25)
-    # print("[correct] u25 ",U25)
-    # print("[correct] T25 ",T25)
-    # print("[not correct] N25 ",N22)
     
     # N25=IF($N$22<=R25,$N$22*Q25,T25+$U$25*($N$22-$R$25))
     if (N22[0] <=  R25):
@@ -365,8 +411,31 @@ def calculate_balance(branch_gross,total_expense,q22):
   
     return branch_gross - calculate_debit(branch_gross,total_expense,q22)
 
+
    
-  
+from recruiter.models import AHF
+def calculate_gross__new_branch_income(loan_break_amount,comp_plan,gci,value = 275):
+    """
+        ahf gross income commission 
+      
+        K8=IF(K10<=H10,E8*K10,H8+$C8*(K10-H$10))
+    """
+    branch  = Branch.objects.all().first()
+    ahf     = AHF.objects.all().first()   # left side table
+    E8      = calculate_above_loan_break_point_ahf_commission(loan_break_amount,comp_plan,branch)
+    H8      = E8 * ahf.loan_per_year
+    C8      = gci
+    K10 = branch.loan_per_year
+    H10 = ahf.loan_per_year
+    if K10 <= H10:
+        return E8 * K10
+    else:
+        return (H8+C8)*(K10-H10)
+ 
+    # total =  ((value * loan_break_amount.loan_break_point )/ 10000 + comp_plan.Flat_Fee)* commission * loans_per_year
+    return 10
+
+
 
 
        

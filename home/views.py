@@ -25,7 +25,12 @@ from utils.calc_res import (
                     calculate_branch_payroll_liabilities_total,
                     calculate_total_employee_with_holding_expense,
                     calculate_debit,
-                    calculate_balance
+                    calculate_balance,
+                    calculate_branch_gross_ahf_income,
+                    calculate_gross_branch_income,
+                    calculate_gross__new_branch_income,
+                    calculate_above_loan_break_point_ahf_commission
+                    
 
     )
 
@@ -108,12 +113,16 @@ def home(request):
      #F7 * J9 -> E21 * D23 /10000 + comp_flat_fee * J9(constant loan/peryear)
     annual_ahf_cap =  calculate_annual_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
     gross_ahf_income = calculate_gross_ahf_income(loan_break_point,comp_plan,float(branch.commission))
-    gross_income = calculate_gross_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
-    branch_gross = branch_gross_income(loan_break_point,comp_plan,float(branch.commission))
+    gross_income         = calculate_gross_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
+    branch_gross       = calculate_gross_branch_income(loan_break_point,comp_plan,float(branch.commission))
+    _branch_gross_income  = calculate_branch_gross_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
+    _branch_new_gross_income    = calculate_gross__new_branch_income(loan_break_point,comp_plan,gci,branch)
+    print("_branch_new_gross_income ",_branch_new_gross_income)
+
     
 
     flat_fee_gci = int((comp_plan.Percentage * 100) * loan_break_point.loan_break_point / 10000) 
-    above_loan_break_point_ahf_commission = int(flat_fee_gci * (branch.commission))
+    above_loan_break_point_ahf_commission = calculate_above_loan_break_point_ahf_commission(loan_break_point,comp_plan,branch) #int(flat_fee_gci * (branch.commission))
   
     
 
@@ -174,13 +183,15 @@ def home(request):
  
     
     
-    
     ahf_annual_cap_data = {
         'annual_ahf_cap'            :annual_ahf_cap,
         'gross_ahf_income'          :gross_ahf_income,
         'gross_income'              :gross_income,
+        'branch_income'            :_branch_gross_income,
         'branch_gross_income'       :branch_gross,
         'annual_ahf_to_gci_result'  :annual_ahf_to_gci_result,
+        'test_branch_gross_income' :_branch_gross_income,
+        'test2_branch_gross_income' :_branch_new_gross_income
         
         
     }
@@ -265,70 +276,70 @@ def home(request):
 
 
 
-        
-    while abs(balance) > 0.001 and j < 10:
-        print("j= ",j)
-        print("========================================")
+    # j = 0
+    # while abs(balance) > 0.001 and j < 10:
+    #     print("j= ",j)
+    #     print("========================================")
 
-        print("q22a= ",q22.value)
-        print("balance= ",balance)
-        print("incrementa= ",increment)
-        i = 0
-        print("i= ",i)
+    #     print("q22a= ",q22.value)
+    #     print("balance= ",balance)
+    #     print("incrementa= ",increment)
+    #     i = 0
+    #     print("i= ",i)
 
-        print("incrementb= ",increment)
-        print("q22b= ",q22.value)
-        print("balance ",balance)
+    #     print("incrementb= ",increment)
+    #     print("q22b= ",q22.value)
+    #     print("balance ",balance)
 
-        print("+++++++++++++++++++++++++++++++++++++++++++")
-        # balance is too low, need to raise to q22
-        while balance > 0 and i < 160:
-            q22.value = q22.value + increment
-            # increment = 
-            # print("increment= ",increment)
-            balance = calculate_balance(branch_gross,total_expense,q22)
+    #     print("+++++++++++++++++++++++++++++++++++++++++++")
+    #     # balance is too low, need to raise to q22
+    #     while balance > 0 and i < 160:
+    #         q22.value = q22.value + increment
+    #         # increment = 
+    #         # print("increment= ",increment)
+    #         balance = calculate_balance(branch_gross,total_expense,q22)
 
-            print("incrementc= ",increment)
-            print("q22c= ",q22.value)
-            print("balance ",balance)
-            k = 0
-            # balance is still too low need to raise q22
-            while balance > 0 and k < 80:
-                q22.value = q22.value + increment
-                print("q22K= ",q22.value)
-                balance = calculate_balance(branch_gross,total_expense,q22)
-                print("balanceK= ",balance)
+    #         print("incrementc= ",increment)
+    #         print("q22c= ",q22.value)
+    #         print("balance ",balance)
+    #         k = 0
+    #         # balance is still too low need to raise q22
+    #         while balance > 0 and k < 80:
+    #             q22.value = q22.value + increment
+    #             print("q22K= ",q22.value)
+    #             balance = calculate_balance(branch_gross,total_expense,q22)
+    #             print("balanceK= ",balance)
                 
-                k = k + 1
+    #             k = k + 1
 
-            i = i + 1
-        #balance is too high,need to lower q22
-        i = 0
-        while balance < 0 and i < 80:
-            q22.value = q22.value - increment + increment/2
-            increment = increment / 10
-            print("incrementd= ",increment)
-            if increment < 0.0001:
-                print("increment < 0.0001")
-                break
-            balance = calculate_balance(branch_gross,total_expense,q22)
-            print("q22F ",q22.value)
-            print("balance ",balance)
+    #         i = i + 1
+    #     #balance is too high,need to lower q22
+    #     i = 0
+    #     while balance < 0 and i < 80:
+    #         q22.value = q22.value - increment + increment/2
+    #         increment = increment / 10
+    #         print("incrementd= ",increment)
+    #         if increment < 0.0001:
+    #             print("increment < 0.0001")
+    #             break
+    #         balance = calculate_balance(branch_gross,total_expense,q22)
+    #         print("q22F ",q22.value)
+    #         print("balance ",balance)
             
-            # balance is still too high , need to lower q22 by current increment
-            p = 0 
-            while balance < 0 and p < 40:
-                q22.value = q22.value - increment
-                balance = calculate_balance(branch_gross,total_expense,q22)
+    #         # balance is still too high , need to lower q22 by current increment
+    #         p = 0 
+    #         while balance < 0 and p < 40:
+    #             q22.value = q22.value - increment
+    #             balance = calculate_balance(branch_gross,total_expense,q22)
 
-                print("incremente= ",increment)
-                print("q22d= ",q22.value)
-                print("balance ",balance)
+    #             print("incremente= ",increment)
+    #             print("q22d= ",q22.value)
+    #             print("balance ",balance)
 
-                p = p + 1
-            i = i + 1
+    #             p = p + 1
+    #         i = i + 1
 
-        j = j + 1
+    #     j = j + 1
       
 
         
