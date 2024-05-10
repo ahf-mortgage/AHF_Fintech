@@ -185,6 +185,7 @@ calculation for table Employee withholding
 
 # def calculate_social_security(loan_break_amount,comp_plan,commission,above_loan_break_point_ahf_commission,percentage,small_percentage):
 def calculate_social_security(branch_gross,total_expense,q22):
+    
     """
         Social Security = =IF($N$22<=R24,$N$22*Q24,T24)
         N22 = N20*Q22#({w2_branch_yearly_gross_income_data.w2_Taxable_gross_payroll)
@@ -192,25 +193,20 @@ def calculate_social_security(branch_gross,total_expense,q22):
         Q24 = 6.2% (need to be input) (Q24.social_security)
         T24 = Q24*R24  (R24.social_security) (Q24.social_security)
     """
-    N22 = int(branch_gross - total_expense)* q22.value/100 #w2_branch_yearly_gross_income_data.w2_Taxable_gross_payroll
+    #15675
+    
+    N2 = branch_gross
+    N20 = N2 -total_expense
+    N22 = N20 * q22.value/100
     R24 = BranchPayrollLiabilitieR.objects.all().first().Social_Security
     Q24 = BranchPayrollLiabilitieQ.objects.all().first().Social_Security/100
-    
-    T24 = (Q24 * R24)
-   
-    
-    
-    R25 = BranchPayrollLiabilitieR.objects.all().first().Medicare
-    Q25 = BranchPayrollLiabilitieQ.objects.all().first().Medicare
-   
- 
-    Social_Security = 0
-    if N22 < R24:
-        Social_Security = float(N22) * float(Q24)
-    else:
-        Social_Security = T24
-    return Social_Security #branch_gross_income_num - branch_commission * (percentage) * small_percentage
 
+
+    if N22 <= R24:
+        return N22*Q24
+    else:
+        return R24 * Q24
+        
 
 def calculate_medicare(branch_gross,total_expense,q22):
     """

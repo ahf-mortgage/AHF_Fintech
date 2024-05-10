@@ -345,7 +345,7 @@ def home(request):
 
     
     # Employee withholding data
-    _calculate_social_security              = calculate_social_security(branch_gross,total_expense,q22) 
+    _calculate_social_security              = calculate_social_security(_branch_new_gross_income,total_expense,q22) 
     CA_Unemployment                         = calculate_CA_Unemployment(branch_gross,total_expense,q22)
     medicare                                = calculate_medicare((_branch_new_gross_income - total_expense),total_expense,q22)
     bplr_total                              = _calculate_social_security + calculate_CA_Disability(branch_gross,total_expense,q22)  + medicare
@@ -357,7 +357,7 @@ def home(request):
   
     
     # _payroll_liabilities
-    _calculate_social_security_payroll_liabilities              = calculate_social_security_payroll_liabilities(branch_gross,total_expense,q22) 
+    # _calculate_social_security_payroll_liabilities              = calculate_social_security_payroll_liabilities(branch_gross,total_expense,q22) 
     CA_Unemployment_payroll_liabilities                         = calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22)
     medicare_payroll_liabilities                                = calculate_medicare_payroll_liabilities(branch_gross,total_expense,q22)
     _calculate_CA_Disability                                    = calculate_CA_Disability(branch_gross,total_expense,q22) 
@@ -390,7 +390,7 @@ def home(request):
       
     w2_branch_payroll_liabilities_data = {
         
-        'calculate_social_security_payroll_liabilities '     :_calculate_social_security_payroll_liabilities,
+        # 'calculate_social_security_payroll_liabilities '     :_calculate_social_security_payroll_liabilities,
         'calculate_fed_un_employ_payroll_liabilities '       :calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22),
         'CA_Unemployment_payroll_liabilities'                :CA_Unemployment_payroll_liabilities,
         'calculate_Medicare_payroll_liabilities '            :medicare_payroll_liabilities,
@@ -441,16 +441,12 @@ def home(request):
         'debit':debit,
         'balance':branch_gross- debit,
         'employee_with_holdings_q_columns_total':employee_with_holdings_q_columns_total,
-        
-        
         'net_paycheck_for_employee_with_holdings_total':net_paycheck_for_employee_with_holdings(
             _branch_new_gross_income,
             total_expense,
             q22,
             bplr_total
             ),
-        
-        
         
         "calculate_ett_num":_calculate_ett,
         "branch_payroll_liabilities_percentate_total":branch_payroll_liabilities_percentate_total,
