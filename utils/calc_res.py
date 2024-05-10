@@ -218,12 +218,7 @@ def calculate_medicare(branch_gross,total_expense,q22):
     N2 = branch_gross
     N20 = N2 -total_expense
     N22 = N20 * q22.value/100   
-    
-    print("N22=",N22)
-    print("R25=",R25)
-    print("Q25=",Q25)
-    print("U25=",U25)
-    
+
    
 
     # N25=IF($N$22<=R25,$N$22*Q25,T25+$U$25*($N$22-$R$25))
@@ -270,26 +265,26 @@ def calculate_CA_Disability(branch_gross,total_expense,q22):
     return (Q26/100) * N22[0]
 
 
+def calculate_social_medicare_disability(branch_gross,total_expense,q22):
+    return (
+        calculate_CA_Disability(branch_gross,total_expense,q22)+
+        calculate_medicare(branch_gross,total_expense,q22) +
+        calculate_social_security(branch_gross,total_expense,q22)
+)
+
+
 
 def net_paycheck_for_employee_with_holdings(branch_gross,total_expense,q22,total):
     """
     N28=N22-N27
     """
-    N22 = int(branch_gross - total_expense)* q22.value/100
-    N27 = total
-    print("N27=",N27)
+    
+    N2 = branch_gross
+    N20 = N2 -total_expense
+    N22 = N20 * q22.value/100  
+    N27 = calculate_social_medicare_disability(branch_gross,total_expense,q22)
     return N22 - N27
 
-
-
- 
- 
- 
- 
-"""
-calculation for table Branch payroll liabilities
-
-"""
 
 # def calculate_social_security(loan_break_amount,comp_plan,commission,above_loan_break_point_ahf_commission,percentage,small_percentage):
 def calculate_social_security_payroll_liabilities(branch_gross,total_expense,q22):
@@ -389,25 +384,25 @@ def calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22
 def calculate_branch_payroll_liabilities_total(branch_gross,total_expense,q22):
     
     return   calculate_ett(branch_gross,total_expense,q22)+calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22) + calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22)+calculate_medicare(branch_gross,total_expense,q22) +calculate_social_security(branch_gross,total_expense,q22)  
-""" (
-        calculate_social_security(branch_gross,total_expense,q22)+
-        calculate_medicare(branch_gross,total_expense,q22)+
-        calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22)/100+
-        calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22) +7
-        
-        )"""
+
     
 def calculate_total_employee_with_holding_expense(branch_gross,total_expense,q22):
     return (branch_gross - total_expense)* q22.value/100
 
+
+
 def calculate_debit(branch_gross,total_expense,q22):
-    
-    debit =   calculate_total_employee_with_holding_expense(branch_gross,total_expense,q22) + calculate_branch_payroll_liabilities_total(branch_gross,total_expense,q22) #calculate_total_expense(branch_gross,total_expense) 
+    total_employee_with_holding_expense = calculate_total_employee_with_holding_expense(branch_gross,total_expense,q22) 
+    branch_payroll_liabilities_total = calculate_branch_payroll_liabilities_total(branch_gross,total_expense,q22) 
+  
+    debit = (total_employee_with_holding_expense
+             + branch_payroll_liabilities_total
+             + total_expense
+             )
     return debit
 
 
 def calculate_balance(branch_gross,total_expense,q22):
-  
     return branch_gross - calculate_debit(branch_gross,total_expense,q22)
 
 
@@ -425,10 +420,16 @@ def calculate_gross__new_branch_income(loan_break_amount,comp_plan,gci,value = 2
     C8      = gci
     K10     = branch.loan_per_year
     H10     = ahf.loan_per_year
+    print("E8=",E8)
+    print("H8=",H8)
+    print("C8=",C8)
+    print("K10=",K10)
+    print("H10=",H10)
+    
     if K10 <= H10:
         return E8 * K10
     else:
-        return (H8+C8)*(K10-H10)
+        return H8+C8*(K10-H10)
  
 
 

@@ -29,7 +29,8 @@ from utils.calc_res import (
                     calculate_branch_gross_ahf_income,
                     calculate_gross_branch_income,
                     calculate_gross__new_branch_income,
-                    calculate_above_loan_break_point_ahf_commission
+                    calculate_above_loan_break_point_ahf_commission,
+                    calculate_social_medicare_disability
                     
 
     )
@@ -186,7 +187,7 @@ def home(request):
         'gross_ahf_income'          :gross_ahf_income,
         'gross_income'              :gross_income,
         'branch_income'            :_branch_gross_income,
-        'branch_gross_income'       :branch_gross,
+        'branch_gross_income'       :_branch_new_gross_income,
         'annual_ahf_to_gci_result'  :annual_ahf_to_gci_result,
         'test_branch_gross_income' :_branch_gross_income,
         'test2_branch_gross_income' :_branch_new_gross_income
@@ -348,7 +349,7 @@ def home(request):
     _calculate_social_security              = calculate_social_security(_branch_new_gross_income,total_expense,q22) 
     CA_Unemployment                         = calculate_CA_Unemployment(branch_gross,total_expense,q22)
     medicare                                = calculate_medicare(_branch_new_gross_income,total_expense,q22)
-    bplr_total                              = _calculate_social_security + calculate_CA_Disability(branch_gross,total_expense,q22)  + medicare
+    bplr_total                              = calculate_social_medicare_disability(_branch_new_gross_income,total_expense,q22)
    
     
     
@@ -364,10 +365,9 @@ def home(request):
     calcuate_Fed_Unemploy                                       = calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22)
     _calculate_ett                                              = calculate_ett(branch_gross,total_expense,q22)
     branch_payroll_liabilities_total                            = calculate_branch_payroll_liabilities_total(_branch_new_gross_income,total_expense,q22)
-    debit                                                       = calculate_debit(branch_gross,total_expense,q22) # total_expense  + total_employee_with_holding_expense + branch_payroll_liabilities_total 
+    debit                                                       = calculate_debit(_branch_new_gross_income,total_expense,q22) # total_expense  + total_employee_with_holding_expense + branch_payroll_liabilities_total 
     branch_payroll_liabilities_percentate_total                 = bplq.Social_Security + bplq.Medicare +bplq.CA_Unemployment + bplq.Fed_Unemploy + bplq.Employment_Training_Tax
-   
-   
+    print("Debit=",debit)
     w2_branch_yearly_gross_income_data = {
         'calculate_social_security'     :_calculate_social_security,
         'calculate_fed_un_employ'       :calculate_fed_un_employ(branch_gross),
@@ -439,10 +439,11 @@ def home(request):
         'bplq_total': sum(bplq_dict.values()),
         'bplr_total': bplr_total,
         'debit':debit,
-        'balance':branch_gross- debit,
+        'balance':calculate_balance(_branch_new_gross_income,total_expense,q22),
         'employee_with_holdings_q_columns_total':employee_with_holdings_q_columns_total,
         'net_paycheck_for_employee_with_holdings_total':net_paycheck_for_employee_with_holdings(
             _branch_new_gross_income,
+            # branch_gross,
             total_expense,
             q22,
             bplr_total
