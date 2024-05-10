@@ -185,7 +185,6 @@ calculation for table Employee withholding
 
 # def calculate_social_security(loan_break_amount,comp_plan,commission,above_loan_break_point_ahf_commission,percentage,small_percentage):
 def calculate_social_security(branch_gross,total_expense,q22):
-    
     """
         Social Security = =IF($N$22<=R24,$N$22*Q24,T24)
         N22 = N20*Q22#({w2_branch_yearly_gross_income_data.w2_Taxable_gross_payroll)
@@ -206,33 +205,26 @@ def calculate_social_security(branch_gross,total_expense,q22):
         return N22*Q24
     else:
         return R24 * Q24
-        
 
 def calculate_medicare(branch_gross,total_expense,q22):
     """
     N25 = IF($N$22<=R25,$N$22*Q25,T25+$U$25*($N$22-$R$25))  
- 
-    
-    N22 = N20*Q2
-    N20 = N2-O17
-    Q2 = branch_loan_per_year
-    
-    N22 = (N2-O17)*(Q2)
-    N2 = branch_gross_income
-    O17 = total_expense_epw
-    N22 = (branch_gross_income - total_expense_epw) * branch_loan_per_year
-    N20 = _branch_new_gross_income - total_expense
-    
+
     """
     R25 = EmployeeWithholdingR.objects.all().first().Medicare
     Q25 = EmployeeWithholdingQ.objects.all().first().Medicare /100
     U25 = 0.009     #   0.009
     T25 = R25 * Q25 #   2900
-    N22 =branch_gross *q22.value/100                # (branch_gross - total_expense)* q22.value/100, 
+    N2 = branch_gross
+    N20 = N2 -total_expense
+    N22 = N20 * q22.value/100   
+    
     print("N22=",N22)
+    print("R25=",R25)
     print("Q25=",Q25)
     print("U25=",U25)
-    print("T25=",T25)
+    
+   
 
     # N25=IF($N$22<=R25,$N$22*Q25,T25+$U$25*($N$22-$R$25))
     if N22 <=  R25:
@@ -396,13 +388,14 @@ def calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22
     
 def calculate_branch_payroll_liabilities_total(branch_gross,total_expense,q22):
     
-    return (
+    return   calculate_ett(branch_gross,total_expense,q22)+calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22) + calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22)+calculate_medicare(branch_gross,total_expense,q22) +calculate_social_security(branch_gross,total_expense,q22)  
+""" (
         calculate_social_security(branch_gross,total_expense,q22)+
         calculate_medicare(branch_gross,total_expense,q22)+
         calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22)/100+
-        calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22) 
+        calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22) +7
         
-        )
+        )"""
     
 def calculate_total_employee_with_holding_expense(branch_gross,total_expense,q22):
     return (branch_gross - total_expense)* q22.value/100
@@ -423,7 +416,6 @@ from recruiter.models import AHF
 def calculate_gross__new_branch_income(loan_break_amount,comp_plan,gci,value = 275):
     """
         ahf gross income commission 
-      
         K8=IF(K10<=H10,E8*K10,H8+$C8*(K10-H$10))
     """
     branch  = Branch.objects.all().first()
@@ -431,15 +423,13 @@ def calculate_gross__new_branch_income(loan_break_amount,comp_plan,gci,value = 2
     E8      = calculate_above_loan_break_point_ahf_commission(loan_break_amount,comp_plan,branch)
     H8      = E8 * ahf.loan_per_year
     C8      = gci
-    K10 = branch.loan_per_year
-    H10 = ahf.loan_per_year
+    K10     = branch.loan_per_year
+    H10     = ahf.loan_per_year
     if K10 <= H10:
         return E8 * K10
     else:
         return (H8+C8)*(K10-H10)
  
-    # total =  ((value * loan_break_amount.loan_break_point )/ 10000 + comp_plan.Flat_Fee)* commission * loans_per_year
-    return 10
 
 
 

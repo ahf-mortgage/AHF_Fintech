@@ -347,7 +347,7 @@ def home(request):
     # Employee withholding data
     _calculate_social_security              = calculate_social_security(_branch_new_gross_income,total_expense,q22) 
     CA_Unemployment                         = calculate_CA_Unemployment(branch_gross,total_expense,q22)
-    medicare                                = calculate_medicare((_branch_new_gross_income - total_expense),total_expense,q22)
+    medicare                                = calculate_medicare(_branch_new_gross_income,total_expense,q22)
     bplr_total                              = _calculate_social_security + calculate_CA_Disability(branch_gross,total_expense,q22)  + medicare
    
     
@@ -360,10 +360,10 @@ def home(request):
     # _calculate_social_security_payroll_liabilities              = calculate_social_security_payroll_liabilities(branch_gross,total_expense,q22) 
     CA_Unemployment_payroll_liabilities                         = calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22)
     medicare_payroll_liabilities                                = calculate_medicare_payroll_liabilities(branch_gross,total_expense,q22)
-    _calculate_CA_Disability                                    = calculate_CA_Disability(branch_gross,total_expense,q22) 
+    _calculate_CA_Disability                                    = calculate_CA_Disability(_branch_new_gross_income,total_expense,q22) 
     calcuate_Fed_Unemploy                                       = calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22)
     _calculate_ett                                              = calculate_ett(branch_gross,total_expense,q22)
-    branch_payroll_liabilities_total                            = calculate_branch_payroll_liabilities_total(branch_gross,total_expense,q22)
+    branch_payroll_liabilities_total                            = calculate_branch_payroll_liabilities_total(_branch_new_gross_income,total_expense,q22)
     debit                                                       = calculate_debit(branch_gross,total_expense,q22) # total_expense  + total_employee_with_holding_expense + branch_payroll_liabilities_total 
     branch_payroll_liabilities_percentate_total                 = bplq.Social_Security + bplq.Medicare +bplq.CA_Unemployment + bplq.Fed_Unemploy + bplq.Employment_Training_Tax
    
