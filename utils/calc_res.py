@@ -1,4 +1,5 @@
 import math
+import logging
 from recruiter.models import Bps,Branch
 from W2branchYearlyGross.models import (
                      BranchPayrollLiabilitieR,
@@ -6,6 +7,7 @@ from W2branchYearlyGross.models import (
                      EmployeeWithholdingR,
                      EmployeeWithholdingQ
 )
+logger = logging.getLogger(__name__)
 
 
 
@@ -74,10 +76,10 @@ def calculate_branch_gross_ahf_income(loan_break_amount,comp_plan,commission,val
     # 
     ahf     = AHF.objects.all().first()   # left side table
     branch  = Branch.objects.all().first() # right side table
-    D8 = ((value * loan_break_amount.loan_break_point )/ 10000 + comp_plan.Flat_Fee)* commission 
-    print("D8 ",D8)
-    print("ahf    ",ahf.loan_per_year)
-    print("branch ",branch.loan_per_year)
+    D8      = ((value * loan_break_amount.loan_break_point )/ 10000 + comp_plan.Flat_Fee)* commission 
+    # logger.info("D8 ",D8)
+    
+
     if branch.loan_per_year <= ahf.loan_per_year:
         return D8 * branch.loan_per_year
     
@@ -160,8 +162,13 @@ def calculate_total_expense(_branch_commission,_gross_ahf_income):
     """
     O17=IF(N2>=E8*2, SUM(N9:N17),0)
     """
+    
+    
     total_expense = 0
     categories = Category.objects.all()
+    print("_branch_commission=",_branch_commission)
+    print("_gross_ahf_income=",_gross_ahf_income)
+    
     if _branch_commission > 2 * _gross_ahf_income:
         for cat in categories:
             for expense in cat.expense.all():
@@ -218,22 +225,24 @@ def calculate_medicare(branch_gross,total_expense,q22):
     N2 = branch_gross_income
     O17 = total_expense_epw
     N22 = (branch_gross_income - total_expense_epw) * branch_loan_per_year
+    N20 = _branch_new_gross_income - total_expense
     
     """
     R25 = EmployeeWithholdingR.objects.all().first().Medicare
     Q25 = EmployeeWithholdingQ.objects.all().first().Medicare /100
-    U25 = 0.009
-    T25 = R25 * Q25 # 2900
-    
-    N22 = math.ceil(int(branch_gross - total_expense)* q22.value/100), 
-    
+    U25 = 0.009     #   0.009
+    T25 = R25 * Q25 #   2900
+    N22 =branch_gross *q22.value/100                # (branch_gross - total_expense)* q22.value/100, 
+    print("N22=",N22)
+    print("Q25=",Q25)
+    print("U25=",U25)
+    print("T25=",T25)
 
-    
     # N25=IF($N$22<=R25,$N$22*Q25,T25+$U$25*($N$22-$R$25))
-    if (N22[0] <=  R25):
-        return (N22[0]) * (Q25)
+    if N22 <=  R25:
+        return N22 * Q25
     else :
-        return T25 + U25 * (N22[0] - R25)
+        return T25 + U25 * (N22 - R25)
     
     
     
@@ -254,7 +263,7 @@ def calculate_CA_Unemployment(branch_gross,total_expense,q22):
     R34 = BranchPayrollLiabilitieR.objects.all().first().CA_Unemployment
     Q34 = BranchPayrollLiabilitieQ.objects.all().first().CA_Unemployment
     T34 = Q34 * R34
-    N22 = math.ceil(int(branch_gross - total_expense)* q22.value/100),
+    N22 = (branch_gross - total_expense) * q22.value/100,
     Q26 = BranchPayrollLiabilitieQ.objects.all().first().CA_Unemployment
 
     if R34 >= N22[0]:
@@ -280,6 +289,7 @@ def net_paycheck_for_employee_with_holdings(branch_gross,total_expense,q22,total
     """
     N22 = int(branch_gross - total_expense)* q22.value/100
     N27 = total
+    print("N27=",N27)
     return N22 - N27
 
 
@@ -390,13 +400,13 @@ def calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22
     
 def calculate_branch_payroll_liabilities_total(branch_gross,total_expense,q22):
     
-
     return (
-        calculate_social_security_payroll_liabilities(branch_gross,total_expense,q22)+
-        calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22)+
-        calculate_medicare_payroll_liabilities(branch_gross,total_expense,q22)+
-       # calculate_CA_Disability(branch_gross,total_expense,q22)+
-        calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22))
+        calculate_social_security(branch_gross,total_expense,q22)+
+        calculate_medicare(branch_gross,total_expense,q22)+
+        calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22)/100+
+        calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22) 
+        
+        )
     
 def calculate_total_employee_with_holding_expense(branch_gross,total_expense,q22):
     return (branch_gross - total_expense)* q22.value/100

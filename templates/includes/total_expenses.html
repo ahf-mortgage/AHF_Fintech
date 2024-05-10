@@ -62,7 +62,7 @@
 
                 {% if column == 'Social_Security' %}
               <td class="whitespace-nowrap">
-                {{w2_branch_yearly_gross_income_data.calculate_social_security|floatformat:"2"|intcomma}}
+              {{w2_branch_yearly_gross_income_data.calculate_social_security|floatformat:"2"|intcomma}}
               </td>
 
               {% elif column == 'Medicare'%}
@@ -231,7 +231,7 @@
 
                 {% if column == 'Social_Security' %}
               <td class="whitespace-nowrap">
-                {{w2_branch_yearly_gross_income_data.calculate_social_security|intcomma}}
+               {{w2_branch_yearly_gross_income_data.calculate_social_security|intcomma}}
 
               </td>
 
@@ -263,7 +263,7 @@
 
               {% elif column == 'total'%}
               <td class="whitespace-nowrap">
-               {{branch_payroll_liabilities_total}}
+                {{branch_payroll_liabilities_total|intcomma}}
               </td>
 
           
@@ -314,7 +314,7 @@
                 {% else %}
                 <h1 class="font-bold">
 
-                {{bplr_total}}
+               {{bplr_total}}
 
                 </h1>
 

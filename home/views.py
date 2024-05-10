@@ -82,6 +82,7 @@ def home(request):
     
     logging.basicConfig(level=logging.DEBUG)  
     logger = logging.getLogger(__name__)
+  
 
     
     
@@ -117,7 +118,6 @@ def home(request):
     branch_gross       = calculate_gross_branch_income(loan_break_point,comp_plan,float(branch.commission))
     _branch_gross_income  = calculate_branch_gross_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
     _branch_new_gross_income    = calculate_gross__new_branch_income(loan_break_point,comp_plan,gci,branch)
-    print("_branch_new_gross_income ",_branch_new_gross_income)
 
     
 
@@ -130,8 +130,6 @@ def home(request):
     E23 = (bps.bps * loan_break_point.loan_break_point )/ 10000 + comp_plan.Flat_Fee 
     nums_loans = [math.ceil(get_gci_result(comp_plan, num) * float((1-branch.commission))) for num in loan_below_limits]
     annual_ahf_to_gci_result = [int(gross_income)// num for num in  nums_loans]
-       
-  
     revenue_share = round((branch.loan_per_year / ahf.loan_per_year) * 100,2) if (branch.loan_per_year / ahf.loan_per_year) < 1 else 100
     
     
@@ -172,7 +170,7 @@ def home(request):
     bpl_columns.remove('id')
     bpl = bpl.values().first()
     categories = Category.objects.all()
-    total_expense = calculate_total_expense(branch_gross,gross_ahf_income)
+    total_expense = calculate_total_expense(_branch_new_gross_income,above_loan_break_point_ahf_commission)
     ewh = EmployeeWithholding.objects.all()
   
     ewh_meta = EmployeeWithholding._meta
@@ -199,10 +197,10 @@ def home(request):
    
     # q22 range(1-90) increment 1 
     # q22 range(90 - 100) increment x
-    q22.value = 95
-    balance = calculate_balance(branch_gross,total_expense,q22)
+    # q22.value = 95
+    # balance = calculate_balance(branch_gross,total_expense,q22)
    
-    increment = 1
+    # increment = 1
    
   
     # while abs(balance) > 0.001 and j < 60:
@@ -349,8 +347,7 @@ def home(request):
     # Employee withholding data
     _calculate_social_security              = calculate_social_security(branch_gross,total_expense,q22) 
     CA_Unemployment                         = calculate_CA_Unemployment(branch_gross,total_expense,q22)
-    medicare                                = calculate_medicare(branch_gross,total_expense,q22)
-    
+    medicare                                = calculate_medicare((_branch_new_gross_income - total_expense),total_expense,q22)
     bplr_total                              = _calculate_social_security + calculate_CA_Disability(branch_gross,total_expense,q22)  + medicare
    
     
@@ -366,7 +363,6 @@ def home(request):
     _calculate_CA_Disability                                    = calculate_CA_Disability(branch_gross,total_expense,q22) 
     calcuate_Fed_Unemploy                                       = calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22)
     _calculate_ett                                              = calculate_ett(branch_gross,total_expense,q22)
-    
     branch_payroll_liabilities_total                            = calculate_branch_payroll_liabilities_total(branch_gross,total_expense,q22)
     debit                                                       = calculate_debit(branch_gross,total_expense,q22) # total_expense  + total_employee_with_holding_expense + branch_payroll_liabilities_total 
     branch_payroll_liabilities_percentate_total                 = bplq.Social_Security + bplq.Medicare +bplq.CA_Unemployment + bplq.Fed_Unemploy + bplq.Employment_Training_Tax
@@ -382,8 +378,8 @@ def home(request):
         'column_and_bplqs_dict'         :column_and_bplqs_dict,
         'bplqr_dict'                    :bplqr_dict, 
         'bplq_dict'                     :bplq_dict,
-        'net_income_before_payroll'     :branch_gross - total_expense,
-        'w2_Taxable_gross_payroll'      :(branch_gross - total_expense) * q22.value/100,
+        'net_income_before_payroll'     :_branch_new_gross_income - total_expense,
+        'w2_Taxable_gross_payroll'      :(_branch_new_gross_income - total_expense) * q22.value/100,
         'q22'                           :q22.value,
        
       
@@ -448,8 +444,8 @@ def home(request):
         
         
         'net_paycheck_for_employee_with_holdings_total':net_paycheck_for_employee_with_holdings(
-            branch_gross,
-            math.ceil(total_expense),
+            _branch_new_gross_income,
+            total_expense,
             q22,
             bplr_total
             ),
