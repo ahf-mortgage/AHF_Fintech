@@ -233,10 +233,10 @@ def calculate_medicare(branch_gross,total_expense,q22):
     U25 = 0.009     #   0.009
     T25 = R25 * Q25 #   2900
     N22 =branch_gross *q22.value/100                # (branch_gross - total_expense)* q22.value/100, 
-    print("N22=",N22)
-    print("Q25=",Q25)
-    print("U25=",U25)
-    print("T25=",T25)
+    # print("N22=",N22)
+    # print("Q25=",Q25)
+    # print("U25=",U25)
+    # print("T25=",T25)
 
     # N25=IF($N$22<=R25,$N$22*Q25,T25+$U$25*($N$22-$R$25))
     if N22 <=  R25:
@@ -399,12 +399,20 @@ def calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22
         return T34
     
 def calculate_branch_payroll_liabilities_total(branch_gross,total_expense,q22):
+    print("branch_gross-total_expense N20=",branch_gross-total_expense)
+    socail_security =  calculate_social_security(branch_gross-total_expense,total_expense,q22)
+    medicare = calculate_medicare(branch_gross,total_expense,q22)
+    CA_Unemployment = calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22)
+    fed_un_employ = calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22) 
+    print("socail_security=",socail_security)
+    print("medicare=",medicare)
+    print("CA_Unemployment=",CA_Unemployment)
+    print("fed_un_employ=",fed_un_employ)
     
     return (
-        calculate_social_security(branch_gross,total_expense,q22)+
-        calculate_medicare(branch_gross,total_expense,q22)+
-        calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22)/100+
-        calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22) 
+        socail_security +medicare+CA_Unemployment + CA_Unemployment + fed_un_employ +7
+        
+    
         
         )
     
