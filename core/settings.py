@@ -258,3 +258,4 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # Configure your default site. See
 SITE_ID = 1
+VERSION = 0.001

@@ -5,6 +5,7 @@ import math
 import logging
 from  django.shortcuts import redirect
 from utils.q22 import automate_q22_value
+from django.conf import  settings
 
 from utils.calc_res import (
                     calculate_annual_ahf_income,
@@ -342,6 +343,7 @@ def home(request):
         'branch_commission': branch_commission if branch_commission > 0 else None,
         'branch_commission_amount':branch.commission if branch.commission > 0 else None,
         'ahf_annual_cap_data':ahf_annual_cap_data,
+        'version':settings.VERSION
 
     }
     return render(request,"home/index2.html",context)
