@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'recruiter',
     'home',
     'W2branchYearlyGross',
+    'util',
     
     
     # all auth apps

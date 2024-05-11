@@ -121,6 +121,7 @@ def home(request):
     gross_income         = calculate_gross_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
     branch_gross       = calculate_gross_branch_income(loan_break_point,comp_plan,float(branch.commission))
     _branch_gross_income  = calculate_branch_gross_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
+    
     _branch_new_gross_income    = calculate_gross__new_branch_income(loan_break_point,comp_plan,gci,branch)
     
 
