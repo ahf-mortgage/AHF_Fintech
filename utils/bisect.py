@@ -6,6 +6,7 @@ def function(x):
 
 def find_root(function, left, right, tolerance):
     # Bisection method to find the root of a function
+
     if function(left) * function(right) >= 0:
         raise ValueError("Root not found in the given interval.")
 

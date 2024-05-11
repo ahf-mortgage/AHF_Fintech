@@ -1,53 +1,59 @@
+
+from django.core.management.base import BaseCommand
 import bisect
 from util.calc_res import calculate_balance,calculate_gross__new_branch_income,calculate_total_expense,calculate_above_loan_break_point_ahf_commission
 from recruiter.models import LoanBreakPoint,CompPlan,Branch
 from W2branchYearlyGross.models import Q22
 
-loan_break_point = LoanBreakPoint.objects.all().first()
-comp_plan        = CompPlan.objects.all().first()
-branch           = Branch.objects.all().first()  
-gci = 2700
-
-
-
-
-
-def function(q22):
-    branch_gross = calculate_gross__new_branch_income(loan_break_point,comp_plan,gci,branch)
-    above_loan_break_point_ahf_commission = calculate_above_loan_break_point_ahf_commission(loan_break_point,comp_plan,branch) #int(flat_fee_gci * (branch.commission))
-    total_expense = calculate_total_expense(branch_gross,above_loan_break_point_ahf_commission)
+class Command(BaseCommand):
+    """
+        management command to run bisect balance from termail
+    """
+    help = 'Process some data'
     
-    print("xxxxxxxxxxxxxxxxxxxxxxxbranch_gross=",branch_gross)
-    print("xxxxxxxxxxxxxxxxxxxxxxxtotal_expense=",total_expense)
-    print("xxxxxxxxxxxxxxxxxxxxxxxq22=",q22.value)
-    
-    return calculate_balance(branch_gross,total_expense,q22)
+    def __init__(self):
+        self.loan_break_point = LoanBreakPoint.objects.all().first()
+        self.comp_plan        = CompPlan.objects.all().first()
+        self.branch           = Branch.objects.all().first()  
+        self.gci              = 27500
+        self.q22              =  Q22.objects.all().first()
+        self.tolerance        = 1e-6
 
-def find_root(function, left, right, tolerance):
-    # Bisection method to find the root of a function
-    if function(left) * function(right) >= 0:
-        raise ValueError("Root not found in the given interval.")
+    def handle(self, *args, **options):
+        left = Q22.objects.create(value=0)
+        right = Q22.objects.create(value = 100)
+        root = self.find_root(self.function, left, right, self.tolerance)
+        return root
+      
 
-    while abs(right - left) > tolerance:
-        midpoint = (left + right) / 2
-        if function(midpoint) == 0:
-            return midpoint
-        elif function(midpoint) * function(left) < 0:
-            right = midpoint
-        else:
-            left = midpoint
+    def function(self,q22):
+        # self.branch_gross = calculate_gross__new_branch_income(self.loan_break_point,self.comp_plan,self.gci,self.branch)
+        # self.above_loan_break_point_ahf_commission = calculate_above_loan_break_point_ahf_commission(self.loan_break_point,self.comp_plan,self.branch) #int(flat_fee_gci * (branch.commission))
+        # self.total_expense = calculate_total_expense(self.branch_gross,self.above_loan_break_point_ahf_commission)
+        
+        branch_gross = 275000
+        total_expense = 20794
+        return calculate_balance(branch_gross,total_expense,self.q22)
 
-    return (left + right) / 2
+    def find_root(self,function, left, right, tolerance):
+        
+        # Bisection method to find the root of a function
+        print(left.value,"=left")
+        print(right.value,"=right")
+        print("function(left)=",function(left))
+        print("function(right)=",function(right))
+        
+        if function(left) * function(right) >= 0:
+            raise ValueError("Root not found in the given interval.")
 
-# Define the interval [left, right] and the desired tolerance
-q22 = Q22.objects.all().first()
-q22.value = 0
-left = q22
-q22.value = 100
-right = q22
-tolerance = 1e-6
+        while abs(right - left) > tolerance:
+          
+            midpoint = (left + right) / 2
+            if function(midpoint) == 0:
+                return midpoint
+            elif function(midpoint) * function(left) < 0:
+                right = midpoint
+            else:
+                left = midpoint
 
-# Find the root using the bisection method
-root = find_root(function, left, right, tolerance)
-print("Root:", root)
-print("Function value at the root:", function(root))
+        return (left + right) / 2
