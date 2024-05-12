@@ -33,8 +33,7 @@ from utils.calc_res import (
                     calculate_gross_branch_income,
                     calculate_gross__new_branch_income,
                     calculate_above_loan_break_point_ahf_commission,
-                    calculate_social_medicare_disability
-                    
+                    calculate_social_medicare_disability                 
 
     )
 
@@ -83,23 +82,32 @@ def home(request):
     except Branch.DoesNotExist as e:
         raise e
     
+    try:
+        bpl                     = BranchPayrollLiabilities.objects.all()
+    except BranchPayrollLiabilities.DoesNotExist as e:
+        raise e
     
-    logging.basicConfig(level=logging.DEBUG)  
-    logger = logging.getLogger(__name__)
-  
-
+    try:
+        bplq                    = BranchPayrollLiabilitieQ.objects.all().first()
+    except BranchPayrollLiabilitieQ.DoesNotExist as e:
+        raise e
+    try: 
+        ewl                     = EmployeeWithholding.objects.all().first()
+    except EmployeeWithholding.DoesNotExist as e:
+        raise e  
+    try:   
+        ewlq                    = EmployeeWithholdingQ.objects.all().first()
+    except EmployeeWithholdingQ.DoesNotExist as e:
+        raise e
+    try: 
+        bplr                    = BranchPayrollLiabilitieR.objects.all().first()
+    except BranchPayrollLiabilitieR.DoesNotExist as e:
+        raise e
     
-    
-    bpl                     = BranchPayrollLiabilities.objects.all()
-    bplq                    = BranchPayrollLiabilitieQ.objects.all().first()
-    ewl                     = EmployeeWithholding.objects.all().first()
-    ewlq                    = EmployeeWithholdingQ.objects.all().first()
-    bplr                    = BranchPayrollLiabilitieR.objects.all().first()
-    
-    gci                    = (comp_plan.Percentage * 100) * loan_break_point.loan_break_point/10000  #+ comp_plan.Flat_Fee
-    branch_commission   = gci * float(branch.commission)
-    ahf_commission      = gci * (1 - float(branch.commission))
-    ahf_amount          = 100 - branch.commission * 100
+    gci                =     (comp_plan.Percentage * 100) * loan_break_point.loan_break_point/10000  #+ comp_plan.Flat_Fee
+    branch_commission  =     gci * float(branch.commission)
+    ahf_commission     =     gci * (1 - float(branch.commission))
+    ahf_amount         =     100 - branch.commission * 100
     
     
     
@@ -115,13 +123,12 @@ def home(request):
         gci = comp_plan.MAX_GCI
     FLAT_AM0UNT = gci - (gci/1000) * ((loan_below_limits[len(loan_below_limits) - 1] or 0) * 0.1/10000) 
     
-     #F7 * J9 -> E21 * D23 /10000 + comp_flat_fee * J9(constant loan/peryear)
-    annual_ahf_cap =  calculate_annual_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
-    gross_ahf_income = calculate_gross_ahf_income(loan_break_point,comp_plan,float(branch.commission))
-    gross_income         = calculate_gross_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
-    branch_gross       = calculate_gross_branch_income(loan_break_point,comp_plan,float(branch.commission))
-    _branch_gross_income  = calculate_branch_gross_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
     
+    annual_ahf_cap              =  calculate_annual_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
+    gross_ahf_income            = calculate_gross_ahf_income(loan_break_point,comp_plan,float(branch.commission))
+    gross_income                = calculate_gross_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
+    branch_gross                = calculate_gross_branch_income(loan_break_point,comp_plan,float(branch.commission))
+    _branch_gross_income        = calculate_branch_gross_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
     _branch_new_gross_income    = calculate_gross__new_branch_income(loan_break_point,comp_plan,gci,branch)
     
 
@@ -163,7 +170,6 @@ def home(request):
         
     for column in bpl_columns:
         bplq_dict[column] = getattr(bplq,column)
-        
         
     for column in ewl_columns:
         ewl_dict[column] = getattr(ewlq,column)
@@ -225,6 +231,7 @@ def home(request):
     branch_payroll_liabilities_total                            = calculate_branch_payroll_liabilities_total(_branch_new_gross_income,total_expense,q22)
     debit                                                       = calculate_debit(_branch_new_gross_income,total_expense,q22) # total_expense  + total_employee_with_holding_expense + branch_payroll_liabilities_total 
     branch_payroll_liabilities_percentate_total                 = bplq.Social_Security + bplq.Medicare +bplq.CA_Unemployment + bplq.Fed_Unemploy + bplq.Employment_Training_Tax
+   
     w2_branch_yearly_gross_income_data = {
         'calculate_social_security'     :_calculate_social_security,
         'calculate_fed_un_employ'       :calculate_fed_un_employ(branch_gross),
@@ -348,51 +355,6 @@ def home(request):
 
     }
     return render(request,"home/index2.html",context)
-
-
-
-
-
-    
-#S1 = M9 Number of loans
-#P1 = M7 Branch Yearly Gross Revenue
-#P19  =P1-Q16 Net income before payroll
-#P17 =SUM(P8:P16) Total expenses
-#P21 =P19*S21   Taxable gross payroll
-# O23 = label(social security  Employee) = P23
-# 030 = label(socail security Branch)  = P30
-# S21 = 96.205%  iterate to get this value so that balance is less than 0.001
-# R39 = P39 - Q39 
-# while R39 is greater than 0.001 iterate S21 
-        # if R39 is negative then S21 = S21 - increment
-        # else S21 = S21 + increment
-        # adjust increment
-        #S1 = 96.205324% final solution balance equals 0.00
-        #S1 = 96.0 balance equals -11.02 minus sign tells you 96.0 is too big 
-        # S1 = 95.0 the balance equal to +3858.06 plus sign tells you 95.0 is too small 
-            # increment = 0.5  initial guess halfway between 
-        # S1 = 95.0 + increment 
-        # S1 = 95.5 the balance equal to +1923.25 plus sign tells you 95.5 is too small
-            # increment = 0.1
-        # S1 = 95.5 + increment
-        # S1 = 95.6 the balance equal to +1536.61 plus sign tells you 95.6 is too small
-        # S1 = 95.7 the balance equal to +1149.71 plus sign tells you 95.7 is too small
-        # S1 = 95.8 the balance equal to +762.80 plus sign tells you 95.8 is too small
-        # S1 = 95.9 the balance equal to +375.89 plus sign tells you 95.9 is too small
-        # S1 = 96.0 the balance equal to -11.02 minus sign tells you 96.0 is too big
-            # increment = increment / 10
-            # increment = 0.01 
-        # S1 = 96.0 + increment(-0.01)
-        # S1 = 95.99 the balance equal to +27.67 plus sign tells you 95.99 is too small 
-            # increment equals 0.001 increment = increment / 10
-        # S1 = 95.999 the balance equal to -7.15  negative sing tells you 95.999 is too big
-        # S1 = 95.998 the the balance equal to -3.28 negative sign tells you 95.998 is too big
-        # S2 = 95.997 the the balance equal to +0.59  plus sign tells you 95.997 is to small
-        # S2 = 95.9979 the balance equal to -2.89 negative sign tells you 95.9979  is to big
-        # S2 = 95.9978 the balance equal to -2.50 negative sing tells you 95.9978 is to big
-        # S2 = 95.9977 the  balance equal to -2.12 negative sing tells you 95.9977 is to big
-        
-
 
 
 

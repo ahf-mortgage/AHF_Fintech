@@ -24,7 +24,8 @@ class Command(BaseCommand):
         left = Q22.objects.filter(value = 0).first()
         right = Q22.objects.filter(value = 100).first()
         root = self.find_root(self.function,left,right,self.tolerance)
-        return root
+        print(root)
+        # return root
       
 
     def function(self,q22):
