@@ -1,4 +1,4 @@
-import bisect
+import bisect as bs
 
 def function(x):
     # The function for which you want to find the root

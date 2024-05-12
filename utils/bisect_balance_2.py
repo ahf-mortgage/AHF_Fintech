@@ -1,24 +1,23 @@
-import bisect
+import sys
+# import bisect
+import django
+from django.conf import settings
+# Configure Django settings
+settings.configure(DEBUG=True)
+# Initialize Django
+django.setup()
+sys.path.append("/home/tinsae/Desktop/projects/AHF_Fintech/utils/")
 import calc_res
-# from recruiter.models import *
 
-# def function(x):
-#     # The function for which you want to find the root
-#     return x**3 - 2*x - 5
+
+print("sys path ",sys.path)
 
 def function(q22):
     branch_gross = 275000
     total_expense = 20794
-    return calculate_balance(branch_gross,total_expense,q22)
+    return calc_res.calculate_balance(branch_gross,total_expense,q22)
 
-# def function(self,q22):
-#         # self.branch_gross = calculate_gross__new_branch_income(self.loan_break_point,self.comp_plan,self.gci,self.branch)
-#         # self.above_loan_break_point_ahf_commission = calculate_above_loan_break_point_ahf_commission(self.loan_break_point,self.comp_plan,self.branch) #int(flat_fee_gci * (branch.commission))
-#         # self.total_expense = calculate_total_expense(self.branch_gross,self.above_loan_break_point_ahf_commission)
-        
-#         branch_gross = 275000
-#         total_expense = 20794
-#         return calculate_balance(branch_gross,total_expense,self.q22)
+
 
 
 def find_root(function, left, right, tolerance):

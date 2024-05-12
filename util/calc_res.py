@@ -1,4 +1,5 @@
 import math
+import sys
 from recruiter.models import Bps,Branch
 from W2branchYearlyGross.models import (
                      BranchPayrollLiabilitieR,
@@ -395,6 +396,11 @@ def calculate_debit(branch_gross,total_expense,q22):
 
 
 def calculate_balance(branch_gross,total_expense,q22):
+    credit = branch_gross
+    return credit - calculate_debit(branch_gross,total_expense,q22)
+
+
+def calculate_balance_raw(branch_gross,total_expense,q22):
     credit = branch_gross
     return credit - calculate_debit(branch_gross,total_expense,q22)
 

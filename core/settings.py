@@ -37,38 +37,25 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-
-    
-    
-    # thrid party packages
+    #thrid party packages
     'tailwind',
     'theme',
     'django_browser_reload',
     'crispy_forms',
-     "crispy_bootstrap5",
+    "crispy_bootstrap5",
     'widget_tweaks',
-
-
     # installed apps,
-
     'recruiter',
     'home',
     'W2branchYearlyGross',
     'util',
-    
-    
     # all auth apps
     'allauth',
     'allauth.account',
-    
      # Configure the django-otp package.
     'django_otp',
     'django_otp.plugins.otp_totp',
     'django_otp.plugins.otp_static',
-    
-    
-
-
 ]
 
 MIDDLEWARE = [
@@ -79,19 +66,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
-    
     # Add the account middleware:
     "allauth.account.middleware.AccountMiddleware",
     # Configure the django-otp package. Note this must be after the
     # AuthenticationMiddleware.
     'django_otp.middleware.OTPMiddleware',
 
-    # Reset login flow middleware. If this middleware is included, the login
-    # flow is reset if another page is loaded between login and successfully
-    # entering two-factor credentials.
-    'allauth_2fa.middleware.AllauthTwoFactorMiddleware',
-    "django_browser_reload.middleware.BrowserReloadMiddleware",
 
 ]
 
