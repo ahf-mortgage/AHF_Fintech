@@ -57,7 +57,7 @@ class Command(BaseCommand):
             print("left balance     =",function(left),    "q22=",left.value)
             print("right balance    =",function(right),   "q22=",right.value)
             
-            if function(midpoint) == 0.0009355954243801534:
+            if function(midpoint) == 0 :
                 return midpoint
             elif function(midpoint) * function(left) < 0:
                 right = midpoint               

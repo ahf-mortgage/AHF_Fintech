@@ -48,15 +48,15 @@
       Branch 
     </td>
     <td scope="col" class="px-4 font-bold">
-        ${{ahf_annual_cap_data.branch_gross_income|intcomma}}
+        ${{ahf_annual_cap_data.branch_gross_income|floatformat:'2'|intcomma}}
     </td>
 
     <td scope="col" class="px-4 font-bold">
-      {{debit }}
+      {{debit|floatformat:'2'|intcomma}}
     </td>
 
     <td scope="col" class="px-4  font-bold">
-        ${{balance}}
+        ${{balance|floatformat:'2'|intcomma}}
     </td>
 
     <td scope="col" class="px-4 font-bold">

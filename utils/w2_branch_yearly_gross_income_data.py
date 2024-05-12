@@ -93,7 +93,9 @@ try:
     bplr                    = BranchPayrollLiabilitieR.objects.all().first()
 except BranchPayrollLiabilitieR.DoesNotExist as e:
     raise e
-        
+
+
+
         
 
 q22                     = Q22.objects.all().first()
@@ -132,6 +134,15 @@ _calculate_ett                              = calculate_ett(branch_gross,total_e
 branch_payroll_liabilities_total            = calculate_branch_payroll_liabilities_total(_branch_new_gross_income,total_expense,q22)
 debit                                       = calculate_debit(_branch_new_gross_income,total_expense,q22)
 
+
+bps_from_50_to_250              = [50,100] + [num for num in range(100,250,25)]+[250]
+gci_for_bps_from_50_to_250      = [gci/(num) * 10000 for num in bps_from_50_to_250] 
+ahf_for_bps_from_50_to_250      = [(1 - branch.commission) * num for num in bps_from_50_to_250] 
+branch_for_bps_from_50_to_250   = [branch.commission* num for num in bps_from_50_to_250]
+bps_to_gci_dict                 = {}
+bps_to_ahf_commission_dict      = {}
+bps_to_branch_commission_dict   = {}
+
 for key,value in zip(bps_from_50_to_250,gci_for_bps_from_50_to_250):
     bps_to_gci_dict[key] = value
         
@@ -141,6 +152,13 @@ for key,value in zip(bps_from_50_to_250,ahf_for_bps_from_50_to_250):
 for key,value in zip(bps_from_50_to_250,branch_for_bps_from_50_to_250):
     bps_to_branch_commission_dict[key] = value
         
+        
+
+  
+ewh_meta = EmployeeWithholding._meta
+ewh_columns = [field.name for field in ewh_meta.get_fields()]
+ewh_columns.remove('id')
+ewh = ewh.values().first()
 
 
 

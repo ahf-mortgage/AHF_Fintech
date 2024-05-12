@@ -164,7 +164,7 @@
 
               </td>
               <td class="font-bold whitespace-nowrap">
-              ${{net_paycheck_for_employee_with_holdings_total|intcomma}}
+              ${{net_paycheck_for_employee_with_holdings_total|floatformat:'2'|intcomma}}
               </td>
 
               <td class="flex whitespace-nowrap">
@@ -180,7 +180,7 @@
 
               </td>
               <td class="flex font-bold whitespace-nowrap">
-                {{net_paycheck_for_employee_with_holdings_total|intcomma}}
+                {{net_paycheck_for_employee_with_holdings_total|floatformat:'2'|intcomma}}
               </td>
 
 
@@ -224,14 +224,14 @@
 
                 {% if column == 'Social_Security' %}
               <td class="whitespace-nowrap">
-               {{w2_branch_yearly_gross_income_data.calculate_social_security|intcomma}}
+               {{w2_branch_yearly_gross_income_data.calculate_social_security|floatformat:'2'|intcomma}}
 
               </td>
 
               {% elif column == 'Medicare' %}
 
               <td class="whitespace-nowrap">
-                {{w2_branch_yearly_gross_income_data.calculate_Medicare|intcomma}}
+                {{w2_branch_yearly_gross_income_data.calculate_Medicare|floatformat:'2'|intcomma}}
               </td>
 
 
@@ -256,13 +256,13 @@
 
               {% elif column == 'total'%}
               <td class="whitespace-nowrap">
-                {{branch_payroll_liabilities_total|intcomma}}
+                {{branch_payroll_liabilities_total|floatformat:'2'|intcomma}}
               </td>
 
           
 
               {% else %}
-              <td class="font-bold whitespace-nowrap"> {{bpl|dict_get:column|intcomma}}</td>
+              <td class="font-bold whitespace-nowrap"> {{bpl|dict_get:column|floatformat:'2'|intcomma}}</td>
 
               {% endif %}
              
@@ -321,7 +321,7 @@
 
               <td class="pr-4">
           
-                ${{bplqr|dict_get:column|mul:10}}
+                ${{bplqr|dict_get:column|mul:10|floatformat:'2'|intcomma}}
               </td>
             </tr>
 

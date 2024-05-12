@@ -49,6 +49,8 @@ from W2branchYearlyGross.models import (
                                 
                                         )
 
+from utils.bisect_balance import find_root,function
+
 
 
 
@@ -148,6 +150,13 @@ def home(request):
         
 
     q22                     = Q22.objects.all().first()
+    left                    = Q22.objects.filter(value = 0).first()
+    right                   = Q22.objects.filter(value = 100).first()
+    tolerance               = 1e-6
+    root                    = find_root(function,left,right,tolerance)
+    q22.value = root
+    
+    
     bpl_meta                = BranchPayrollLiabilities._meta
     bpl_columns             = [field.name for field in BranchPayrollLiabilities._meta.get_fields()]
     ewl_columns             = [field.name for field in EmployeeWithholding._meta.get_fields()]
@@ -292,7 +301,7 @@ def home(request):
         'bps_to_ahf_commission_dict':bps_to_ahf_commission_dict,
         'bps_to_branch_commission_dict':bps_to_branch_commission_dict,
         'categories':categories,
-        'total_expense':int(total_expense),
+        'total_expense':total_expense,
         'min_compesate':comp_plan.Maximum_Compensation / 1000,
         'flat_fee_gci': flat_fee_gci, #+  comp_plan.Flat_Fee
         'above_loan_break_point_ahf_commission':above_loan_break_point_ahf_commission,
