@@ -166,8 +166,8 @@ def calculate_total_expense(_branch_commission,_gross_ahf_income):
     
     total_expense = 0
     categories = Category.objects.all()
-    print("_branch_commission=",_branch_commission)
-    print("_gross_ahf_income=",_gross_ahf_income)
+    # print("_branch_commission=",_branch_commission)
+    # print("_gross_ahf_income=",_gross_ahf_income)
     
     if _branch_commission > 2 * _gross_ahf_income:
         for cat in categories:
@@ -420,11 +420,11 @@ def calculate_gross__new_branch_income(loan_break_amount,comp_plan,gci,value = 2
     C8      = gci
     K10     = branch.loan_per_year
     H10     = ahf.loan_per_year
-    print("E8=",E8)
-    print("H8=",H8)
-    print("C8=",C8)
-    print("K10=",K10)
-    print("H10=",H10)
+    # print("E8=",E8)
+    # print("H8=",H8)
+    # print("C8=",C8)
+    # print("K10=",K10)
+    # print("H10=",H10)
     
     if K10 <= H10:
         return E8 * K10

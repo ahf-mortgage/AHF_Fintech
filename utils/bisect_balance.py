@@ -38,9 +38,9 @@ def find_root(function, left, right, tolerance):
             right     = Q22(value = _right)
             left      = Q22(value = _left)
             
-            print("midpoint balance =",function(midpoint),"q22=",midpoint.value)
-            print("left balance     =",function(left),    "q22=",left.value)
-            print("right balance    =",function(right),   "q22=",right.value)
+            # print("midpoint balance =",function(midpoint),"q22=",midpoint.value)
+            # print("left balance     =",function(left),    "q22=",left.value)
+            # print("right balance    =",function(right),   "q22=",right.value)
             
             if function(midpoint) == 0 :
                 return midpoint

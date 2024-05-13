@@ -138,28 +138,41 @@ def comp_plan_change_view(request):
     loan_break_point = LoanBreakPoint.objects.all().first()
     comp_plan_obj = CompPlan.objects.all().first()
     branch = Branch.objects.all().first()
+    
+   
 
     if request.method == "POST":
         max_gci = request.POST.get('max_gci',None)
+        Maximum_Compensation = request.POST.get("Maximum_Compensation",None)
         comp_plan = request.POST.get("comp_plan")
         loan_break= request.POST.get("loan_break_point",0)
         branch_amount = request.POST.get("branch_amount")
+        CURRENT_Maximum_Compensation = comp_plan_obj.Maximum_Compensation
+        
         if branch_amount != None:
             branch_amount = float(branch_amount)
             if branch_amount > 99:
                 branch_amount = 99
+                
+        print("*********DEBUG*************CURRENT_Maximum_Compensation = ",CURRENT_Maximum_Compensation)
+        print("*********DEBUG*************max_gci                      = ",max_gci)
+        print("*********DEBUG*************Maximum_Compensation         = ",Maximum_Compensation)
+                
+        # if max_gci != None and Maximum_Compensation != None:
+        #     if float(Maximum_Compensation) > CURRENT_Maximum_Compensation:
+        #         max_gci = CURRENT_Maximum_Compensation
         
         if branch_amount:
-            comp_plan_obj.MAX_GCI = max_gci
-            comp_plan_obj.Percentage = float(comp_plan)
+            comp_plan_obj.MAX_GCI             = max_gci
+            comp_plan_obj.Percentage          = float(comp_plan)
             loan_break_point.loan_break_point = loan_break
-            branch_amount = int(branch_amount) / 100
-            branch.commission = branch_amount
+            branch_amount                     = int(branch_amount) / 100
+            branch.commission                 = branch_amount
             branch.save()
             loan_break_point.save()
+            comp_plan_obj.Maximum_Compensation = max_gci
             comp_plan_obj.save()
-            return redirect("/")
-            
+            return redirect("/")   
         else:
             return redirect("/")
   
