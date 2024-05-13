@@ -33,7 +33,7 @@
                                 <td class="whitespace-nowrap px-6 font-medium">Percentage (0.000% -2.750%)</td>
                                 <td class="whitespace-nowrap px-6">
 
-                                    {{min_compesate}}%
+                                    {{comp_plan_for_lower_limit.Percentage}}%
                                     
                                   </td>
                             </tr>
@@ -46,12 +46,15 @@
 
 
                             <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
-                                <td class="whitespace-nowrap px-6 font-medium">Maximum Compensation (Min. Comp - $40,000)
-
+                                <td class="whitespace-nowrap px-6 font-medium">
+                                    Maximum Compensation (Min. Comp - $40,000)
+                                    
                                 </td>
-                                <td class="whitespace-nowrap px-6">
 
+                                <td class="px-6">
+                                    {{comp_plan_for_lower_limit.Maximum_Compensation}}
                                 </td>
+                              
                             </tr>
 
 
@@ -102,7 +105,7 @@
 
                                     <div class="relative mb-3" data-twe-input-wrapper-init>
                                         <input 
-                                            type="text"
+                                            type="number"
                                             name="comp_plan"
                                             id="comp_plan"
                                             value="{{comp_plan_for_lower_limit.Percentage}}"
@@ -156,7 +159,9 @@
 
                                     <div style="display: flex;">
                                         <div class="relative mb-3" data-twe-input-wrapper-init>
-                                            <input type="text" name="branch_amount" id="branch_amount"
+                                            <input type="number" 
+                                                    name="branch_amount"
+                                                 id="branch_amount"
                                                 value="{{branch_amount}}"
                                                 class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
                                                 class="inputs_fields" placeholder="" value="{{branch_amount}}" />

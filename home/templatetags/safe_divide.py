@@ -11,7 +11,7 @@ def sum_list(numbers):
 
 @register.filter(name='safe_divide')
 def  safe_divide(value):
-    return math.ceil(int(value)/12)
+    return int(value)/12
  
  
  

@@ -142,13 +142,17 @@ def comp_plan_change_view(request):
     if request.method == "POST":
         max_gci = request.POST.get('max_gci',None)
         comp_plan = request.POST.get("comp_plan")
-        loan_break= request.POST.get("loan_break_point")
+        loan_break= request.POST.get("loan_break_point",0)
         branch_amount = request.POST.get("branch_amount")
+        if branch_amount != None:
+            branch_amount = float(branch_amount)
+            if branch_amount > 99:
+                branch_amount = 99
         
-        if True:
+        if branch_amount:
             comp_plan_obj.MAX_GCI = max_gci
             comp_plan_obj.Percentage = float(comp_plan)
-            loan_break_point.loan_break_point = int(loan_break)
+            loan_break_point.loan_break_point = loan_break
             branch_amount = int(branch_amount) / 100
             branch.commission = branch_amount
             branch.save()
