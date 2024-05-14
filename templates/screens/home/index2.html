@@ -153,18 +153,16 @@
 
     // Table data for loan below loan limit
     for (let num of loan_below_limits) {
-      const D2 = document.getElementById(`D2_${num}`)
-      const F2 = document.getElementById(`F2_${num}`)
-      const H2 = document.getElementById(`H2_${num}`)
+      const D2  = document.getElementById(`D2_${num}`)
+      const F2  = document.getElementById(`F2_${num}`)
+      const H2  = document.getElementById(`H2_${num}`)
       const row = document.getElementById(`below_row_${num}`)
       let branch_share = 0
       let ahf_share = 0
 
-    
-
-      const gci_result = (comp_plan_percentage * 100) * num / 10000  //+ Number.parseFloat("{{comp_plan_for_lower_limit.Flat_Fee}}")
+      const gci_result    = (comp_plan_percentage * 100) * num / 10000  //+ Number.parseFloat("{{comp_plan_for_lower_limit.Flat_Fee}}")
       const branch_amount = (Number.parseFloat("{{branch_amount}}") / 100)//Number.parseFloat("{{branch_commission_amount}}")
-      const ahf_amount = 1 - (Number.parseFloat("{{branch_amount}}") / 100)
+      const ahf_amount    = 1 - (Number.parseFloat("{{branch_amount}}") / 100)
 
       if(counter % 2 == 0 ) {
         row.classList.remove("bg-gray-200")
@@ -177,15 +175,15 @@
       if (gci_result < MAX_GCI) {
         D2.innerText = (gci_result).toLocaleString()
         branch_share = (gci_result * branch_amount)
-        ahf_share = (gci_result * ahf_amount)
+        ahf_share    = (gci_result * ahf_amount)
       }
       else {
         D2.innerText = MAX_GCI.toLocaleString()
         branch_share = MAX_GCI * branch_amount
-        ahf_share = MAX_GCI * ahf_amount
+        ahf_share    = MAX_GCI * ahf_amount
       }
       F2.innerText = ahf_share.toLocaleString()
-      H2.innerHTML = `<p> ${branch_share.toLocaleString()} </p>`
+      H2.innerHTML = `<p>${branch_share.toLocaleString()}</p>`
 
     counter += 1
 

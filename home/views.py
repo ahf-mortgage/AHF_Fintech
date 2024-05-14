@@ -119,6 +119,7 @@ def home(request):
     loan_below_limits = [num for num in range(int(loan_break_point.loan_break_point),MIN_LOAN - MIN_LOAN,-MIN_LOAN)]
     
     
+    
 
     gci = (comp_plan.Percentage * 100) * loan_break_point.loan_break_point / 10000 + comp_plan.Flat_Fee
     if gci > comp_plan.MAX_GCI:

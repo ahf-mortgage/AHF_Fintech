@@ -91,17 +91,21 @@
 
                             <!-- Table row for Comp Percentage -->
                             <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
-                                <td class="whitespace-nowrap px-6 font-medium">Comp Percentage</td>
+                                <td class="whitespace-nowrap px-6 font-medium"> Comp Percentage</td>
 
                                 <td class="whitespace-nowrap px-6">
                                     <!-- for comp plan -->
 
 
                                     <div class="relative mb-3" data-twe-input-wrapper-init>
-                                        <input type="number" name="comp_plan" id="comp_plan"
-                                            value="{{comp_plan_for_lower_limit.Percentage}}"
-                                            class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3  leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
-                                            id="exampleFormControlInputText" placeholder="" />
+                                        <input type="text"
+                                               name="comp_plan"
+                                               id="comp_plan"
+                                                value="{{comp_plan_for_lower_limit.Percentage}}"
+                                                class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3  leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
+                                                placeholder=""
+                                                required
+                                                />
                                         <label for="exampleFormControlInputText"
                                             class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[0.9rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-400 dark:peer-focus:text-primary">
 
@@ -121,10 +125,17 @@
                                 <td class="whitespace-nowrap px-6">
 
                                     <div class="relative mb-3" data-twe-input-wrapper-init>
-                                        <input type="text" name="loan_break_point" id="loan_break_point"
+                                        
+                                        <input 
+                                            type="text" 
+                                            name="loan_break_point"
+                                            id="loan_break_point"
                                             class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
-                                            id="exampleFormControlInputText" class="inputs_fields" placeholder=""
-                                            value="{{loan_break_point}}" />
+                                            id="exampleFormControlInputText"
+                                            class="inputs_fields"
+                                            placeholder=""
+                                            value="{{loan_break_point}}"
+                                        />
                                         <label for="exampleFormControlInputText"
                                             class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[0.9rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-400 dark:peer-focus:text-primary">
 
@@ -145,10 +156,15 @@
 
                                     <div style="display: flex;">
                                         <div class="relative mb-3" data-twe-input-wrapper-init>
-                                            <input type="number" name="branch_amount" id="branch_amount"
-                                                value="{{branch_amount}}"
+                                            <input 
+                                                type="number"
+                                                name="branch_amount"
+                                                id="branch_amount"
                                                 class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
-                                                class="inputs_fields" placeholder="" value="{{branch_amount}}" />
+                                                class="inputs_fields"
+                                                placeholder="" 
+                                                value="{{branch_amount}}" 
+                                                />
                                             <label for="exampleFormControlInputText"
                                                 class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[0.9rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-400 dark:peer-focus:text-primary">
 

@@ -2,6 +2,8 @@ from django.shortcuts import render
 from .models import MLO,Company,Loan
 from django.shortcuts import get_object_or_404,redirect
 from recruiter.models import Bps,LoanBreakPoint,CompPlan,AHF,Branch
+from utils.calc_res import get_gci_result
+
 
 
 def calculate_commission_above_million(loan_id,mlo_id):
@@ -127,10 +129,12 @@ def loan_break_point(request):
     }
     return render(request,"home/index2.html",context)
 
-
+# from home.views import loan_below_limits
 def comp_plan_change_view(request):
     """
         This function handle comp plane changes
+        
+        Flat_Fee=max_gci*loan_below_limits[len(loan_below_limits) -1]/10000
 
     """
     
@@ -155,12 +159,25 @@ def comp_plan_change_view(request):
                 branch_amount = 99
      
         # if max_gci != None and Maximum_Compensation != None:
+        MIN_LOAN               =  100000 
+        bps                    =  Bps.objects.all().first().bps
+        rows                   = [50] +  [num for num in range(100,275,25)]
+        row_counter            = [i-7 for i in range(7,7+ len(rows))]
+        loan_below_limits      = [num for num in range(int(loan_break_point.loan_break_point),MIN_LOAN - MIN_LOAN,-MIN_LOAN)]    
+        gci_result             = [(comp_plan_obj.Percentage * 100) * num / 10000 for num in range(int(loan_break_point.loan_break_point),MIN_LOAN - MIN_LOAN,-MIN_LOAN)]
+        
+      
+        peak_loan_below_limits = loan_below_limits[len(loan_below_limits) - 1]
+        peak_gci_results       = gci_result[len(gci_result)-1]
+        Flat_Fee               = peak_gci_results - bps * peak_loan_below_limits/10000
+        
         if float(max_gci) > float(Maximum_Compensation):
             max_gci = Maximum_Compensation
         
         if branch_amount:
             comp_plan_obj.MAX_GCI             = max_gci
-            comp_plan_obj.Maximum_Compensation    = float(Maximum_Compensation)
+            comp_plan_obj.Maximum_Compensation= float(Maximum_Compensation)
+            comp_plan_obj.Flat_Fee            = Flat_Fee
             comp_plan_obj.Percentage          = float(comp_plan)
             loan_break_point.loan_break_point = loan_break
             branch_amount                     = int(branch_amount) / 100
