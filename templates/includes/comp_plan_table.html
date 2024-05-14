@@ -5,9 +5,7 @@
 <style>
     .disabled {
         opacity: 0.5;
-        /* Reduce opacity to make it appear grayed out */
         cursor: not-allowed;
-        /* Change cursor to indicate it's not clickable */
     }
 </style>
 <div>
@@ -28,6 +26,28 @@
                                 <td class="whitespace-nowrap px-6 font-medium">Flat Fee</td>
                                 <td class="whitespace-nowrap px-6">{{comp_plan_for_lower_limit.Flat_Fee}}</td>
                             </tr>
+                        <form action="{% url 'comp_plan_change_view' %}" method="post"
+                            style="display: flex;justify-content:center;" class="pl-6">
+                            
+                            {% csrf_token %}
+                            <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
+                                <td class="whitespace-nowrap px-6 font-medium">FF-{{MIN_LOAN}}</td>
+                                
+                                <td class="whitespace-nowrap px-6">
+                                    <input 
+                                    type="number" 
+                                    name="FF_MIN_LOAN"
+                                     id="FF_MIN_LOAN"
+                                     value="{{comp_plan_for_lower_limit.FF_MIN_LOAN}}"
+
+                                   
+                                    />
+
+                                </td>
+                            </tr>
+
+
+
                             <tr class="border-b border-neutral-200 bg-gray/[0.02] dark:border-white/10">
                                 <td class="whitespace-nowrap px-6 font-medium">Percentage (0.000% -{{comp_plan_for_lower_limit.Percentage}}%)</td>
                                 <td class="whitespace-nowrap px-6">
@@ -49,9 +69,7 @@
 
                                 </td>
 
-                                <form action="{% url 'comp_plan_change_view' %}" method="post"
-                                    style="display: flex;justify-content:center;" class="pl-6">
-                                    {% csrf_token %}
+                            
 
                                     <td class="px-6">
                                         <input type="number" name="Maximum_Compensation" id="Maximum_Compensation"

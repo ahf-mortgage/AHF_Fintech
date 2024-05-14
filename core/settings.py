@@ -45,10 +45,9 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",
     'widget_tweaks',
     # installed apps,
-    'recruiter',
-    'home',
-    'W2branchYearlyGross',
-    'util',
+    'apps.recruiter',
+    'apps.home',
+    'apps.W2branchYearlyGross',
     # all auth apps
     'allauth',
     'allauth.account',

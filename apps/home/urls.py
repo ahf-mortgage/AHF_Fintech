@@ -1,8 +1,7 @@
 
 from django.contrib import admin
 from django.urls import path
-from recruiter.views import (
- 
+from apps.recruiter.views import (
     change_branch_amount,
     loan_break_point,
     change_comp_plan,
@@ -11,7 +10,7 @@ from recruiter.views import (
     change_branch_loan,
     change_ahf_loan
     )
-from .views import home
+from apps.home.views import home
 
 
 

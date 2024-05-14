@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .models import MLO,Company,Loan
 from django.shortcuts import get_object_or_404,redirect
-from recruiter.models import Bps,LoanBreakPoint,CompPlan,AHF,Branch
+from .models import Bps,LoanBreakPoint,CompPlan,AHF,Branch
 from utils.calc_res import get_gci_result
 
 
@@ -148,6 +148,7 @@ def comp_plan_change_view(request):
     if request.method == "POST":
         Maximum_Compensation = request.POST.get("Maximum_Compensation",None)
         max_gci = request.POST.get('max_gci',None)
+        FF_MIN_LOAN = request.POST.get('FF_MIN_LOAN',None)
         comp_plan = request.POST.get("comp_plan")
         loan_break= request.POST.get("loan_break_point",0)
         branch_amount = request.POST.get("branch_amount")
@@ -162,18 +163,33 @@ def comp_plan_change_view(request):
         bps                    =  Bps.objects.all().first().bps
         rows                   = [50] +  [num for num in range(100,275,25)]
         row_counter            = [i-7 for i in range(7,7+ len(rows))]
-        loan_below_limits      = [num for num in range(int(loan_break_point.loan_break_point),MIN_LOAN - MIN_LOAN,-MIN_LOAN)]    
+        
+        
+        loan_below_limits      = [num for num in range(int(loan_break_point.loan_break_point),MIN_LOAN - MIN_LOAN,-MIN_LOAN)]  
+        # loan_below_limits      = [num for num in range(int(loan_break_point.loan_break_point),-MIN_LOAN * 2)]    
+  
+        
+        
+        
         gci_result             = [(comp_plan_obj.Percentage * 100) * num / 10000 for num in range(int(loan_break_point.loan_break_point),MIN_LOAN - MIN_LOAN,-MIN_LOAN)]
         
       
         peak_loan_below_limits = loan_below_limits[len(loan_below_limits) - 1]
         peak_gci_results       = gci_result[len(gci_result)-1]
-        Flat_Fee               = peak_gci_results - bps * peak_loan_below_limits/10000
+        Flat_Fee               = peak_gci_results - (bps * peak_loan_below_limits)/10000
         
-        print("Flat fee=",Flat_Fee)
+    
         
         if float(max_gci) > float(Maximum_Compensation):
             max_gci = Maximum_Compensation
+            
+        print("FF_MIN_LOAN=",FF_MIN_LOAN)
+            
+        if FF_MIN_LOAN != None:
+            
+            comp_plan_obj.FF_MIN_LOAN = float(FF_MIN_LOAN)
+            comp_plan_obj.save()
+            
         
         if branch_amount:
             comp_plan_obj.MAX_GCI             = max_gci

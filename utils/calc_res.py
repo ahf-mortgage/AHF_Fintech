@@ -1,12 +1,15 @@
 import math
 import logging
-from recruiter.models import Bps,Branch
-from W2branchYearlyGross.models import (
+from apps.recruiter.models import  *
+from apps.W2branchYearlyGross.models import (
                      BranchPayrollLiabilitieR,
                      BranchPayrollLiabilitieQ,
                      EmployeeWithholdingR,
                      EmployeeWithholdingQ
 )
+
+from apps.W2branchYearlyGross.models import *
+
 logger = logging.getLogger(__name__)
 
 
@@ -27,7 +30,6 @@ def calculate_annual_ahf_income(loan_break_amount,comp_plan,ahf_comission_amount
 
 
 
-from recruiter.models import AHF
 def calculate_gross_ahf_income(loan_break_amount,comp_plan,commission,value = 275):
     """
         ahf gross income commission 
@@ -48,7 +50,7 @@ def calculate_gross_ahf_income(loan_break_amount,comp_plan,commission,value = 27
 
 
 
-from recruiter.models import AHF
+
 def calculate_gross_branch_income(loan_break_amount,comp_plan,commission,value = 275):
     """
         ahf gross income commission 
@@ -66,7 +68,6 @@ def calculate_gross_branch_income(loan_break_amount,comp_plan,commission,value =
 
 
 # branch_amount =  275 * loan_amout_break / 10000 + comp.Flat_Fee * branch.commission*  21
-from recruiter.models import Branch
 def calculate_branch_gross_ahf_income(loan_break_amount,comp_plan,commission,value = 275):
     """
         ahf gross income commission 
@@ -157,7 +158,6 @@ increment = 0.5
 
 
 
-from W2branchYearlyGross.models import Category
 def calculate_total_expense(_branch_commission,_gross_ahf_income):
     """
     O17=IF(N2>=E8*2, SUM(N9:N17),0)
@@ -407,7 +407,6 @@ def calculate_balance(branch_gross,total_expense,q22):
 
 
    
-from recruiter.models import AHF
 def calculate_gross__new_branch_income(loan_break_amount,comp_plan,gci,value = 275):
     """
         ahf gross income commission 

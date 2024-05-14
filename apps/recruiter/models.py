@@ -5,11 +5,12 @@ from django.contrib.auth.models import User
 
 
 class CompPlan(models.Model):
-    Flat_Fee = models.FloatField(default=0)
-    Percentage = models.FloatField()
+    Flat_Fee             = models.FloatField(default=0)
+    Percentage           = models.FloatField()
     Minimum_Compensation = models.FloatField(default=2.75)
     Maximum_Compensation = models.FloatField(default=2750)
-    MAX_GCI  = models.FloatField(default=27500)
+    MAX_GCI              = models.FloatField(default=27500)
+    FF_MIN_LOAN          = models.IntegerField(default=27500)
     
     def __str__(self) -> str:
         return f"{self.Percentage}"

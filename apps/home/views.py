@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from recruiter.models import Bps,LoanBreakPoint,CompPlan,AHF,Branch
+from apps.recruiter.models import Bps,LoanBreakPoint,CompPlan,AHF,Branch
 import math
 import logging
 from  django.shortcuts import redirect
@@ -38,7 +38,7 @@ from utils.calc_res import (
     )
 
 from utils.w2_branch import W2_branch_column_names
-from W2branchYearlyGross.models import (
+from apps.W2branchYearlyGross.models import (
                                         Category,
                                         EmployeeWithholding,
                                         EmployeeWithholdingQ,
@@ -111,30 +111,16 @@ def home(request):
     ahf_commission     =     gci * (1 - float(branch.commission))
     ahf_amount         =     100 - branch.commission * 100
     
-    # MIN_LOAN               =  100000 
-    # bps                    =  Bps.objects.all().first().bps
-    # rows                   = [50] +  [num for num in range(100,275,25)]
-    # row_counter            = [i-7 for i in range(7,7+ len(rows))]
-    
-    
-    # loan_below_limits      = [num for num in range(int(loan_break_point.loan_break_point),MIN_LOAN - MIN_LOAN,-MIN_LOAN)]    
-    # gci_result             = [(comp_plan.Percentage * 100) * num / 10000 for num in range(int(loan_break_point.loan_break_point),MIN_LOAN - MIN_LOAN,-MIN_LOAN)]
-    # peak_loan_below_limits = loan_below_limits[len(loan_below_limits) - 1]
-    # peak_gci_results       = gci_result[len(gci_result)-1]
-        
-    # Flat_Fee               = peak_gci_results - bps * peak_loan_below_limits/10000
-    
-    # print("Flat fee=",Flat_Fee)
-
-    
+ 
     
     
     MIN_LOAN = 100000 
     rows = [50] +  [num for num in range(100,275,25)]
     row_counter = [i-7 for i in range(7,7+ len(rows))]
+    
     loan_below_limits = [num for num in range(int(loan_break_point.loan_break_point),MIN_LOAN - MIN_LOAN,-MIN_LOAN)]
-    
-    
+    print("loan_below_limits=",loan_below_limits)
+
     
 
     gci = (comp_plan.Percentage * 100) * loan_break_point.loan_break_point / 10000 + comp_plan.Flat_Fee
@@ -330,6 +316,7 @@ def home(request):
         'bplq_total': sum(bplq_dict.values()),
         'bplr_total': bplr_total,
         'debit':debit,
+        'MIN_LOAN':MIN_LOAN,
         'balance':calculate_balance(_branch_new_gross_income,total_expense,q22),
         'employee_with_holdings_q_columns_total':employee_with_holdings_q_columns_total,
         'net_paycheck_for_employee_with_holdings_total':net_paycheck_for_employee_with_holdings(

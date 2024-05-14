@@ -152,6 +152,7 @@
 
 
     // Table data for loan below loan limit
+    let size_of_loan_below_limits = loan_below_limits.length
     for (let num of loan_below_limits) {
       const D2  = document.getElementById(`D2_${num}`)
       const F2  = document.getElementById(`F2_${num}`)
@@ -172,6 +173,8 @@
         row.classList.add("font-bold")
       }
 
+    
+
       if (gci_result < MAX_GCI) {
         D2.innerText = (gci_result).toLocaleString()
         branch_share = (gci_result * branch_amount)
@@ -184,6 +187,13 @@
       }
       F2.innerText = ahf_share.toLocaleString()
       H2.innerHTML = `<p>${branch_share.toLocaleString()}</p>`
+
+      if(counter == size_of_loan_below_limits - 1) {
+        D2.innerText = "{{comp_plan_for_lower_limit.FF_MIN_LOAN}}"
+
+      }
+
+    
 
     counter += 1
 

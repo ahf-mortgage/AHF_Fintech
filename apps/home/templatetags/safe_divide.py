@@ -33,15 +33,19 @@ def  divide_by_12(value):
     return round(int(value)/12,2)
 
 
-
-
 @register.filter(name='dict_get')
 def dict_get(dictionary, key):
     return dictionary.get(key)
 
-
-
 @register.filter("split_word")
 def split_words(value):
     return " ".join(value.split("_"))
+
+
+# @register.filter("split_word")
+# def split_words(value):
+#     return " ".join(value.split("_"))
   
+# FF-10000  25000 --> comp plan table 
+# at and below $loan_break_point
+# hookup with 100,100 2500 low list 
