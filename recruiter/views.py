@@ -158,7 +158,6 @@ def comp_plan_change_view(request):
             if branch_amount > 99:
                 branch_amount = 99
      
-        # if max_gci != None and Maximum_Compensation != None:
         MIN_LOAN               =  100000 
         bps                    =  Bps.objects.all().first().bps
         rows                   = [50] +  [num for num in range(100,275,25)]
@@ -170,6 +169,8 @@ def comp_plan_change_view(request):
         peak_loan_below_limits = loan_below_limits[len(loan_below_limits) - 1]
         peak_gci_results       = gci_result[len(gci_result)-1]
         Flat_Fee               = peak_gci_results - bps * peak_loan_below_limits/10000
+        
+        print("Flat fee=",Flat_Fee)
         
         if float(max_gci) > float(Maximum_Compensation):
             max_gci = Maximum_Compensation

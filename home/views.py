@@ -111,6 +111,22 @@ def home(request):
     ahf_commission     =     gci * (1 - float(branch.commission))
     ahf_amount         =     100 - branch.commission * 100
     
+    # MIN_LOAN               =  100000 
+    # bps                    =  Bps.objects.all().first().bps
+    # rows                   = [50] +  [num for num in range(100,275,25)]
+    # row_counter            = [i-7 for i in range(7,7+ len(rows))]
+    
+    
+    # loan_below_limits      = [num for num in range(int(loan_break_point.loan_break_point),MIN_LOAN - MIN_LOAN,-MIN_LOAN)]    
+    # gci_result             = [(comp_plan.Percentage * 100) * num / 10000 for num in range(int(loan_break_point.loan_break_point),MIN_LOAN - MIN_LOAN,-MIN_LOAN)]
+    # peak_loan_below_limits = loan_below_limits[len(loan_below_limits) - 1]
+    # peak_gci_results       = gci_result[len(gci_result)-1]
+        
+    # Flat_Fee               = peak_gci_results - bps * peak_loan_below_limits/10000
+    
+    # print("Flat fee=",Flat_Fee)
+
+    
     
     
     MIN_LOAN = 100000 
