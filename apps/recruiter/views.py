@@ -167,45 +167,21 @@ def comp_plan_change_view(request):
         
         
         loan_below_limits      = [num for num in range(int(loan_break_point.loan_break_point),MIN_LOAN - MIN_LOAN,-MIN_LOAN)]  
-        # loan_below_limits      = [num for num in range(int(loan_break_point.loan_break_point),-MIN_LOAN * 2)]    
         gci_result             = [(comp_plan_obj.Percentage * 100) * num / 10000 for num in range(int(loan_break_point.loan_break_point),MIN_LOAN - MIN_LOAN,-MIN_LOAN)]
-        
-      
         peak_loan_below_limits = loan_below_limits[len(loan_below_limits) - 1]
-        peak_gci_results       = gci_result[len(gci_result)-1]
-        
-        
-        # comp_plan_obj.FF_MIN_LOAN= 2750
-        # comp_plan_obj.Percentage/100= 0.02
-        # peak_loan_below_limits/10000= 10.0
-        # FF_MIN_LOAN= 2750
-        # Flatt fee = 2730.0
-        
+        peak_gci_results       = gci_result[len(gci_result)-1]        
         Flat_Fee               = comp_plan_obj.FF_MIN_LOAN - ((comp_plan_obj.Percentage * peak_loan_below_limits)/100)
-        #2730= 2750 - 10
-        
-        
-        
-        print("comp_plan_obj.FF_MIN_LOAN=",comp_plan_obj.FF_MIN_LOAN)
-        print("comp_plan_obj.Percentage=",comp_plan_obj.Percentage)
-        print(" peak_loan_below_limits=", peak_loan_below_limits)
-        
-        print((comp_plan_obj.Percentage * peak_loan_below_limits)/100,"=left side")
-        
-    
-        
+   
         if float(max_gci) > float(Maximum_Compensation):
             max_gci = Maximum_Compensation
-            
-        print("FF_MIN_LOAN=",FF_MIN_LOAN)
-            
+                     
         if FF_MIN_LOAN != None:
-            
             comp_plan_obj.FF_MIN_LOAN = float(FF_MIN_LOAN)
             comp_plan_obj.save()
             
         
         if branch_amount:
+            comp_plan_obj.FF_MIN_LOAN = float(FF_MIN_LOAN)
             comp_plan_obj.MAX_GCI             = max_gci
             comp_plan_obj.Maximum_Compensation= float(Maximum_Compensation)
             comp_plan_obj.Flat_Fee            = Flat_Fee

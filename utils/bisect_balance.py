@@ -15,14 +15,15 @@ gci = 2700
 
 def function(q22):
         branch_gross                          = calculate_gross__new_branch_income(loan_break_point,comp_plan,gci,branch)
+        # _branch_new_gross_income              = calculate_gross__new_branch_income(loan_break_point,comp_plan,gci,branch)
         above_loan_break_point_ahf_commission = calculate_above_loan_break_point_ahf_commission(loan_break_point,comp_plan,branch) #int(flat_fee_gci * (branch.commission))
         total_expense                         = calculate_total_expense(branch_gross,above_loan_break_point_ahf_commission)
+        
         return calculate_balance(branch_gross,total_expense,q22)
 
 def find_root(function, left, right, tolerance):
         if function(left) * function(right) >= 0:
             raise ValueError("Root not found in the given interval.")
-        
         
         _left = left.value
         _right = right.value

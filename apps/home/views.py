@@ -129,7 +129,7 @@ def home(request):
     FLAT_AM0UNT = gci - (gci/1000) * ((loan_below_limits[len(loan_below_limits) - 1] or 0) * 0.1/10000) 
     
     
-    annual_ahf_cap              =  calculate_annual_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
+    annual_ahf_cap              = calculate_annual_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
     gross_ahf_income            = calculate_gross_ahf_income(loan_break_point,comp_plan,float(branch.commission))
     gross_income                = calculate_gross_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
     branch_gross                = calculate_gross_branch_income(loan_break_point,comp_plan,float(branch.commission))
@@ -231,19 +231,15 @@ def home(request):
 
     
     employee_with_holdings_q_columns_total  = sum(ewl_dict.values())
-    total_employee_with_holding_expense     = calculate_total_employee_with_holding_expense(branch_gross,total_expense,q22) #(branch_gross - total_expense)* q22.value/100
+    total_employee_with_holding_expense     = calculate_total_employee_with_holding_expense(branch_gross,total_expense,q22)
   
-    
-    # _payroll_liabilities
-    # _calculate_social_security_payroll_liabilities              = calculate_social_security_payroll_liabilities(branch_gross,total_expense,q22) 
-    q22 = Q22.objects.filter(id= 1).first()
     CA_Unemployment_payroll_liabilities                         = calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22)
     medicare_payroll_liabilities                                = calculate_medicare_payroll_liabilities(branch_gross,total_expense,q22)
     _calculate_CA_Disability                                    = calculate_CA_Disability(_branch_new_gross_income,total_expense,q22) 
     calcuate_Fed_Unemploy                                       = calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22)
     _calculate_ett                                              = calculate_ett(branch_gross,total_expense,q22)
     branch_payroll_liabilities_total                            = calculate_branch_payroll_liabilities_total(_branch_new_gross_income,total_expense,q22)
-    debit                                                       = calculate_debit(_branch_new_gross_income,total_expense,q22) # total_expense  + total_employee_with_holding_expense + branch_payroll_liabilities_total 
+    debit                                                       = calculate_debit(_branch_new_gross_income,total_expense,q22) 
     branch_payroll_liabilities_percentate_total                 = bplq.Social_Security + bplq.Medicare +bplq.CA_Unemployment + bplq.Fed_Unemploy + bplq.Employment_Training_Tax
    
     w2_branch_yearly_gross_income_data = {
