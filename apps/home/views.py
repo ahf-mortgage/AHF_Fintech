@@ -156,8 +156,9 @@ def home(request):
     left                    = Q22.objects.filter(value = 0).first()
     right                   = Q22.objects.filter(value = 100).first()
     tolerance               = 1e-6
-    balance,root                  = find_root(function,left,right,tolerance)
+    balance,root            = find_root(function,left,right,tolerance)
     q22.value = root
+    q22.save()
    
     
   
@@ -235,6 +236,7 @@ def home(request):
     
     # _payroll_liabilities
     # _calculate_social_security_payroll_liabilities              = calculate_social_security_payroll_liabilities(branch_gross,total_expense,q22) 
+    q22 = Q22.objects.filter(id= 1).first()
     CA_Unemployment_payroll_liabilities                         = calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22)
     medicare_payroll_liabilities                                = calculate_medicare_payroll_liabilities(branch_gross,total_expense,q22)
     _calculate_CA_Disability                                    = calculate_CA_Disability(_branch_new_gross_income,total_expense,q22) 
