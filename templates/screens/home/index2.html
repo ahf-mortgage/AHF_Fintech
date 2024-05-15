@@ -161,7 +161,7 @@
       let branch_share = 0
       let ahf_share = 0
 
-      const gci_result    = (comp_plan_percentage * 100) * num / 10000  //+ Number.parseFloat("{{comp_plan_for_lower_limit.Flat_Fee}}")
+      const gci_result    = (comp_plan_percentage * 100) * num / 10000  + Number.parseFloat("{{comp_plan_for_lower_limit.Flat_Fee}}")
       const branch_amount = (Number.parseFloat("{{branch_amount}}") / 100)//Number.parseFloat("{{branch_commission_amount}}")
       const ahf_amount    = 1 - (Number.parseFloat("{{branch_amount}}") / 100)
 

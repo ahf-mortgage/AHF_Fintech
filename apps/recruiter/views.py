@@ -152,6 +152,7 @@ def comp_plan_change_view(request):
         comp_plan = request.POST.get("comp_plan")
         loan_break= request.POST.get("loan_break_point",0)
         branch_amount = request.POST.get("branch_amount")
+        
         # CURRENT_Maximum_Compensation = comp_plan_obj.Maximum_Compensation
         
         if branch_amount != None:
@@ -160,23 +161,36 @@ def comp_plan_change_view(request):
                 branch_amount = 99
      
         MIN_LOAN               =  100000 
-        bps                    =  Bps.objects.all().first().bps
+        bps                    =  Bps.objects.all().first()
         rows                   = [50] +  [num for num in range(100,275,25)]
         row_counter            = [i-7 for i in range(7,7+ len(rows))]
         
         
         loan_below_limits      = [num for num in range(int(loan_break_point.loan_break_point),MIN_LOAN - MIN_LOAN,-MIN_LOAN)]  
         # loan_below_limits      = [num for num in range(int(loan_break_point.loan_break_point),-MIN_LOAN * 2)]    
-  
-        
-        
-        
         gci_result             = [(comp_plan_obj.Percentage * 100) * num / 10000 for num in range(int(loan_break_point.loan_break_point),MIN_LOAN - MIN_LOAN,-MIN_LOAN)]
         
       
         peak_loan_below_limits = loan_below_limits[len(loan_below_limits) - 1]
         peak_gci_results       = gci_result[len(gci_result)-1]
-        Flat_Fee               = peak_gci_results - (bps * peak_loan_below_limits)/10000
+        
+        
+        # comp_plan_obj.FF_MIN_LOAN= 2750
+        # comp_plan_obj.Percentage/100= 0.02
+        # peak_loan_below_limits/10000= 10.0
+        # FF_MIN_LOAN= 2750
+        # Flatt fee = 2730.0
+        
+        Flat_Fee               = comp_plan_obj.FF_MIN_LOAN - ((comp_plan_obj.Percentage * peak_loan_below_limits)/100)
+        #2730= 2750 - 10
+        
+        
+        
+        print("comp_plan_obj.FF_MIN_LOAN=",comp_plan_obj.FF_MIN_LOAN)
+        print("comp_plan_obj.Percentage=",comp_plan_obj.Percentage)
+        print(" peak_loan_below_limits=", peak_loan_below_limits)
+        
+        print((comp_plan_obj.Percentage * peak_loan_below_limits)/100,"=left side")
         
     
         
@@ -200,6 +214,8 @@ def comp_plan_change_view(request):
             branch_amount                     = int(branch_amount) / 100
             branch.commission                 = branch_amount
             branch.save()
+            bps.bps = float(comp_plan) * 100
+            bps.save()
             loan_break_point.save()
             comp_plan_obj.save()
             return redirect("/")   

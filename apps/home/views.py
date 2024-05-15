@@ -145,7 +145,7 @@ def home(request):
     
     E23 = (bps.bps * loan_break_point.loan_break_point )/ 10000 + comp_plan.Flat_Fee 
     nums_loans = [math.ceil(get_gci_result(comp_plan, num) * float((1-branch.commission))) for num in loan_below_limits]
-    annual_ahf_to_gci_result = [int(gross_income)// num for num in  nums_loans]
+    annual_ahf_to_gci_result = [gross_income/ num for num in  nums_loans]
     revenue_share = round((branch.loan_per_year / ahf.loan_per_year) * 100,2) if (branch.loan_per_year / ahf.loan_per_year) < 1 else 100
     
     
