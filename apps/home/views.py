@@ -152,12 +152,15 @@ def home(request):
     
         
 
-    q22                     = Q22.objects.all().first()
+    q22                     = Q22.objects.filter(id=1).first()
     left                    = Q22.objects.filter(value = 0).first()
     right                   = Q22.objects.filter(value = 100).first()
     tolerance               = 1e-6
-    root                    = find_root(function,left,right,tolerance)
+    balance,root                  = find_root(function,left,right,tolerance)
     q22.value = root
+   
+    
+  
     
     
     bpl_meta                = BranchPayrollLiabilities._meta
@@ -224,10 +227,7 @@ def home(request):
     medicare                                = calculate_medicare(_branch_new_gross_income,total_expense,q22)
     bplr_total                              = calculate_social_medicare_disability(_branch_new_gross_income,total_expense,q22)
     
-    # automate_q22_value(_branch_new_gross_income,total_expense,q22)
 
-   
-    
     
     employee_with_holdings_q_columns_total  = sum(ewl_dict.values())
     total_employee_with_holding_expense     = calculate_total_employee_with_holding_expense(branch_gross,total_expense,q22) #(branch_gross - total_expense)* q22.value/100
@@ -317,7 +317,9 @@ def home(request):
         'bplr_total': bplr_total,
         'debit':debit,
         'MIN_LOAN':MIN_LOAN,
-        'balance':calculate_balance(_branch_new_gross_income,total_expense,q22),
+        
+        'balance': balance ,#calculate_balance(_branch_new_gross_income,total_expense,q22),
+        
         'employee_with_holdings_q_columns_total':employee_with_holdings_q_columns_total,
         'net_paycheck_for_employee_with_holdings_total':net_paycheck_for_employee_with_holdings(
             _branch_new_gross_income,

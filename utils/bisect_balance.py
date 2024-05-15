@@ -26,6 +26,8 @@ def find_root(function, left, right, tolerance):
         
         _left = left.value
         _right = right.value
+        midpoint = None
+        
     
         while abs(_right - _left) > tolerance:
             _left = left.value
@@ -34,11 +36,13 @@ def find_root(function, left, right, tolerance):
             midpoint  = Q22(value = _midpoint)
             right     = Q22(value = _right)
             left      = Q22(value = _left)
+            
             if function(midpoint) == 0 :
                 return midpoint
             elif function(midpoint) * function(left) < 0:
                 right = midpoint               
             else:
                 left = midpoint
-        return (_left + _right) / 2
+        return abs(function(midpoint)),( _left + _right )/ 2
+    
 
