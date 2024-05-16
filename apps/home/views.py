@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from apps.recruiter.models import Bps,LoanBreakPoint,CompPlan,AHF,Branch
 import math
 import logging
+from colorlog import ColoredFormatter
 from  django.shortcuts import redirect
 from utils.q22 import automate_q22_value
 from django.conf import  settings
@@ -57,8 +58,47 @@ from utils.bisect_balance import find_root,function
 
 def home(request):
     """
-        This function display comp plan,loan above limit and loan below limit
+        entry point of the system
     """
+
+
+    # Set up the logger
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
+
+    # Create a custom log formatter with colors
+    formatter = ColoredFormatter(
+        "%(log_color)s%(levelname)-8s%(reset)s | %(log_color)s%(message)s%(reset)s",
+        datefmt=None,
+        reset=True,
+        log_colors={
+            'DEBUG': 'cyan',
+            'INFO': 'green',
+            'WARNING': 'yellow',
+            'ERROR': 'red',
+            'CRITICAL': 'red,bg_white',
+        },
+        secondary_log_colors={},
+        style='%'
+    )
+    
+    # Create a console handler and set the formatter
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(formatter)
+
+    # Add the console handler to the logger
+    logger.addHandler(console_handler)
+
+    # Now you can use the logger with different log levels
+    logger.debug("This is a debug message.")
+    logger.info("This is an info message.")
+    logger.warning("This is a warning message.")
+    logger.error("This is an error message.")
+    logger.critical("This is a critical message.")
+
+    
+    
+    
     try:
         bps              = Bps.objects.all().first()
     except Bps.DoesNotExist as e:
@@ -85,28 +125,28 @@ def home(request):
         raise e
     
     try:
-        bpl                     = BranchPayrollLiabilities.objects.all()
+        bpl             = BranchPayrollLiabilities.objects.all()
     except BranchPayrollLiabilities.DoesNotExist as e:
         raise e
     
     try:
-        bplq                    = BranchPayrollLiabilitieQ.objects.all().first()
+        bplq            = BranchPayrollLiabilitieQ.objects.all().first()
     except BranchPayrollLiabilitieQ.DoesNotExist as e:
         raise e
     try: 
-        ewl                     = EmployeeWithholding.objects.all().first()
+        ewl              = EmployeeWithholding.objects.all().first()
     except EmployeeWithholding.DoesNotExist as e:
         raise e  
     try:   
-        ewlq                    = EmployeeWithholdingQ.objects.all().first()
+        ewlq            = EmployeeWithholdingQ.objects.all().first()
     except EmployeeWithholdingQ.DoesNotExist as e:
         raise e
     try: 
-        bplr                    = BranchPayrollLiabilitieR.objects.all().first()
+        bplr           = BranchPayrollLiabilitieR.objects.all().first()
     except BranchPayrollLiabilitieR.DoesNotExist as e:
         raise e
     
-    gci                =     (comp_plan.Percentage * 100) * loan_break_point.loan_break_point/10000  #+ comp_plan.Flat_Fee
+    gci                =     (comp_plan.Percentage * 100) * loan_break_point.loan_break_point/10000  + comp_plan.Flat_Fee
     branch_commission  =     gci * float(branch.commission)
     ahf_commission     =     gci * (1 - float(branch.commission))
     ahf_amount         =     100 - branch.commission * 100
@@ -119,13 +159,14 @@ def home(request):
     row_counter = [i-7 for i in range(7,7+ len(rows))]
     
     loan_below_limits = [num for num in range(int(loan_break_point.loan_break_point),MIN_LOAN - MIN_LOAN,-MIN_LOAN)]
-    print("loan_below_limits=",loan_below_limits)
+    
 
     
 
-    gci = (comp_plan.Percentage * 100) * loan_break_point.loan_break_point / 10000 + comp_plan.Flat_Fee
-    if gci > comp_plan.MAX_GCI:
-        gci = comp_plan.MAX_GCI
+    gci = bps.bps * loan_break_point.loan_break_point / 10000 + comp_plan.Flat_Fee
+    GCI = gci
+   
+        
     FLAT_AM0UNT = gci - (gci/1000) * ((loan_below_limits[len(loan_below_limits) - 1] or 0) * 0.1/10000) 
     
     
@@ -140,9 +181,6 @@ def home(request):
     flat_fee_gci = int((comp_plan.Percentage * 100) * loan_break_point.loan_break_point / 10000) 
     above_loan_break_point_ahf_commission = calculate_above_loan_break_point_ahf_commission(loan_break_point,comp_plan,branch) #int(flat_fee_gci * (branch.commission))
   
-    
-
-    
     E23 = (bps.bps * loan_break_point.loan_break_point )/ 10000 + comp_plan.Flat_Fee 
     nums_loans = [math.ceil(get_gci_result(comp_plan, num) * float((1-branch.commission))) for num in loan_below_limits]
     annual_ahf_to_gci_result = [gross_income/ num for num in  nums_loans]
@@ -262,8 +300,6 @@ def home(request):
     
       
     w2_branch_payroll_liabilities_data = {
-        
-        # 'calculate_social_security_payroll_liabilities '     :_calculate_social_security_payroll_liabilities,
         'calculate_fed_un_employ_payroll_liabilities '       :calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22),
         'CA_Unemployment_payroll_liabilities'                :CA_Unemployment_payroll_liabilities,
         'calculate_Medicare_payroll_liabilities '            :medicare_payroll_liabilities,
@@ -309,16 +345,15 @@ def home(request):
         'flat_fee_gci': flat_fee_gci, #+  comp_plan.Flat_Fee
         'above_loan_break_point_ahf_commission':above_loan_break_point_ahf_commission,
         'column_and_index_dict':column_and_index_dict,
-        'bplqr':bplqr_dict,
-        'bplq_dict':bplq_dict,
-        'ewl_dict':ewl_dict,
-        'bplr_total': sum(bplqr_dict.values()),
-        'bplq_total': sum(bplq_dict.values()),
-        'bplr_total': bplr_total,
-        'debit':debit,
-        'MIN_LOAN':MIN_LOAN,
-        
-        'balance': balance ,#calculate_balance(_branch_new_gross_income,total_expense,q22),
+        'bplqr'     :bplqr_dict,
+        'bplq_dict' :bplq_dict,
+        'ewl_dict'  :ewl_dict,
+        'bplr_total':sum(bplqr_dict.values()),
+        'bplq_total':sum(bplq_dict.values()),
+        'bplr_total':bplr_total,
+        'debit'     :debit,
+        'MIN_LOAN'  :MIN_LOAN,
+        'balance'   :balance ,#calculate_balance(_branch_new_gross_income,total_expense,q22),
         
         'employee_with_holdings_q_columns_total':employee_with_holdings_q_columns_total,
         'net_paycheck_for_employee_with_holdings_total':net_paycheck_for_employee_with_holdings(
@@ -331,42 +366,42 @@ def home(request):
         
         "calculate_ett_num":_calculate_ett,
         "branch_payroll_liabilities_percentate_total":branch_payroll_liabilities_percentate_total,
-        "branch_payroll_liabilities_total":branch_payroll_liabilities_total,
+        "branch_payroll_liabilities_total"  :branch_payroll_liabilities_total,
         
-        'ewh':dict(ewh),
-        'ewh_columns':ewh_columns,
+        'ewh'                               :dict(ewh),
+        'ewh_columns'                       :ewh_columns,
         
-        'bpl':dict(bpl),
-        'bpl_columns':bpl_columns,
+        'bpl'                               :dict(bpl),
+        'bpl_columns'                       :bpl_columns,
         'w2_branch_yearly_gross_income_data':w2_branch_yearly_gross_income_data,
         'w2_branch_payroll_liabilities_data':w2_branch_payroll_liabilities_data,
         
         
-        'E23':E23,
-        'revenue_share':revenue_share,
-        'W2_branch_column_names':W2_branch_column_names,
+        'E23'                              :E23,
+        'revenue_share'                    :revenue_share,
+        'W2_branch_column_names'           :W2_branch_column_names,
         'comp_plan_for_lower_limit_MAX_GCI':int(comp_plan.MAX_GCI),
-        'ahf_loan_per_year':ahf.loan_per_year,
-        'ahf_loan_per_month':ahf.loan_per_year / 12,
-        'ahf_bps':int(bps.bps) *float(1- branch.commission),
-        'branch_bps':int(bps.bps) *float(branch.commission),
-        'loan_below_limits':loan_below_limits,
-        'loan_per_year':int(branch.loan_per_year),
-        'comp_plan_for_lower_limit':comp_plan,
-        'ahf_amount': ahf_amount if ahf_amount > 0 else None,
-        'rows':rows,
-        'rows_counter':row_counter,
-        'branch_amount': branch.commission * 100 if branch.commission > 0 else None,
-        'bps':int(bps.bps) if bps.bps > 0 else None,
-        'loan_break_point': loan_break_point.loan_break_point ,# if loan_break_point >0 else None,
-        'comp_plan':comp_plan.Flat_Fee if comp_plan.Flat_Fee > 0 else None,
-        'gci': gci,
-        'ahf_commission': ahf_commission if ahf_commission > 0 else None,
-        'ahf_commission_amount':  1 - float(branch.commission) if branch.commission > 0 else None ,#ahf_amount, # ahf.commission,
-        'branch_commission': branch_commission if branch_commission > 0 else None,
-        'branch_commission_amount':branch.commission if branch.commission > 0 else None,
-        'ahf_annual_cap_data':ahf_annual_cap_data,
-        'version':settings.VERSION
+        'ahf_loan_per_year'                :ahf.loan_per_year,
+        'ahf_loan_per_month'               :ahf.loan_per_year / 12,
+        'ahf_bps'                          :bps.bps *float(1- branch.commission),
+        'branch_bps'                       :bps.bps *float(branch.commission),
+        'loan_below_limits'                :loan_below_limits,
+        'loan_per_year'                    :branch.loan_per_year,
+        'comp_plan_for_lower_limit'        :comp_plan,
+        'ahf_amount'                       :ahf_amount if ahf_amount > 0 else None,
+        'rows'                             :rows,
+        'rows_counter'                     :row_counter,
+        'branch_amount'                    :branch.commission * 100 if branch.commission > 0 else None,
+        'bps'                              :bps.bps if bps.bps > 0 else None,
+        'loan_break_point'                 :loan_break_point.loan_break_point ,# if loan_break_point >0 else None,
+        'comp_plan'                        :comp_plan.Flat_Fee if comp_plan.Flat_Fee > 0 else None,
+        'GCI'                              :GCI,
+        'ahf_commission'                   :ahf_commission if ahf_commission > 0 else None,
+        'ahf_commission_amount'            :1 - float(branch.commission) if branch.commission > 0 else None ,#ahf_amount, # ahf.commission,
+        'branch_commission'                :branch_commission if branch_commission > 0 else None,
+        'branch_commission_amount'         :branch.commission if branch.commission > 0 else None,
+        'ahf_annual_cap_data'              :ahf_annual_cap_data,
+        'version'                          :settings.VERSION
 
     }
     return render(request,"home/entry.html",context)
