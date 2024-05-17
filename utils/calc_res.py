@@ -176,6 +176,14 @@ increment = 0.5
 
      
 
+def calculate_balance(branch_gross,total_expense,q22):
+    # balance = calculate_balance(branch_gross,total_expense,q22)
+    # debit   = branch_gross - calculate_debit(branch_gross,total_expense,q22)
+    # diff =  balance - debit
+    
+    return  branch_gross - calculate_debit(branch_gross,total_expense,q22)
+
+
 
 def calculate_total_expense(_branch_commission,_gross_ahf_income):
     """
@@ -412,27 +420,21 @@ def calculate_total_employee_with_holding_expense(branch_gross,total_expense,q22
 
 def calculate_debit(branch_gross,total_expense,q22):
     total_employee_with_holding_expense = calculate_total_employee_with_holding_expense(branch_gross,total_expense,q22) 
-    branch_payroll_liabilities_total = calculate_branch_payroll_liabilities_total(branch_gross,total_expense,q22)
-    
-    
-    logger.warn(f"total_employee_with_holding_expense={total_employee_with_holding_expense}") 
-    logger.warn(f"branch_payroll_liabilities_total={branch_payroll_liabilities_total}") 
-    logger.warn(f"total_expense={total_expense}")
+    branch_payroll_liabilities_total    = calculate_branch_payroll_liabilities_total(branch_gross,total_expense,q22)
 
-    
     
     debit = (
             total_employee_with_holding_expense
              + branch_payroll_liabilities_total
              + total_expense
              )
-    
-    logger.critical(f"debit={debit}")
-    return debit
+    balance = branch_gross - debit
 
 
-def calculate_balance(branch_gross,total_expense,q22):
-    return branch_gross - calculate_debit(branch_gross,total_expense,q22)
+    return debit 
+
+
+
 
 
    

@@ -205,8 +205,11 @@ def home(request):
     q22                     = Q22.objects.filter(id=1).first()
     left                    = Q22.objects.filter(value = 0).first()
     right                   = Q22.objects.filter(value = 100).first()
-    tolerance               = 1e-6
+    
+    tolerance               = 1e-9
+    
     balance,root            = find_root(function,left,right,tolerance)
+    
     q22.value = root
     q22.save()
    
@@ -289,7 +292,12 @@ def home(request):
     calcuate_Fed_Unemploy                                       = calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22)
     _calculate_ett                                              = calculate_ett(branch_gross,total_expense,q22)
     branch_payroll_liabilities_total                            = calculate_branch_payroll_liabilities_total(_branch_new_gross_income,total_expense,q22)
+    
+    
     debit                                                       = calculate_debit(_branch_new_gross_income,total_expense,q22) 
+    
+    
+    
     branch_payroll_liabilities_percentate_total                 = bplq.Social_Security + bplq.Medicare +bplq.CA_Unemployment + bplq.Fed_Unemploy + bplq.Employment_Training_Tax
    
     w2_branch_yearly_gross_income_data = {
@@ -346,7 +354,8 @@ def home(request):
         
     
         
-  
+    credit = _branch_new_gross_income
+    balance = credit - debit
     context = {
         'bps_from_50_to_250':bps_from_50_to_250,
         'bps_to_gci_dict':bps_to_gci_dict,
@@ -366,7 +375,7 @@ def home(request):
         'bplr_total':bplr_total,
         'debit'     :debit,
         'MIN_LOAN'  :MIN_LOAN,
-        'balance'   :balance, # _branch_new_gross_income - debit ,#       balance,
+        'balance'   : _branch_new_gross_income - debit ,#       balance,
         
         'employee_with_holdings_q_columns_total':employee_with_holdings_q_columns_total,
         'net_paycheck_for_employee_with_holdings_total':net_paycheck_for_employee_with_holdings(
