@@ -3,17 +3,44 @@
 {% load safe_divide %}
 
 <style>
-    .disabled {
+  
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      
+      th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+      
+      th {
+        background-color: #f2f2f2;
+      }
+      
+      .resize-handle {
+        position: absolute;
+        height: 100%;
+        width: 5px;
+        background-color: #ccc;
+        cursor: col-resize;
+      }
+
+      .disabled {
         opacity: 0.5;
         cursor: not-allowed;
     }
+
+
 </style>
 <div>
     <div class="flex flex-col">
         <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div class="inline-block min-w-full sm:px-6 lg:px-8">
                 <div>
-                    <table class="text-left text-sm font-light text-surface dark:text-white">
+                    <table class="text-left text-sm font-light text-surface dark:text-white" id="comp_plan_table">
                         <thead
                             class="border-b border-neutral-200 bg-white font-medium dark:border-white/10 dark:bg-body-dark">
                             <tr>
@@ -213,6 +240,46 @@
 
     </div>
 </div>
+
+<script>
+        const table = document.getElementById('comp_plan_table2');
+        const tableHeaders = table.getElementsByTagName('th');
+
+        for (let i = 0; i < tableHeaders.length; i++) {
+        const header = tableHeaders[i];
+        const resizeHandle = document.createElement('div');
+        resizeHandle.classList.add('resize-handle');
+
+        header.appendChild(resizeHandle);
+        resizeHandle.addEventListener('mousedown', startResize);
+        }
+
+        let currentHeader;
+        let currentIndex;
+        let startX;
+        let startWidth;
+
+        function startResize(e) {
+        currentHeader = e.target.parentElement;
+        currentIndex = Array.from(currentHeader.parentElement.children).indexOf(currentHeader);
+        startX = e.clientX;
+        startWidth = currentHeader.offsetWidth;
+
+        document.addEventListener('mousemove', resizeColumn);
+        document.addEventListener('mouseup', stopResize);
+        }
+
+        function resizeColumn(e) {
+        const deltaX = e.clientX - startX;
+        const newWidth = Math.max(startWidth + deltaX, 50); // Minimum column width is 50px
+        currentHeader.style.width = `${newWidth}px`;
+        }
+
+        function stopResize() {
+        document.removeEventListener('mousemove', resizeColumn);
+        document.removeEventListener('mouseup', stopResize);
+        }
+</script>
 
 <script src="{% static 'comp_plan_table.js'%}"></script>
 <script src="{% static 'comp_plan_table_drag_drop.js'%}"></script>
