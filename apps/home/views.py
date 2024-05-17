@@ -89,12 +89,12 @@ def home(request):
     # Add the console handler to the logger
     logger.addHandler(console_handler)
 
-    # Now you can use the logger with different log levels
-    logger.debug("This is a debug message.")
-    logger.info("This is an info message.")
-    logger.warning("This is a warning message.")
-    logger.error("This is an error message.")
-    logger.critical("This is a critical message.")
+    # # Now you can use the logger with different log levels
+    # logger.debug("This is a debug message.")
+    # logger.info("This is an info message.")
+    # logger.warning("This is a warning message.")
+    # logger.error("This is an error message.")
+    # logger.critical("This is a critical message.")
 
     
     
@@ -175,15 +175,24 @@ def home(request):
     gross_income                = calculate_gross_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
     branch_gross                = calculate_gross_branch_income(loan_break_point,comp_plan,float(branch.commission))
     _branch_gross_income        = calculate_branch_gross_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
+    
     _branch_new_gross_income    = calculate_gross__new_branch_income(loan_break_point,comp_plan,gci,branch)
     
+    logger.critical(f"_branch_new_gross_income={_branch_new_gross_income}")
+    
+ 
 
     flat_fee_gci = int((comp_plan.Percentage * 100) * loan_break_point.loan_break_point / 10000) 
     above_loan_break_point_ahf_commission = calculate_above_loan_break_point_ahf_commission(loan_break_point,comp_plan,branch) #int(flat_fee_gci * (branch.commission))
   
     E23 = (bps.bps * loan_break_point.loan_break_point )/ 10000 + comp_plan.Flat_Fee 
-    nums_loans = [math.ceil(get_gci_result(comp_plan, num) * float((1-branch.commission))) for num in loan_below_limits]
+    
+    nums_loans = [get_gci_result(comp_plan, num) * float((1-branch.commission)) for num in loan_below_limits]
+      
+    
     annual_ahf_to_gci_result = [gross_income/ num for num in  nums_loans]
+
+    
     revenue_share = round((branch.loan_per_year / ahf.loan_per_year) * 100,2) if (branch.loan_per_year / ahf.loan_per_year) < 1 else 100
     
     
@@ -353,7 +362,7 @@ def home(request):
         'bplr_total':bplr_total,
         'debit'     :debit,
         'MIN_LOAN'  :MIN_LOAN,
-        'balance'   :balance ,#calculate_balance(_branch_new_gross_income,total_expense,q22),
+        'balance'   :balance, # _branch_new_gross_income - debit ,#       balance,
         
         'employee_with_holdings_q_columns_total':employee_with_holdings_q_columns_total,
         'net_paycheck_for_employee_with_holdings_total':net_paycheck_for_employee_with_holdings(

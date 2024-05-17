@@ -1,5 +1,6 @@
 import math
 import logging
+from colorlog import ColoredFormatter
 from apps.recruiter.models import  *
 from apps.W2branchYearlyGross.models import (
                      BranchPayrollLiabilitieR,
@@ -9,16 +10,44 @@ from apps.W2branchYearlyGross.models import (
 )
 
 from apps.W2branchYearlyGross.models import *
+# Create a console handler and set the formatter
+console_handler = logging.StreamHandler()
+
 
 logger = logging.getLogger(__name__)
+# Add the console handler to the logger
+logger.addHandler(console_handler)
+
+formatter = ColoredFormatter(
+        "%(log_color)s%(levelname)-8s%(reset)s | %(log_color)s%(message)s%(reset)s",
+        datefmt=None,
+        reset=True,
+        log_colors={
+            'DEBUG': 'cyan',
+            'INFO': 'green',
+            'WARNING': 'yellow',
+            'ERROR': 'red',
+            'CRITICAL': 'red,bg_white',
+        },
+        secondary_log_colors={},
+        style='%'
+    )
+    
+console_handler.setFormatter(formatter)
+
+
+
 
 
 
 bps = Bps.objects.all().first().bps
 
+logger.addHandler(console_handler)
 
 def calculate_above_loan_break_point_ahf_commission(loan_break_point,comp_plan,branch):
-    return float(comp_plan.Percentage * 100) * float(loan_break_point.loan_break_point / 10000)  * float(branch.commission)
+    gci = bps * loan_break_point.loan_break_point / 10000 + comp_plan.Flat_Fee
+    # return  float(comp_plan.Percentage * 100) * float(loan_break_point.loan_break_point / 10000)   * float(branch.commission)
+    return gci * float(branch.commission)
 
 
 
@@ -38,9 +67,15 @@ def calculate_gross_ahf_income(loan_break_amount,comp_plan,commission,value = 27
     """
     ahf     = AHF.objects.all().first()   # left side table
     branch  = Branch.objects.all().first() # right side table
-    loans_per_year = ahf.loan_per_year
-    total =  ((value * loan_break_amount.loan_break_point )/ 10000 + comp_plan.Flat_Fee)* commission * loans_per_year
-    return total
+    K10     = ahf.loan_per_year
+    H10     = branch.loan_per_year
+    E8      = calculate_above_loan_break_point_ahf_commission(loan_break_amount,comp_plan,branch)
+    D8      = 20100
+    if K10 <= H10:
+        return D8*K10
+    else:
+        total =  ((value * loan_break_amount.loan_break_point )/ 10000 + comp_plan.Flat_Fee)* commission * K10
+        return total
 
 
 
@@ -78,16 +113,16 @@ def calculate_branch_gross_ahf_income(loan_break_amount,comp_plan,commission,val
     ahf     = AHF.objects.all().first()   # left side table
     branch  = Branch.objects.all().first() # right side table
     D8      = ((value * loan_break_amount.loan_break_point )/ 10000 + comp_plan.Flat_Fee)* commission 
-    # logger.info("D8 ",D8)
+    total = 160800
     
 
     if branch.loan_per_year <= ahf.loan_per_year:
-        return D8 * branch.loan_per_year
-    
-    loans_per_year = branch.loan_per_year
-    return  calculate_gross_ahf_income(loan_break_amount,comp_plan,commission,value = 275)
-    
-    
+        return   D8 * branch.loan_per_year
+    else:
+        loans_per_year = branch.loan_per_year
+        return calculate_gross_ahf_income(loan_break_amount,comp_plan,commission,value = 275)
+        
+        
 
 
 
@@ -121,6 +156,8 @@ def branch_gross_income(loan_break_amount,comp_plan,commission):
 
 
 def get_gci_result(comp_plan,num):
+    # const gci_result    = (comp_plan_percentage * 100) * num / 10000  + Number.parseFloat("{{comp_plan_for_lower_limit.Flat_Fee}}")
+
     return comp_plan.Percentage * 100 * num /10000 + comp_plan.Flat_Fee
 
 
@@ -141,21 +178,6 @@ percentage = 0
 increment = 0.5
 
      
-# def get_percentage_recurssion():
-#     if balance < break_point:
-#         return percentage
-#     if balance < 0:#if R39 is negative then S21 = S21 - increment
-#         increment = increment/10
-#         percentage -= increment
-#         get_percentage_recurssion()
-        
-#     else:
-#         increment = increment/ 10
-#         percentage += increment
-#         get_percentage_recurssion()
-        
-    
-
 
 
 def calculate_total_expense(_branch_commission,_gross_ahf_income):
@@ -419,12 +441,7 @@ def calculate_gross__new_branch_income(loan_break_amount,comp_plan,gci,value = 2
     C8      = gci
     K10     = branch.loan_per_year
     H10     = ahf.loan_per_year
-    # print("E8=",E8)
-    # print("H8=",H8)
-    # print("C8=",C8)
-    # print("K10=",K10)
-    # print("H10=",H10)
-    
+
     if K10 <= H10:
         return E8 * K10
     else:
