@@ -62,7 +62,6 @@ def calculate_annual_ahf_income(loan_break_amount,comp_plan,ahf_comission_amount
 def calculate_gross_ahf_income(loan_break_amount,comp_plan,commission,value = 275):
     """
         ahf gross income commission 
-      
         K8=IF(K10<=H10,E8*K10,H8+$C8*(K10-H$10))
     """
     ahf     = AHF.objects.all().first()   # left side table
@@ -70,12 +69,14 @@ def calculate_gross_ahf_income(loan_break_amount,comp_plan,commission,value = 27
     K10     = ahf.loan_per_year
     H10     = branch.loan_per_year
     E8      = calculate_above_loan_break_point_ahf_commission(loan_break_amount,comp_plan,branch)
-    D8      = 20100
+    gci     = (comp_plan.Percentage * 100) * loan_break_amount.loan_break_point/10000  + comp_plan.Flat_Fee
+    D8      = gci * (1 - float(branch.commission))
+    G8      = D8 * H10
+    
     if K10 <= H10:
-        return D8*K10
+        return K10 * D8
     else:
-        total =  ((value * loan_break_amount.loan_break_point )/ 10000 + comp_plan.Flat_Fee)* commission * K10
-        return total
+        return H10 * D8
 
 
 
@@ -109,18 +110,32 @@ def calculate_branch_gross_ahf_income(loan_break_amount,comp_plan,commission,val
         =IF(K10<=H10,K10*D8,G8)
     """
     
-    # 
     ahf     = AHF.objects.all().first()   # left side table
     branch  = Branch.objects.all().first() # right side table
-    D8      = ((value * loan_break_amount.loan_break_point )/ 10000 + comp_plan.Flat_Fee)* commission 
-    total = 160800
+    K10     = ahf.loan_per_year
+    H10     = branch.loan_per_year
+    E8      = calculate_above_loan_break_point_ahf_commission(loan_break_amount,comp_plan,branch)
+    gci     = (comp_plan.Percentage * 100) * loan_break_amount.loan_break_point/10000  + comp_plan.Flat_Fee
+    D8      = gci * (1 - float(branch.commission))
+    G8      = D8 * H10
+    
+    if K10 <= H10:
+        return K10 * D8
+    else:
+        return H10 * D8
+    
+    
+    # ahf     = AHF.objects.all().first()   # left side table
+    # branch  = Branch.objects.all().first() # right side table
+    # D8      = ((value * loan_break_amount.loan_break_point )/ 10000 + comp_plan.Flat_Fee)* commission 
+    # total = 160800
     
 
-    if branch.loan_per_year <= ahf.loan_per_year:
-        return   D8 * branch.loan_per_year
-    else:
-        loans_per_year = branch.loan_per_year
-        return calculate_gross_ahf_income(loan_break_amount,comp_plan,commission,value = 275)
+    # if branch.loan_per_year <= ahf.loan_per_year:
+    #     return   D8 * branch.loan_per_year
+    # else:
+    #     loans_per_year = branch.loan_per_year
+    #     return calculate_gross_ahf_income(loan_break_amount,comp_plan,commission,value = 275)
         
         
 
@@ -451,60 +466,5 @@ def calculate_gross__new_branch_income(loan_break_amount,comp_plan,gci,value = 2
 
 
 
-       
-        
-# def calculate_Employment_Training_Tax(branch_gross_income):
-    
-#     N22 = (branch_gross_income - 20974) * (0.923199268694749)
-#     if N22 <= R35:
-# 	    N22 * 0.1%
-	
-#     else:
-#         Q35 * R35
-
-        
-
-
-    
-
-# s1 = m9
-# S1 = M9 Number of loans
-# P1 = M7 Branch Yearly Gross Revenue
-# P19  =P1-Q16 Net income before payroll
-# P17 =SUM(P8:P16) Total expenses
-# P21 =P19*S21   Taxable gross payroll
-# O23 = label(social security  Employee) = P23
-# 030 = label(socail security Branch)  = P30
-# S21 = 96.205%  iterate to get this value so that balance is less than 0.001
-# R39 = P39 - Q39 
-# while R39 is greater than 0.001 iterate S21 
-        # if R39 is negative then S21 = S21 - increment
-        # else S21 = S21 + increment
-        # adjust increment
-        # S1 = 96.205324% final solution balance equals 0.00
-        # S1 = 96.0 balance equals -11.02 minus sign tells you 96.0 is too big 
-        # S1 = 95.0 the balance equal to +3858.06 plus sign tells you 95.0 is too small 
-            # increment = 0.5  initial guess halfway between 
-        # S1 = 95.0 + increment 
-        # S1 = 95.5 the balance equal to +1923.25 plus sign tells you 95.5 is too small
-            # increment = 0.1
-        # S1 = 95.5 + increment
-        # S1 = 95.6 the balance equal to +1536.61 plus sign tells you 95.6 is too small
-        # S1 = 95.7 the balance equal to +1149.71 plus sign tells you 95.7 is too small
-        # S1 = 95.8 the balance equal to +762.80 plus sign tells you 95.8 is too small
-        # S1 = 95.9 the balance equal to +375.89 plus sign tells you 95.9 is too small
-        # S1 = 96.0 the balance equal to -11.02 minus sign tells you 96.0 is too big
-            # increment = increment / 10
-            # increment = 0.01 
-        # S1 = 96.0 + increment(-0.01)
-        # S1 = 95.99 the balance equal to +27.67 plus sign tells you 95.99 is too small 
-            # increment equals 0.001 increment = increment / 10
-        # S1 = 95.999 the balance equal to -7.15  negative sing tells you 95.999 is too big
-        # S1 = 95.998 the the balance equal to -3.28 negative sign tells you 95.998 is too big
-        # S2 = 95.997 the the balance equal to +0.59  plus sign tells you 95.997 is to small
-        # S2 = 95.9979 the balance equal to -2.89 negative sign tells you 95.9979  is to big
-        # S2 = 95.9978 the balance equal to -2.50 negative sing tells you 95.9978 is to big
-        # S2 = 95.9977 the  balance equal to -2.12 negative sing tells you 95.9977 is to big
-        
 
     

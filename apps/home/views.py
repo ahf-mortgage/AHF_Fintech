@@ -338,6 +338,7 @@ def home(request):
     for key,value in zip(bps_from_50_to_250,branch_for_bps_from_50_to_250):
         bps_to_branch_commission_dict[key] = value
         
+    logger.debug(f"ahf_commission={ahf_commission}")
     
         
     
