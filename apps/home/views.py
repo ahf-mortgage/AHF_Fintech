@@ -34,7 +34,8 @@ from utils.calc_res import (
                     calculate_gross_branch_income,
                     calculate_gross__new_branch_income,
                     calculate_above_loan_break_point_ahf_commission,
-                    calculate_social_medicare_disability                 
+                    calculate_social_medicare_disability,
+                    calculate_ahf_annual_cap_ahf              
 
     )
 
@@ -172,13 +173,13 @@ def home(request):
     
     annual_ahf_cap              = calculate_annual_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
     gross_ahf_income            = calculate_gross_ahf_income(loan_break_point,comp_plan,float(branch.commission))
-    gross_income                = calculate_gross_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
+    gross_income                = calculate_ahf_annual_cap_ahf(loan_break_point,comp_plan,1 - float(branch.commission)) 
     branch_gross                = calculate_gross_branch_income(loan_break_point,comp_plan,float(branch.commission))
     _branch_gross_income        = calculate_branch_gross_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
-    
     _branch_new_gross_income    = calculate_gross__new_branch_income(loan_break_point,comp_plan,gci,branch)
     
-    logger.critical(f"_branch_new_gross_income={_branch_new_gross_income}")
+    logger.debug(f"gross_income={gross_income}")
+ 
     
  
 
@@ -191,6 +192,8 @@ def home(request):
       
     
     annual_ahf_to_gci_result = [gross_income/ num for num in  nums_loans]
+    logger.debug(f"annual_ahf_to_gci_result={annual_ahf_to_gci_result}")
+    
 
     
     revenue_share = round((branch.loan_per_year / ahf.loan_per_year) * 100,2) if (branch.loan_per_year / ahf.loan_per_year) < 1 else 100

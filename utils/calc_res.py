@@ -10,30 +10,7 @@ from apps.W2branchYearlyGross.models import (
 )
 
 from apps.W2branchYearlyGross.models import *
-# Create a console handler and set the formatter
-console_handler = logging.StreamHandler()
-
-
-logger = logging.getLogger(__name__)
-# Add the console handler to the logger
-logger.addHandler(console_handler)
-
-formatter = ColoredFormatter(
-        "%(log_color)s%(levelname)-8s%(reset)s | %(log_color)s%(message)s%(reset)s",
-        datefmt=None,
-        reset=True,
-        log_colors={
-            'DEBUG': 'cyan',
-            'INFO': 'green',
-            'WARNING': 'yellow',
-            'ERROR': 'red',
-            'CRITICAL': 'red,bg_white',
-        },
-        secondary_log_colors={},
-        style='%'
-    )
-    
-console_handler.setFormatter(formatter)
+from utils.formatter import logger
 
 
 
@@ -41,8 +18,6 @@ console_handler.setFormatter(formatter)
 
 
 bps = Bps.objects.all().first().bps
-
-logger.addHandler(console_handler)
 
 def calculate_above_loan_break_point_ahf_commission(loan_break_point,comp_plan,branch):
     gci = bps * loan_break_point.loan_break_point / 10000 + comp_plan.Flat_Fee
@@ -66,17 +41,38 @@ def calculate_gross_ahf_income(loan_break_amount,comp_plan,commission,value = 27
     """
     ahf     = AHF.objects.all().first()   # left side table
     branch  = Branch.objects.all().first() # right side table
-    K10     = ahf.loan_per_year
-    H10     = branch.loan_per_year
+    K10     = branch.loan_per_year
+    H10     = ahf.loan_per_year
     E8      = calculate_above_loan_break_point_ahf_commission(loan_break_amount,comp_plan,branch)
     gci     = (comp_plan.Percentage * 100) * loan_break_amount.loan_break_point/10000  + comp_plan.Flat_Fee
     D8      = gci * (1 - float(branch.commission))
     G8      = D8 * H10
     
-    if K10 <= H10:
-        return K10 * D8
-    else:
-        return H10 * D8
+    return E8 * H10
+ 
+    
+
+
+def calculate_ahf_annual_cap_ahf(loan_break_amount,comp_plan,commission,value = 275):
+    """
+        ahf gross income commission 
+        K8=IF(K10<=H10,E8*K10,H8+$C8*(K10-H$10))
+    """
+    
+  
+    ahf     = AHF.objects.all().first()   # left side table
+    branch  = Branch.objects.all().first() # right side table
+    K10     = ahf.loan_per_year
+    H10     = ahf.loan_per_year
+    E8      = calculate_above_loan_break_point_ahf_commission(loan_break_amount,comp_plan,branch)
+    gci     = (comp_plan.Percentage * 100) * loan_break_amount.loan_break_point/10000  + comp_plan.Flat_Fee
+    D8      = gci * (1 - float(branch.commission))
+    G8      = D8 * H10
+    print("G8=",G8)
+    print("D8=",D8)
+    print("H10=",H10)
+    
+    return G8
 
 
 
@@ -123,26 +119,12 @@ def calculate_branch_gross_ahf_income(loan_break_amount,comp_plan,commission,val
         return K10 * D8
     else:
         return H10 * D8
-    
-    
-    # ahf     = AHF.objects.all().first()   # left side table
-    # branch  = Branch.objects.all().first() # right side table
-    # D8      = ((value * loan_break_amount.loan_break_point )/ 10000 + comp_plan.Flat_Fee)* commission 
-    # total = 160800
-    
 
-    # if branch.loan_per_year <= ahf.loan_per_year:
-    #     return   D8 * branch.loan_per_year
-    # else:
-    #     loans_per_year = branch.loan_per_year
-    #     return calculate_gross_ahf_income(loan_break_amount,comp_plan,commission,value = 275)
-        
         
 
 
 
 # branch_amount =  275 * loan_amout_break / 10000 + comp.Flat_Fee * branch.commission*  21
-
 def gross_ahf_income(loan_break_amount,comp_plan,ahf_commission_amount):
     """
         ahf gross income commission 
@@ -430,12 +412,22 @@ def calculate_total_employee_with_holding_expense(branch_gross,total_expense,q22
 
 def calculate_debit(branch_gross,total_expense,q22):
     total_employee_with_holding_expense = calculate_total_employee_with_holding_expense(branch_gross,total_expense,q22) 
-    branch_payroll_liabilities_total = calculate_branch_payroll_liabilities_total(branch_gross,total_expense,q22) 
-  
-    debit = (total_employee_with_holding_expense
+    branch_payroll_liabilities_total = calculate_branch_payroll_liabilities_total(branch_gross,total_expense,q22)
+    
+    
+    logger.warn(f"total_employee_with_holding_expense={total_employee_with_holding_expense}") 
+    logger.warn(f"branch_payroll_liabilities_total={branch_payroll_liabilities_total}") 
+    logger.warn(f"total_expense={total_expense}")
+
+    
+    
+    debit = (
+            total_employee_with_holding_expense
              + branch_payroll_liabilities_total
              + total_expense
              )
+    
+    logger.critical(f"debit={debit}")
     return debit
 
 

@@ -89,8 +89,8 @@
         
       </td>
 
-      <td class="text-center whitespace-nowrap px-6" id="L2_{{num}}">
-        $0
+      <td class="text-center whitespace-nowrap px-6" id="L2_{{num}}" >
+      
       </td>
 
       <td class="text-center whitespace-nowrap px-6" id="K2_{{num}}">
@@ -133,39 +133,50 @@
 
 
   annual_ahf_to_gci_result = JSON.parse(annual_ahf_to_gci_result);
-  
+ 
   for (let [gci, num] of zipArrays(below_limits, annual_ahf_to_gci_result)) {
-   
-    if(index % 2 == 0) {
     const tr = document.getElementById(`row_${num}`)
+    if(tr !== null){
+    if(index % 2 == 0) {
+   
       tr.classList.remove("bg-gray-100")
 
     }
-   
-    const D2 = document.getElementById(`D2_${num}`)
-    const gci_result = (plan_percentage * 100) * gci / 10000 + Number.parseFloat("{{comp_plan_for_lower_limit.Flat_Fee}}")
-    const result = E23 - gci_result
-    D2.innerText = `${result.toLocaleString()}`
+  }
 
-    index += 1
+    const D2 = document.getElementById(`D2_${num}`)
+    const L2 = document.getElementById(`L2_${num}`)
+    if(D2 !== null){
+      const gci_result = (plan_percentage * 100) * gci / 10000 + Number.parseFloat("{{comp_plan_for_lower_limit.Flat_Fee}}")
+      const result = E23 - gci_result
+      D2.innerText = `${result.toLocaleString()}`
+      index += 1
+    }
 
   }
 
-
   for (let [gci, num] of zipArrays(below_limits, annual_ahf_to_gci_result)) {
+    console.log("num=",num)
+    
     const L2 = document.getElementById(`L2_${num}`)
+    if(L2 !== null) {
+    
     const gci_result = (plan_percentage * 100) * gci / 10000 + Number.parseFloat("{{comp_plan_for_lower_limit.Flat_Fee}}")
     const result = E23 - gci_result
     L2.innerText = `$${(result * Number.parseFloat("{{ahf_amount}}")/100 ).toLocaleString()}`
-
+    }
   }
 
-
+ 
   for (let [gci, num] of zipArrays(below_limits, annual_ahf_to_gci_result)) {
     const K2 = document.getElementById(`K2_${num}`)
-    const gci_result = (plan_percentage * 100) * gci / 10000 + Number.parseFloat("{{comp_plan_for_lower_limit.Flat_Fee}}")
-    const result = E23 - gci_result
-    K2.innerText = `$${(result * Number.parseFloat("{{branch_amount}}")/100 ).toLocaleString()}`
+    if(K2 != null) {
+      const gci_result = (plan_percentage * 100) * gci / 10000 + Number.parseFloat("{{comp_plan_for_lower_limit.Flat_Fee}}")
+      const result = E23 - gci_result
+      K2.innerText = `$${(result * Number.parseFloat("{{branch_amount}}")/100 ).toLocaleString()}`
+
+    }
+
 
   }
 
