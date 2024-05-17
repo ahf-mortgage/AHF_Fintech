@@ -256,6 +256,6 @@ LOGGING = {
 
 # Configure your default site. See
 SITE_ID = 1
-VERSION = 0.002
+VERSION = 0.003
 
 
