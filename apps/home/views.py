@@ -206,7 +206,7 @@ def home(request):
     left                    = Q22.objects.filter(value = 0).first()
     right                   = Q22.objects.filter(value = 100).first()
     
-    tolerance               = 1e-9
+    tolerance               = 1e-8
     
     balance,root            = find_root(function,left,right,tolerance)
     

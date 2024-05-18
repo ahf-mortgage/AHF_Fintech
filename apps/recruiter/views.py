@@ -153,8 +153,6 @@ def comp_plan_change_view(request):
         loan_break= request.POST.get("loan_break_point",0)
         branch_amount = request.POST.get("branch_amount")
         
-        # CURRENT_Maximum_Compensation = comp_plan_obj.Maximum_Compensation
-        
         if branch_amount != None:
             branch_amount = float(branch_amount)
             if branch_amount > 99:
@@ -181,7 +179,7 @@ def comp_plan_change_view(request):
             
         
         if branch_amount:
-            comp_plan_obj.FF_MIN_LOAN = float(FF_MIN_LOAN)
+            comp_plan_obj.FF_MIN_LOAN         = float(FF_MIN_LOAN)
             comp_plan_obj.MAX_GCI             = max_gci
             comp_plan_obj.Maximum_Compensation= float(Maximum_Compensation)
             comp_plan_obj.Flat_Fee            = Flat_Fee
@@ -189,11 +187,11 @@ def comp_plan_change_view(request):
             loan_break_point.loan_break_point = loan_break
             branch_amount                     = int(branch_amount) / 100
             branch.commission                 = branch_amount
-            branch.save()
-            bps.bps = float(comp_plan) * 100
+            bps.bps                           = float(comp_plan) * 100
             bps.save()
             loan_break_point.save()
             comp_plan_obj.save()
+            branch.save()
             return redirect("/")   
         else:
             return redirect("/")
