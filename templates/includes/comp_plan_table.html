@@ -66,6 +66,7 @@
                                      name="FF_MIN_LOAN"
                                      id="FF_MIN_LOAN"
                                      value="{{comp_plan_for_lower_limit.FF_MIN_LOAN}}"
+                                     onfocus="this.select()"
                                 />
 
                                 </td>
@@ -96,8 +97,14 @@
                             
 
                                     <td class="px-6">
-                                        <input type="number" name="Maximum_Compensation" id="Maximum_Compensation"
-                                            value="{{comp_plan_for_lower_limit.Maximum_Compensation}}" />
+                                        <input 
+                                        onfocus="this.select()"
+                                        type="number"
+                                        name="Maximum_Compensation"
+                                        id="Maximum_Compensation"
+                                        value="{{comp_plan_for_lower_limit.Maximum_Compensation}}" 
+                                        onfocus="this.select()"
+                                        />
 
                                     </td>
 
@@ -113,6 +120,7 @@
 
                                     <div class="ml-8 relative mb-3" data-twe-input-wrapper-init>
                                         <input 
+                                        onfocus="this.select()"
                                             type="text"
                                             id="max_gci"
                                             name="max_gci"
@@ -140,7 +148,9 @@
 
 
                                     <div class="relative mb-3" data-twe-input-wrapper-init>
-                                        <input type="text"
+                                        <input
+                                        onfocus="this.select()" 
+                                        type="text"
                                                name="comp_plan"
                                                id="comp_plan"
                                                 value="{{comp_plan_for_lower_limit.Percentage}}"
@@ -169,6 +179,7 @@
                                     <div class="relative mb-3" data-twe-input-wrapper-init>
                                         
                                         <input 
+                                            onfocus="this.select()"
                                             type="text" 
                                             name="loan_break_point"
                                             id="loan_break_point"
@@ -199,6 +210,7 @@
                                     <div style="display: flex;">
                                         <div class="relative mb-3" data-twe-input-wrapper-init>
                                             <input 
+                                            onfocus="this.select()"
                                                 type="number"
                                                 name="branch_amount"
                                                 id="branch_amount"
