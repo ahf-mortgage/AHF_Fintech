@@ -50,10 +50,10 @@
                         </thead>
                         <tbody>
                             <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
-                                <td class="whitespace-nowrap px-6 font-medium">Flat Fee</td>
+                                <td class="whitespace-nowrap px-6 font-medium">Flat Fee </td>
                                 <td class="whitespace-nowrap px-6">{{comp_plan_for_lower_limit.Flat_Fee}}</td>
                             </tr>
-                        <form action="{% url 'comp_plan_change_view' %}" method="POST"
+                        <form action="{% url 'home:comp_plan_change_view' %}" method="POST"
                             style="display: flex;justify-content:center;" class="pl-6">
                             
                             {% csrf_token %}

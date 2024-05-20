@@ -139,18 +139,17 @@ def comp_plan_change_view(request):
         Flat_Fee=max_gci*loan_below_limits[len(loan_below_limits) -1]/10000
 
     """
-    
-    
-    loan_break_point = LoanBreakPoint.objects.all().first()
-    comp_plan_obj = CompPlan.objects.all().first()
-    branch = Branch.objects.all().first()
-    
-   
+
 
     if request.method == "POST":
+        loan_break_point = LoanBreakPoint.objects.all().first()
+        comp_plan_obj = CompPlan.objects.all().first()
+        branch = Branch.objects.all().first()
+        
+ 
       
         Maximum_Compensation = request.POST.get("Maximum_Compensation",None)
-        max_gci = request.POST.get('max_gci',None)
+        max_gci     = request.POST.get('max_gci',None)
         FF_MIN_LOAN = request.POST.get('FF_MIN_LOAN',None)
         comp_plan = request.POST.get("comp_plan")
         loan_break= request.POST.get("loan_break_point",0)
@@ -171,7 +170,10 @@ def comp_plan_change_view(request):
         gci_result             = [(comp_plan_obj.Percentage * 100) * num / 10000 for num in range(int(loan_break_point.loan_break_point),MIN_LOAN - MIN_LOAN,-MIN_LOAN)]
         peak_loan_below_limits = loan_below_limits[len(loan_below_limits) - 1]
         peak_gci_results       = gci_result[len(gci_result)-1]     
-        Flat_Fee               = comp_plan_obj.FF_MIN_LOAN - ((comp_plan_obj.Percentage * peak_loan_below_limits)/100)
+        
+        Flat_Fee               = comp_plan_obj.FF_MIN_LOAN - ((float(comp_plan) * peak_loan_below_limits)/100)
+        
+        print("Flat fee = ",Flat_Fee)
         comp_plan_obj.Flat_Fee = Flat_Fee
         comp_plan_obj.save()
    
@@ -195,13 +197,13 @@ def comp_plan_change_view(request):
             bps.bps                           = float(comp_plan) * 100
             
             
-            q22                     = Q22.objects.filter(id=1).first()
-            left                    = Q22.objects.filter(value = 0).first()
-            right                   = Q22.objects.filter(value = 100).first()
-            tolerance               = 1e-6
-            balance,root            = find_root(function,left,right,tolerance)
-            q22.value = root
-            q22.save()
+            # q22                     = Q22.objects.filter(id=1).first()
+            # left                    = Q22.objects.filter(value = 0).first()
+            # right                   = Q22.objects.filter(value = 100).first()
+            # tolerance               = 1e-6
+            # balance,root            = find_root(function,left,right,tolerance)
+            # q22.value = root
+            # q22.save()
    
             bps.save()
             loan_break_point.save()

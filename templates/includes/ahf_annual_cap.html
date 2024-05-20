@@ -36,7 +36,7 @@
               <td class="whitespace-nowrap px-6">Loans per year</td>
               <td class="whitespace-nowrap px-6">
 
-                <form action="{% url 'change_ahf_loan' %}" method="post" class="flex flex-col" id="ahf_form">
+                <form action="{% url 'home:change_ahf_loan' %}" method="post" class="flex flex-col" id="ahf_form">
                   {% csrf_token %}
 
 

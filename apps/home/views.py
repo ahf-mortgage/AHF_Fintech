@@ -184,9 +184,6 @@ def home(request):
     
     annual_ahf_to_gci_result   = [gross_income/ num for num in  nums_loans]
 
-    
-
-    
     revenue_share               = round((branch.loan_per_year / ahf.loan_per_year) * 100,2) if (branch.loan_per_year / ahf.loan_per_year) < 1 else 100
     
     
@@ -194,14 +191,14 @@ def home(request):
         
 
     q22              = Q22.objects.filter(id=1).first()
-    left             = Q22.objects.filter(value = 0).first()
-    right            = Q22.objects.filter(value = 100).first()
-    tolerance        = 1e-6
-    balance,root     = find_root(function,left,right,tolerance)
-    q22.value        = root
-    left.save()
-    right.save()
-    q22.save()
+    # left             = Q22.objects.filter(value = 0).first()
+    # right            = Q22.objects.filter(value = 100).first()
+    # tolerance        = 1e-6
+    # balance,root     = find_root(function,left,right,tolerance)
+    # q22.value        = root
+    # left.save()
+    # right.save()
+    # q22.save()
     
 
     
