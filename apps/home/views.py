@@ -40,6 +40,7 @@ from utils.calc_res import (
     )
 
 from utils.w2_branch import W2_branch_column_names
+from utils.ahf_annual_cap_data import ahf_annual_cap_data
 from apps.W2branchYearlyGross.models import (
                                         Category,
                                         EmployeeWithholding,
@@ -176,46 +177,37 @@ def home(request):
     gross_income                = calculate_ahf_annual_cap_ahf(loan_break_point,comp_plan,1 - float(branch.commission)) 
     branch_gross                = calculate_gross_branch_income(loan_break_point,comp_plan,float(branch.commission))
     _branch_gross_income        = calculate_branch_gross_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
+    
     _branch_new_gross_income    = calculate_gross__new_branch_income(loan_break_point,comp_plan,gci,branch)
-    
-    logger.debug(f"gross_income={gross_income}")
- 
-    
- 
 
-    flat_fee_gci = int((comp_plan.Percentage * 100) * loan_break_point.loan_break_point / 10000) 
-    above_loan_break_point_ahf_commission = calculate_above_loan_break_point_ahf_commission(loan_break_point,comp_plan,branch) #int(flat_fee_gci * (branch.commission))
-  
-    E23 = (bps.bps * loan_break_point.loan_break_point )/ 10000 + comp_plan.Flat_Fee 
-    
-    nums_loans = [get_gci_result(comp_plan, num) * float((1-branch.commission)) for num in loan_below_limits]
+    flat_fee_gci                          = int((comp_plan.Percentage * 100) * loan_break_point.loan_break_point / 10000) 
+    above_loan_break_point_ahf_commission = calculate_above_loan_break_point_ahf_commission(loan_break_point,comp_plan,branch)
+    E23                                   = (bps.bps * loan_break_point.loan_break_point )/ 10000 + comp_plan.Flat_Fee 
+    nums_loans                            = [get_gci_result(comp_plan, num) * float((1-branch.commission)) for num in loan_below_limits]
       
     
-    annual_ahf_to_gci_result = [gross_income/ num for num in  nums_loans]
-    logger.debug(f"annual_ahf_to_gci_result={annual_ahf_to_gci_result}")
+    annual_ahf_to_gci_result   = [gross_income/ num for num in  nums_loans]
+
     
 
     
-    revenue_share = round((branch.loan_per_year / ahf.loan_per_year) * 100,2) if (branch.loan_per_year / ahf.loan_per_year) < 1 else 100
+    revenue_share               = round((branch.loan_per_year / ahf.loan_per_year) * 100,2) if (branch.loan_per_year / ahf.loan_per_year) < 1 else 100
     
     
     
         
 
-    q22                     = Q22.objects.filter(id=1).first()
-    left                    = Q22.objects.filter(value = 0).first()
-    right                   = Q22.objects.filter(value = 100).first()
-    
-    tolerance               = 1e-8
-    
-    balance,root            = find_root(function,left,right,tolerance)
-    
-    q22.value = root
+    q22              = Q22.objects.filter(id=1).first()
+    left             = Q22.objects.filter(value = 0).first()
+    right            = Q22.objects.filter(value = 100).first()
+    tolerance        = 1e-6
+    balance,root     = find_root(function,left,right,tolerance)
+    q22.value        = root
+    left.save()
+    right.save()
     q22.save()
-   
     
-  
-    
+
     
     bpl_meta                = BranchPayrollLiabilities._meta
     bpl_columns             = [field.name for field in BranchPayrollLiabilities._meta.get_fields()]
@@ -258,20 +250,9 @@ def home(request):
     ewh = ewh.values().first()
     
  
+    ahf_annual_cap_data = ahf_annual_cap_data
     
-    
-    ahf_annual_cap_data = {
-        'annual_ahf_cap'            :annual_ahf_cap,
-        'gross_ahf_income'          :gross_ahf_income,
-        'gross_income'              :gross_income,
-        'branch_income'            :_branch_gross_income,
-        'branch_gross_income'       :_branch_new_gross_income,
-        'annual_ahf_to_gci_result'  :annual_ahf_to_gci_result,
-        'test_branch_gross_income' :_branch_gross_income,
-        'test2_branch_gross_income' :_branch_new_gross_income
-        
-        
-    }
+  
   
    
     
@@ -286,15 +267,15 @@ def home(request):
     employee_with_holdings_q_columns_total  = sum(ewl_dict.values())
     total_employee_with_holding_expense     = calculate_total_employee_with_holding_expense(branch_gross,total_expense,q22)
   
-    CA_Unemployment_payroll_liabilities                         = calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22)
+    CA_Unemployment_payroll_liabilities = calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22)
     medicare_payroll_liabilities                                = calculate_medicare_payroll_liabilities(branch_gross,total_expense,q22)
-    _calculate_CA_Disability                                    = calculate_CA_Disability(_branch_new_gross_income,total_expense,q22) 
-    calcuate_Fed_Unemploy                                       = calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22)
-    _calculate_ett                                              = calculate_ett(branch_gross,total_expense,q22)
-    branch_payroll_liabilities_total                            = calculate_branch_payroll_liabilities_total(_branch_new_gross_income,total_expense,q22)
+    _calculate_CA_Disability            = calculate_CA_Disability(_branch_new_gross_income,total_expense,q22) 
+    calcuate_Fed_Unemploy               = calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22)
+    _calculate_ett                      = calculate_ett(branch_gross,total_expense,q22)
+    branch_payroll_liabilities_total    = calculate_branch_payroll_liabilities_total(_branch_new_gross_income,total_expense,q22)
     
     
-    debit                                                       = calculate_debit(_branch_new_gross_income,total_expense,q22) 
+    debit                               = calculate_debit(_branch_new_gross_income,total_expense,q22) 
     
     
     
@@ -348,14 +329,16 @@ def home(request):
         
     for key,value in zip(bps_from_50_to_250,branch_for_bps_from_50_to_250):
         bps_to_branch_commission_dict[key] = value
-        
-    logger.debug(f"ahf_commission={ahf_commission}")
     
-        
-    
-        
     credit = _branch_new_gross_income
+    tolerance    = 1e-6
     balance = credit - debit
+  
+    
+        
+    
+        
+         
     context = {
         'bps_from_50_to_250':bps_from_50_to_250,
         'bps_to_gci_dict':bps_to_gci_dict,
@@ -375,7 +358,7 @@ def home(request):
         'bplr_total':bplr_total,
         'debit'     :debit,
         'MIN_LOAN'  :MIN_LOAN,
-        'balance'   : _branch_new_gross_income - debit ,#       balance,
+        'balance'   :balance ,# _branch_new_gross_income - debit ,#       balance,
         
         'employee_with_holdings_q_columns_total':employee_with_holdings_q_columns_total,
         'net_paycheck_for_employee_with_holdings_total':net_paycheck_for_employee_with_holdings(

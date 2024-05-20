@@ -421,16 +421,13 @@ def calculate_total_employee_with_holding_expense(branch_gross,total_expense,q22
 def calculate_debit(branch_gross,total_expense,q22):
     total_employee_with_holding_expense = calculate_total_employee_with_holding_expense(branch_gross,total_expense,q22) 
     branch_payroll_liabilities_total    = calculate_branch_payroll_liabilities_total(branch_gross,total_expense,q22)
-
-    
     debit = (
             total_employee_with_holding_expense
              + branch_payroll_liabilities_total
              + total_expense
              )
-    balance = branch_gross - debit
-
-
+    
+    
     return debit 
 
 

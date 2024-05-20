@@ -2,7 +2,9 @@ from django.shortcuts import render
 from .models import MLO,Company,Loan
 from django.shortcuts import get_object_or_404,redirect
 from .models import Bps,LoanBreakPoint,CompPlan,AHF,Branch
+from apps.W2branchYearlyGross.models import Q22
 from utils.calc_res import get_gci_result
+from utils.bisect_balance import find_root,function
 
 
 
@@ -188,6 +190,16 @@ def comp_plan_change_view(request):
             branch_amount                     = int(branch_amount) / 100
             branch.commission                 = branch_amount
             bps.bps                           = float(comp_plan) * 100
+            
+            
+            q22                     = Q22.objects.filter(id=1).first()
+            left                    = Q22.objects.filter(value = 0).first()
+            right                   = Q22.objects.filter(value = 100).first()
+            tolerance               = 1e-6
+            balance,root            = find_root(function,left,right,tolerance)
+            q22.value = root
+            q22.save()
+   
             bps.save()
             loan_break_point.save()
             comp_plan_obj.save()

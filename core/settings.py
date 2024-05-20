@@ -113,12 +113,36 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+
+# Otherwise, provide credentials directly in the configuration (less secure)
+DB_NAME = 'purpose_black_db'
+DB_USER = 'purpose_black__user'  # Double underscores allowed by some DBs
+DB_PASSWORD = '123456789'  # Replace with a strong password
+DB_HOST = 'localhost'  # Adjust if your database is on a different host
+DB_PORT = 5432  # Adjust if your database port is different
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': DB_NAME,
+        'USER': DB_USER,
+        'PASSWORD': DB_PASSWORD,
+        'HOST': DB_HOST,
+        'PORT': DB_PORT,
+        'CONN_MAX_AGE': 600,  # Optional: Connection pooling for efficiency
+      
+        
+         
     }
 }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 
 # Password validation
