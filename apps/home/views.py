@@ -40,7 +40,8 @@ from utils.calc_res import (
     )
 
 from utils.w2_branch import W2_branch_column_names
-from utils.ahf_annual_cap_data import ahf_annual_cap_data
+from utils.ahf_annual_cap_data import ahf_annual_cap_data as aacd
+
 from apps.W2branchYearlyGross.models import (
                                         Category,
                                         EmployeeWithholding,
@@ -91,12 +92,7 @@ def home(request):
     # Add the console handler to the logger
     logger.addHandler(console_handler)
 
-    # # Now you can use the logger with different log levels
-    # logger.debug("This is a debug message.")
-    # logger.info("This is an info message.")
-    # logger.warning("This is a warning message.")
-    # logger.error("This is an error message.")
-    # logger.critical("This is a critical message.")
+   
 
     
     
@@ -250,7 +246,7 @@ def home(request):
     ewh = ewh.values().first()
     
  
-    ahf_annual_cap_data = ahf_annual_cap_data
+    ahf_annual_cap_data = aacd
     
   
   

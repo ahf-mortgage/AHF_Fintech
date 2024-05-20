@@ -148,6 +148,7 @@ def comp_plan_change_view(request):
    
 
     if request.method == "POST":
+      
         Maximum_Compensation = request.POST.get("Maximum_Compensation",None)
         max_gci = request.POST.get('max_gci',None)
         FF_MIN_LOAN = request.POST.get('FF_MIN_LOAN',None)
@@ -169,8 +170,10 @@ def comp_plan_change_view(request):
         loan_below_limits      = [num for num in range(int(loan_break_point.loan_break_point),MIN_LOAN - MIN_LOAN,-MIN_LOAN)]  
         gci_result             = [(comp_plan_obj.Percentage * 100) * num / 10000 for num in range(int(loan_break_point.loan_break_point),MIN_LOAN - MIN_LOAN,-MIN_LOAN)]
         peak_loan_below_limits = loan_below_limits[len(loan_below_limits) - 1]
-        peak_gci_results       = gci_result[len(gci_result)-1]        
+        peak_gci_results       = gci_result[len(gci_result)-1]     
         Flat_Fee               = comp_plan_obj.FF_MIN_LOAN - ((comp_plan_obj.Percentage * peak_loan_below_limits)/100)
+        comp_plan_obj.Flat_Fee = Flat_Fee
+        comp_plan_obj.save()
    
         if float(max_gci) > float(Maximum_Compensation):
             max_gci = Maximum_Compensation
