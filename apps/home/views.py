@@ -191,14 +191,14 @@ def home(request):
         
 
     q22              = Q22.objects.filter(id=1).first()
-    # left             = Q22.objects.filter(value = 0).first()
-    # right            = Q22.objects.filter(value = 100).first()
-    # tolerance        = 1e-6
-    # balance,root     = find_root(function,left,right,tolerance)
-    # q22.value        = root
-    # left.save()
-    # right.save()
-    # q22.save()
+    left             = Q22.objects.filter(value = 0).first()
+    right            = Q22.objects.filter(value = 100).first()
+    tolerance        = 1e-6
+    balance,root     = find_root(function,left,right,tolerance)
+    q22.value        = root
+    left.save()
+    right.save()
+    q22.save()
     
 
     

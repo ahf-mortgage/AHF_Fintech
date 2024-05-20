@@ -197,13 +197,13 @@ def comp_plan_change_view(request):
             bps.bps                           = float(comp_plan) * 100
             
             
-            # q22                     = Q22.objects.filter(id=1).first()
-            # left                    = Q22.objects.filter(value = 0).first()
-            # right                   = Q22.objects.filter(value = 100).first()
-            # tolerance               = 1e-6
-            # balance,root            = find_root(function,left,right,tolerance)
-            # q22.value = root
-            # q22.save()
+            q22                     = Q22.objects.filter(id=1).first()
+            left                    = Q22.objects.filter(value = 0).first()
+            right                   = Q22.objects.filter(value = 100).first()
+            tolerance               = 1e-6
+            balance,root            = find_root(function,left,right,tolerance)
+            q22.value = root
+            q22.save()
    
             bps.save()
             loan_break_point.save()
