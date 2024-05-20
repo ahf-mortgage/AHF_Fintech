@@ -38,18 +38,14 @@
 
                 <form action="{% url 'home:change_ahf_loan' %}" method="post" class="flex flex-col" id="ahf_form">
                   {% csrf_token %}
-
-
-
                   <div class="relative mb-3" data-twe-input-wrapper-init>
                     <input 
                       type="text" 
-                  
                       class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:outline-none focus:ring-2 focus:ring-blue-200 data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
                       id="H10"
                       value="{{ahf_loan_per_year}}"
                       name="H10"
-                       />
+                    />
                    
                   </div>
 

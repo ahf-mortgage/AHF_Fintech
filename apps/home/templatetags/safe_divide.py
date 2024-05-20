@@ -11,13 +11,13 @@ def sum_list(numbers):
 
 @register.filter(name='safe_divide')
 def  safe_divide(value):
-    return int(value)/12
+    return float(value)/12
  
  
  
 @register.filter(name='divide_by_10')
 def  divide_by_10(value):
-    return round(int(value)/10,2)
+    return round(float(value)/10,2)
 
 
  
@@ -30,7 +30,7 @@ def  mul(value1,value2):
 
 @register.filter(name='divide_by_12')
 def  divide_by_12(value):
-    return round(int(value)/12,2)
+    return round(float(value)/12,2)
 
 
 @register.filter(name='dict_get')

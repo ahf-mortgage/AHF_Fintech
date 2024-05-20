@@ -57,22 +57,24 @@ except Branch.DoesNotExist as e:
     raise e
     
  
-gci                =     (comp_plan.Percentage * 100) * loan_break_point.loan_break_point/10000  + comp_plan.Flat_Fee
-branch_commission  =     gci * float(branch.commission)
-ahf_commission     =     gci * (1 - float(branch.commission))
-ahf_amount         =     100 - branch.commission * 100
-MIN_LOAN = 100000 
-loan_below_limits  =    [num for num in range(int(loan_break_point.loan_break_point),MIN_LOAN - MIN_LOAN,-MIN_LOAN)]
-nums_loans         =    [get_gci_result(comp_plan, num) * float((1-branch.commission)) for num in loan_below_limits]
+gci               = (comp_plan.Percentage * 100) * loan_break_point.loan_break_point/10000  + comp_plan.Flat_Fee
+branch_commission = gci * float(branch.commission)
+ahf_commission    = gci * (1 - float(branch.commission))
+ahf_amount        = 100 - branch.commission * 100
+MIN_LOAN          = 100000 
+loan_below_limits = [num for num in range(int(loan_break_point.loan_break_point),MIN_LOAN - MIN_LOAN,-MIN_LOAN)]
+nums_loans        = [get_gci_result(comp_plan, num) * float((1-branch.commission)) for num in loan_below_limits]
 
 
 annual_ahf_cap            = calculate_annual_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
-gross_ahf_income           = calculate_gross_ahf_income(loan_break_point,comp_plan,float(branch.commission))
-gross_income                = calculate_ahf_annual_cap_ahf(loan_break_point,comp_plan,1 - float(branch.commission)) 
-_branch_gross_income        = calculate_branch_gross_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
-_branch_new_gross_income    = calculate_gross__new_branch_income(loan_break_point,comp_plan,gci,branch)
-annual_ahf_to_gci_result   = [gross_income/ num for num in  nums_loans]
+gross_ahf_income          = calculate_gross_ahf_income(loan_break_point,comp_plan,float(branch.commission))
+gross_income              = calculate_ahf_annual_cap_ahf(loan_break_point,comp_plan,1 - float(branch.commission)) 
+_branch_gross_income      = calculate_branch_gross_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
+_branch_new_gross_income  = calculate_gross__new_branch_income(loan_break_point,comp_plan,gci,branch)
+annual_ahf_to_gci_result  = [gross_income/ num for num in  nums_loans]
 
+
+print(f"data={annual_ahf_to_gci_result}")
 
 
 

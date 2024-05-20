@@ -68,10 +68,6 @@ def calculate_ahf_annual_cap_ahf(loan_break_amount,comp_plan,commission,value = 
     gci     = (comp_plan.Percentage * 100) * loan_break_amount.loan_break_point/10000  + comp_plan.Flat_Fee
     D8      = gci * (1 - float(branch.commission))
     G8      = D8 * H10
-    print("G8=",G8)
-    print("D8=",D8)
-    print("H10=",H10)
-    
     return G8
 
 
@@ -153,7 +149,6 @@ def branch_gross_income(loan_break_amount,comp_plan,commission):
 
 
 def get_gci_result(comp_plan,num):
-    # const gci_result    = (comp_plan_percentage * 100) * num / 10000  + Number.parseFloat("{{comp_plan_for_lower_limit.Flat_Fee}}")
 
     return comp_plan.Percentage * 100 * num /10000 + comp_plan.Flat_Fee
 
