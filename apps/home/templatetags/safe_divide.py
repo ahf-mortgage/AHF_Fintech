@@ -33,6 +33,18 @@ def  divide_by_12(value):
     return round(float(value)/12,2)
 
 
+
+
+@register.filter('multiply')
+def multiply(value, arg):
+    """
+    Multiplies the value by the argument.
+    
+    """
+    arg = float(arg) / 100
+    return value * arg
+
+
 @register.filter(name='dict_get')
 def dict_get(dictionary, key):
     return dictionary.get(key)

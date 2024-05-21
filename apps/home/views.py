@@ -321,6 +321,7 @@ def home(request):
     
         ahf_for_bps_from_50_to_250    = [(1 - branch.commission) * num for num in bps_from_50_to_250] 
         branch_for_bps_from_50_to_250 = [branch.commission* num for num in bps_from_50_to_250]
+
     bps_to_gci_dict               = {}
     bps_to_ahf_commission_dict    = {}
     bps_to_branch_commission_dict = {}

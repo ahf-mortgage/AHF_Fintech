@@ -280,6 +280,6 @@ LOGGING = {
 #Hello 
 # Configure your default site. See
 SITE_ID = 1
-VERSION = 0.004
+VERSION = 0.005
 
 
