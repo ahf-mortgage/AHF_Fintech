@@ -40,6 +40,8 @@
             </th>
         </tr>
 
+
+
         <tr class="font-bold border-b border-black bg-gray-300">
             <th  class="px-4">
               Flat fee
@@ -54,7 +56,9 @@
             </th>
 
             <th class="px-6"> 
-            ${{above_loan_break_point_ahf_commission|intcomma}}
+                ${{ahf_annual_cap_data.test2_branch_gross_income|intcomma}}
+
+            <!-- ${{above_loan_break_point_ahf_commission|intcomma}} -->
             </th>
         </tr>
 
@@ -84,18 +88,45 @@
             </td>
 
             <td class="text-center whitespace-nowrap px-6">
-                ${{bps_to_gci_dict|dict_get:num|floatformat:"2"|intcomma}}
+
+                {% if num == 0.0 %} 
+
+                $0
+
+            {% else %}
+            ${{bps_to_gci_dict|dict_get:num|floatformat:"2"|intcomma}}
+
+            {% endif %}
+
+
+               
             </td>
 
             <td class="text-center whitespace-nowrap px-6">
+                {% if num == 0.0 %} 
+
+                    $0
+
+                {% else %}
                 {{bps_to_ahf_commission_dict|dict_get:num|floatformat:"2"|intcomma}}
+
+                {% endif %}
     
             </td>
 
             <td class="text-center whitespace-nowrap px-6">
+
+                {% if num == 0.0 %} 
+
+                $0
+
+            {% else %}
+            {{bps_to_branch_commission_dict|dict_get:num|floatformat:"2"|intcomma}}
+
+            {% endif %}
                 
 
-                {{bps_to_branch_commission_dict|dict_get:num|floatformat:"2"|intcomma}}
+                
 
             </td>
          
