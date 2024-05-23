@@ -6,5 +6,6 @@ from utils.views import AhfSignupView
 urlpatterns = [
     path('',include("apps.home.urls",namespace = "home")),
     path('user/W2branchYearlyGross/',include('apps.W2branchYearlyGross.urls',namespace="W2branchYearlyGross")),
+    path('revenue/',include('apps.RevenueShare.urls',namespace="RevenueShare")),
     path('admin/', admin.site.urls),
 ]

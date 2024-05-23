@@ -26,10 +26,10 @@ class MLOForm(forms.ModelForm):
         model = Company
         fields = '__all__'
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Set the FloatField widget to readonly
-        self.fields['gci'].widget.attrs['readonly'] = True
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     # Set the FloatField widget to readonly
+    #     self.fields['gci'].widget.attrs['readonly'] = True
 
 
 @admin.register(MLO)
@@ -53,6 +53,7 @@ admin.site.register(LoanBreakPoint)
 admin.site.register(CompPlan)
 
 # admin.site.register(AHF)
+admin.site.register(Recruiter)
 admin.site.register(Branch)
 admin.site.register(AHF)
 

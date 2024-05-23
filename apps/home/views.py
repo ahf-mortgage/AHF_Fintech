@@ -53,6 +53,9 @@ from apps.W2branchYearlyGross.models import (
                                 
                                         )
 
+
+from apps.RevenueShare.models import RevenueShare
+
 from utils.bisect_balance import find_root,function
 
 
@@ -301,8 +304,10 @@ def home(request):
       
       
     }
-    
-   
+    all_revenues = None
+    revenues   =  {
+        all_revenues:RevenueShare.objects.all()
+    }
     bps_from_50_to_250 = []
     branch_for_bps_from_50_to_250 = []
     gci_for_bps_from_50_to_250 = []
@@ -416,6 +421,7 @@ def home(request):
         'branch_commission'                :branch_commission if branch_commission > 0 else None,
         'branch_commission_amount'         :branch.commission if branch.commission > 0 else None,
         'ahf_annual_cap_data'              :ahf_annual_cap_data,
+        'revenues'                         :revenues,
         'version'                          :settings.VERSION
 
     }

@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'apps.recruiter',
     'apps.home',
     'apps.W2branchYearlyGross',
+    'apps.RevenueShare',
     # all auth apps
     'allauth',
     'allauth.account',

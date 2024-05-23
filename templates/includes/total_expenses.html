@@ -223,8 +223,23 @@
 
 
                 {% if column == 'Social_Security' %}
+             
               <td class="whitespace-nowrap">
-               {{w2_branch_yearly_gross_income_data.calculate_social_security|floatformat:'2'|intcomma}}
+
+                {% if w2_branch_yearly_gross_income_data.calculate_social_security %}
+
+                <p class="bg-red-500">
+                  {{w2_branch_yearly_gross_income_data.calculate_social_security|floatformat:'2'|intcomma}}
+                </p>
+
+                {% else %}
+
+                <p>
+                  {{w2_branch_yearly_gross_income_data.calculate_social_security|floatformat:'2'|intcomma}}
+                </p>
+
+                {% endif %}
+              
 
               </td>
 

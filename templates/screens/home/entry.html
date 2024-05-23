@@ -2,74 +2,76 @@
 {% load static %}
 <!doctype html>
 <html>
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-/* Styles for the grid containers */
+    /* Styles for the grid containers */
 
-body {
-  background-image: linear-gradient(to right, #dddddd 1px, transparent 1px), 
-                    linear-gradient(to bottom, #dddddd 1px, transparent 1px);
-  background-size: 20px 20px;
-}
+    body {
+      background-image: linear-gradient(to right, #dddddd 1px, transparent 1px),
+        linear-gradient(to bottom, #dddddd 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
 
 
-.middle-grid-container {
-  display: grid;
-  grid-template-columns: auto auto;
-  grid-auto-flow: column;
-  grid-gap: 10px;
-  background-color: red;
-}
+    .middle-grid-container {
+      display: grid;
+      grid-template-columns: auto auto;
+      grid-auto-flow: column;
+      grid-gap: 10px;
+      background-color: red;
+    }
 
-.grid-container {
-  display: grid;
-  grid-template-columns: auto auto auto auto auto;
-  padding: 5px;
-}
+    .grid-container {
+      display: grid;
+      grid-template-columns: auto auto auto;
+      padding: 5px;
+    }
 
-.w2-branch-grid-container {
-  display: grid;
-  grid-template-columns: 0.5fr auto;
-}
+    .w2-branch-grid-container {
+      display: grid;
+      grid-template-columns: 0.5fr auto;
+    }
 
-/* Styles for the grid items */
-.comission-grid-item,
-.small-grid-item,
-.grid-item {
-  background-color: rgba(255, 255, 255, 0.8);
-  padding: 20px;
-  font-size: 30px;
-  text-align: center;
-}
+    /* Styles for the grid items */
+    .comission-grid-item,
+    .small-grid-item,
+    .grid-item {
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 20px;
+      font-size: 30px;
+      text-align: center;
+    }
 
-/* Responsive styles for small screens */
-@media (max-width: 480px) {
-  /* Adjust the middle-grid-container for small screens */
-  .middle-grid-container {
-    grid-template-columns: auto;
-    grid-auto-flow: row;
-  }
+    /* Responsive styles for small screens */
+    @media (max-width: 480px) {
 
-  /* Adjust the grid-container for small screens */
-  .grid-container {
-    grid-template-columns: auto auto auto;
-  }
+      /* Adjust the middle-grid-container for small screens */
+      .middle-grid-container {
+        grid-template-columns: auto;
+        grid-auto-flow: row;
+      }
 
-  /* Adjust the w2-branch-grid-container for small screens */
-  .w2-branch-grid-container {
-    grid-template-columns: auto;
-  }
+      /* Adjust the grid-container for small screens */
+      .grid-container {
+        grid-template-columns: auto auto auto;
+      }
 
-  /* Adjust the grid items for small screens */
-  .comission-grid-item,
-  .small-grid-item,
-  .grid-item {
-    font-size: 20px;
-  }
-}
+      /* Adjust the w2-branch-grid-container for small screens */
+      .w2-branch-grid-container {
+        grid-template-columns: auto;
+      }
+
+      /* Adjust the grid items for small screens */
+      .comission-grid-item,
+      .small-grid-item,
+      .grid-item {
+        font-size: 20px;
+      }
+    }
   </style>
 </head>
 
@@ -82,17 +84,14 @@ body {
     <div class="grid-item">
       {% include 'includes/comp_plan_table.html'%}
     </div>
-
   </div>
-
 
 
 
   <div class="flex flex-row">
 
-   
-
     <div class="grid-container">
+
       <div class="grid-item w-full">
         {% include 'includes/above_loan_break_points2.html' %}
       </div>
@@ -104,51 +103,49 @@ body {
       <div class="small-grid-item">
         {% include 'includes/gross_income.html' %}
       </div>
-      
-     
+
+      <div class="grid-item">
+        {% include 'includes/lower_loan_break_points.html' %}
+      </div>
+  
+      <div class="grid-item">
+        {% include 'includes/annual_branch_ahf_cap.html' %}
+      </div>
+
     </div>
 
+    <div class="grid-container">
 
-    <div class="w2-branch-grid-container px-0 mx-0" style="min-width:100%;">
   
+
+      <div class="grid-item">
+        {% include 'includes/W2_Branch_Yearly_Gross_Income.html' %}
+      </div>
+
+      <div class="small-grid-item">
+        {% include 'RevenueShare/table.html' %}
+      </div>
+
+
+
     </div>
 
   </div>
 
 
 
-  <div class="grid-container px-0 mx-0" style="float: left;">
-  
-    <div class="grid-item">
-      {% include 'includes/lower_loan_break_points.html' %}
+  <div class="grid-container">
 
-    </div>
-    <div class="grid-item">
-      {% include 'includes/annual_branch_ahf_cap.html' %}
-    </div>
- 
-    <div class="grid-item">
-      {% include 'includes/W2_Branch_Yearly_Gross_Income.html' %}
-    </div>
-    <div class="grid-item">
-      <!-- 9 -->
-    </div>
+
   </div>
 
- 
-</div>
+
+  </div>
 
   <script>
 
-
-
     const E5 = "{{gci}}"
     const E6 = document.getElementById('E6')
-
-    // for loan below limit
-    // gci=   (comp_plan.Percentage * 100) * loan_break_point.loan_break_point / 10000 + comp_plan.Flat_Fee
-    // max = $B$7
-    //=IF($E$21*D23/10000+$B$3 < $B$7,$E$21*D23/10000+$B$3,$B$7)
 
     const loan_below_limits_raw = "{{loan_below_limits}}"
     const MAX_GCI = Number.parseFloat("{{comp_plan_for_lower_limit.MAX_GCI}}")
@@ -162,50 +159,39 @@ body {
     // Table data for loan below loan limit
     let size_of_loan_below_limits = loan_below_limits.length
     for (let num of loan_below_limits) {
-      const D2  = document.getElementById(`D2_${num}`)
-      const F2  = document.getElementById(`F2_${num}`)
-      const H2  = document.getElementById(`H2_${num}`)
+      const D2 = document.getElementById(`D2_${num}`)
+      const F2 = document.getElementById(`F2_${num}`)
+      const H2 = document.getElementById(`H2_${num}`)
       const row = document.getElementById(`below_row_${num}`)
       let branch_share = 0
       let ahf_share = 0
 
-      const gci_result    = (comp_plan_percentage * 100) * num / 10000  + Number.parseFloat("{{comp_plan_for_lower_limit.Flat_Fee}}")
+      const gci_result = (comp_plan_percentage * 100) * num / 10000 + Number.parseFloat("{{comp_plan_for_lower_limit.Flat_Fee}}")
       const branch_amount = (Number.parseFloat("{{branch_amount}}") / 100)//Number.parseFloat("{{branch_commission_amount}}")
-      const ahf_amount    = 1 - (Number.parseFloat("{{branch_amount}}") / 100)
+      const ahf_amount = 1 - (Number.parseFloat("{{branch_amount}}") / 100)
 
-      if(counter % 2 == 0 ) {
+      if (counter % 2 == 0) {
         row.classList.remove("bg-gray-200")
       }
 
-      if(counter == 0) {
+      if (counter == 0) {
         row.classList.add("font-bold")
       }
       D2.innerText = (gci_result).toLocaleString()
       branch_share = (gci_result * branch_amount)
-      ahf_share    = (gci_result * ahf_amount)
-      
-      /**
-       if (gci_result < MAX_GCI) {
-        D2.innerText = (gci_result).toLocaleString()
-        branch_share = (gci_result * branch_amount)
-        ahf_share    = (gci_result * ahf_amount)
-      }
-      else {
-        D2.innerText = MAX_GCI.toLocaleString()
-        branch_share = MAX_GCI * branch_amount
-        ahf_share    = MAX_GCI * ahf_amount
-      } **/
+      ahf_share = (gci_result * ahf_amount)
+
       F2.innerText = ahf_share.toLocaleString()
       H2.innerHTML = `<p>${branch_share.toLocaleString()}</p>`
 
-      if(counter == size_of_loan_below_limits - 1) {
+      if (counter == size_of_loan_below_limits - 1) {
         D2.innerText = "{{comp_plan_for_lower_limit.FF_MIN_LOAN}}"
 
       }
 
-    
 
-    counter += 1
+
+      counter += 1
 
     }
 
