@@ -1,7 +1,8 @@
-
+{% load humanize %}
+{% load safe_divide %}
 <div class="flex flex-col" >
     <h2 class="mb-2 mt-0 text-4xl font-medium leading-tight text-primary">
-        Revenue Share
+        Revenue Share 
     </h2> 
    
     
@@ -16,9 +17,6 @@
         agents who are generating revenue for the company.
       </p>
 
-      <p>
-        {{ revenues.all_revenues}}
-       </p> 
 
 
       <p class="mb-4 mt-0 text-base font-light leading-relaxed">
@@ -57,7 +55,9 @@
 
 
               <th scope="col" class="px-6 py-4">
-                $165,000
+
+               ${{ahf_annual_cap_data.test_branch_gross_income|div:ahf_amount|mul:100}}
+               
               </th>
 
               <th scope="col" class="px-6 py-4">
@@ -80,7 +80,7 @@
                 </th>
 
                 <th scope="col" class="text-center px-6 py-4">
-                    $66,000
+                  ${{ahf_annual_cap_data.test_branch_gross_income|intcomma}}
                 </th>
 
                 <th scope="col" class="px-6 py-4">
@@ -112,293 +112,127 @@
             <tbody>
 
 
-              {% for revenue in revenues.all_revenue %}
-                <tr>
-                  <td>
-                    Hello
-                  </td>
-                </tr>
-              {% endfor %}
+         
+
+            {% for revenue in revenues.all_revenues%}
+
+            {% if revenue.level == 1 %}
+              <tr class="border-b border-neutral-200 dark:border-white/10 bg-red-100" id="level_{{revenue.level}}">
 
             
-              <tr class="border-b border-neutral-200 dark:border-white/10 bg-red-100">
                 
                 
                 <td class="whitespace-nowrap px-6 py-4 font-medium">
-                  1
+                  {{revenue.level}}
                 </td>
-                <td class="whitespace-nowrap px-6 py-4"></td>
-                <td class="whitespace-nowrap px-6 py-4"></td>
-                <td class="whitespace-nowrap px-6 py-4">1+</td>
-
-                <td class="whitespace-nowrap px-6 py-4 font-medium">
-                    7.00%
-                  </td>
-                  <td class="whitespace-nowrap px-6 py-4">
-                 
-                  </td>
-                  <td class="whitespace-nowrap px-6 py-4">
-                    3.5%
-                  </td>
-
-                  <td class="whitespace-nowrap px-6 py-4 font-medium">
-                    $5,775
-                  </td>
-                  <td class="whitespace-nowrap px-6 py-4">
-                    $2,888
-                  </td>
-
-                  <td class="whitespace-nowrap px-6 py-4">
-                    $2,888
-                  </td>
-                 
-
-              </tr>
-
-
-              <tr
-                class="border-b border-primary-200 bg-primary-100 text-neutral-800" style="background-color: hwb(97 43% 15%);">
-                <td class="whitespace-nowrap px-6 py-4 font-medium">
-                  2
-                </td>
-
-              
                 <td class="whitespace-nowrap px-6 py-4">
-                    0.2%
+                  {{revenue.growth_share.percentage}}%
                 </td>
-                <td class="whitespace-nowrap px-6 py-4 font-medium">
-                  $330
+                <td class="whitespace-nowrap px-6 py-4">
+                  {{revenue.growth_share.amount}}
+
+                </td>
+                <td class="whitespace-nowrap px-6 py-4">
+                  {{revenue.mlos.level}}+
                 </td>
 
                 <td class="whitespace-nowrap px-6 py-4 font-medium">
-                    5+
+                  {{revenue.growth_share.amount}}
+
                   </td>
                   <td class="whitespace-nowrap px-6 py-4">
-                    3.80%
                   </td>
                   <td class="whitespace-nowrap px-6 py-4">
-                      $6,270
+                    {{revenue.annual_revenue_share.percentage}}%
+
                   </td>
 
                   <td class="whitespace-nowrap px-6 py-4 font-medium">
-                    4.0%
+                    ${{ahf_annual_cap_data.test_branch_gross_income|div:ahf_amount|mul:100|mul:revenue.annual_revenue_share.percentage|div:100}}
                   </td>
                   <td class="whitespace-nowrap px-6 py-4">
-                    $6,600
+                    ${{ahf_annual_cap_data.test_branch_gross_income|div:ahf_amount|mul:100|mul:revenue.annual_revenue_share.percentage|div:200}}
                   </td>
-                  <td class="whitespace-nowrap px-6 py-4">
-                    $3,300
-                  </td>
-
-                  <td class="whitespace-nowrap px-6 py-4">
-                    $3,300
-                  </td>
-              </tr>
-
-              
                   
-              <tr
-                class="border-b border-primary-200 bg-primary-100 text-neutral-800">
-                <td class="whitespace-nowrap px-6 py-4 font-medium">
-                  3
-                </td>
-                <td class="whitespace-nowrap px-6 py-4">
-                    0.1%
-                </td>
-                <td class="whitespace-nowrap px-6 py-4">
-                    $165
-                </td>
-
-                <td class="whitespace-nowrap px-6 py-4">
-                  10+
-                </td>
-
-                <td class="whitespace-nowrap px-6 py-4">
-                  2.40%
-                </td>
-
-
-                <td class="whitespace-nowrap px-6 py-4">
-                  $3,960
-                </td>
-
-
-                <td class="whitespace-nowrap px-6 py-4">
-                  2.5%
-                </td>
-
-
-                <td class="whitespace-nowrap px-6 py-4">
-                  $4,125
-                </td>
-
-                <td class="whitespace-nowrap px-6 py-4">
-                  $2,063
-                </td>
-
-
-                <td class="whitespace-nowrap px-6 py-4 font-bold">
-                  $2,063
-                </td>
-
-              </tr>
-
-            
-              <tr
-                class="border-b border-primary-200 bg-primary-100 text-neutral-800">
-                <td class="whitespace-nowrap px-6 py-4 font-medium">
-                  4
-                </td>
-                <td class="whitespace-nowrap px-6 py-4">
-                    0.1%
-                </td>
-                <td class="whitespace-nowrap px-6 py-4">
-                    $165
-                </td>
-
-                <td class="whitespace-nowrap px-6 py-4 font-medium">
-                    15+
-                  </td>
                   <td class="whitespace-nowrap px-6 py-4">
-                    1.40%
+                    ${{ahf_annual_cap_data.test_branch_gross_income|div:ahf_amount|mul:100|mul:revenue.annual_revenue_share.percentage|div:200}}
                   </td>
-                  <td class="whitespace-nowrap px-6 py-4">
-                      $2,310
-                  </td>
-
-                  <td class="whitespace-nowrap px-6 py-4 font-medium">
-                    4.0%
-                  </td>
-                  <td class="whitespace-nowrap px-6 py-4">
-                    $16,040
-                  </td>
-                  <td class="whitespace-nowrap px-6 py-4">
-                    $1,238
-                  </td>
-
-                  <td class="whitespace-nowrap px-6 py-4">
-                    $1,238
-                  </td>
-              </tr>
-
-
-              <tr class="border-b border-neutral-200 dark:border-white/10">
-                
-                
-                <td class="whitespace-nowrap px-6 py-4 font-medium">
-                  5
-                </td>
-                <td class="whitespace-nowrap px-6 py-4">
-                  0.1%
-                </td>
-                <td class="whitespace-nowrap px-6 py-4">
-                  $165
-                </td>
-
-                <td class="whitespace-nowrap px-6 py-4 font-medium">
-                    20+
-                  </td>
-                  <td class="whitespace-nowrap px-6 py-4">
-                    3.5%
-                  </td>
-                  <td class="whitespace-nowrap px-6 py-4">
-                    $1,485
-                  </td>
-
-                  <td class="whitespace-nowrap px-6 py-4">
-                    1%
-                  </td>
-
-                  <td class="whitespace-nowrap px-6 py-4 font-medium">
-                    $1,650
-                  </td>
-                  <td class="whitespace-nowrap px-6 py-4">
-                    $825
-                  </td>
-
-                  <td class="whitespace-nowrap px-6 py-4 font-medium">
-                    $825
-                  </td>
-                 
                  
 
               </tr>
 
-
-              <tr
-                class="border-b border-primary-200 bg-primary-100 text-neutral-800">
-                <td class="whitespace-nowrap px-6 py-4 font-medium">
-                  6
-                </td>
-                <td class="whitespace-nowrap px-6 py-4">
-                    0.2%
-                </td>
-                <td class="whitespace-nowrap px-6 py-4">
-                    $825
-                </td>
+              {% else %}
+              <tr class="border-b border-neutral-200 dark:border-white/10" id="level_{{revenue.level}}">
 
                 <td class="whitespace-nowrap px-6 py-4 font-medium">
-                    25+
+                  {{revenue.level}}
+                </td>
+                <td class="whitespace-nowrap px-6 py-4">
+                  {{revenue.growth_share.percentage}}%
+                </td>
+                <td class="whitespace-nowrap px-6 py-4">
+                  {{ahf_annual_cap_data.test_branch_gross_income|div:ahf_amount|mul:revenue.growth_share.percentage|floatformat:'2'}}
+                </td>
+                <td class="whitespace-nowrap px-6 py-4">
+                   {{revenue.mlos.level}}+
+                </td>
+
+                <td class="whitespace-nowrap px-6 py-4 font-medium">
+                  {{revenue.annual_revenue_share.percentage|minus:revenue.growth_share.percentage}}%
                   </td>
                   <td class="whitespace-nowrap px-6 py-4">
-                    3.80%
                   </td>
                   <td class="whitespace-nowrap px-6 py-4">
-                      $3,300
+                    {{revenue.annual_revenue_share.percentage}}%
                   </td>
 
                   <td class="whitespace-nowrap px-6 py-4 font-medium">
-                    4.0%
-                  </td>
-                  <td class="whitespace-nowrap px-6 py-4">
-                    $16,040
-                  </td>
-                  <td class="whitespace-nowrap px-6 py-4">
-                    $2,063
-                  </td>
+                    ${{ahf_annual_cap_data.test_branch_gross_income|div:ahf_amount|mul:100|mul:revenue.annual_revenue_share.percentage|div:100}}
 
-                  <td class="whitespace-nowrap px-6 py-4">
-                    $2,063
                   </td>
-              </tr>         
+                  <td class="whitespace-nowrap px-6 py-4">
+                    ${{ahf_annual_cap_data.test_branch_gross_income|div:ahf_amount|mul:100|mul:revenue.annual_revenue_share.percentage|div:200}}
+                  </td>
                   
-              <tr
-                class="border-b border-primary-200 bg-primary-100 text-neutral-800">
-                <td class="whitespace-nowrap px-6 py-4 font-medium">
-                  7
-                </td>
-                <td class="whitespace-nowrap px-6 py-4">
-                    0.5%
-                </td>
-                <td class="whitespace-nowrap px-6 py-4">
-                    $825
-                </td>
+                  <td class="whitespace-nowrap px-6 py-4">
+                    ${{ahf_annual_cap_data.test_branch_gross_income|div:ahf_amount|mul:100|mul:revenue.annual_revenue_share.percentage|div:200}}
 
-                <td class="whitespace-nowrap px-6 py-4 font-medium">
-                    40+
                   </td>
-                  <td class="whitespace-nowrap px-6 py-4">
-                    4.5%
-                  </td>
-                  <td class="whitespace-nowrap px-6 py-4">
-                      $7,425
-                  </td>
+                 
 
-                  <td class="whitespace-nowrap px-6 py-4 font-medium">
-                    5.0%
-                  </td>
-                  <td class="whitespace-nowrap px-6 py-4">
-                    $8,250
-                  </td>
-                  <td class="whitespace-nowrap px-6 py-4">
-                    $4,125
-                  </td>
-
-                  <td class="whitespace-nowrap px-6 py-4 font-bold">
-                      $4,125
-                  </td>
               </tr>
-            
+
+            {% endif %}
+
+            {% endfor %}
+
+
+            <tr class="border-b border-neutral-200 dark:border-white/10" id="level_{{revenue.level}}">
+
+              <td class="whitespace-nowrap px-6 py-4 font-medium">
+               
+              </td>
+              <td class="whitespace-nowrap px-6 py-4">  
+              </td>
+              <td class="whitespace-nowrap px-6 py-4">
+              </td>
+              <td class="whitespace-nowrap px-6 py-4">  
+              </td>
+
+              <td class="whitespace-nowrap px-6 py-4 font-medium">
+              </td>
+                <td class="whitespace-nowrap px-6 py-4">
+                </td>
+                <td class="whitespace-nowrap px-6 py-4">
+                  {{revenues.total_all_revenue_share}}%
+                </td>
+                
+                <td class="whitespace-nowrap px-6 py-4 font-medium" colspan="2">
+                  ${{ahf_annual_cap_data.test_branch_gross_income|div:ahf_amount|mul:revenues.total_all_revenue_share|intcomma}}
+
+                </td>
+               
+            </tr>
     
             </tbody>
           </table>
@@ -406,3 +240,10 @@
       </div>
     </div>
   </div>
+
+  <script>
+    const level_2      = document.getElementById("level_2")
+    level_2.style.backgroundColor = "green";
+
+
+  </script>

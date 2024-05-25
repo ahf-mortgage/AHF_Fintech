@@ -23,14 +23,21 @@ def  divide_by_10(value):
  
 @register.filter(name='mul')
 def  mul(value1,value2):
-    return value1
+    return value1*value2
 
 
+@register.filter(name='div')
+def  div(value1,value2):
+    return float(value1)/float(value2)
 
+
+@register.filter(name='minus')
+def  div(value1,value2):
+    return float(value1) - float(value2)
 
 @register.filter(name='divide_by_12')
 def  divide_by_12(value):
-    return round(float(value)/12,2)
+    return float(value)/12
 
 
 
@@ -53,11 +60,3 @@ def dict_get(dictionary, key):
 def split_words(value):
     return " ".join(value.split("_"))
 
-
-# @register.filter("split_word")
-# def split_words(value):
-#     return " ".join(value.split("_"))
-  
-# FF-10000  25000 --> comp plan table 
-# at and below $loan_break_point
-# hookup with 100,100 2500 low list 

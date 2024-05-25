@@ -41,6 +41,7 @@ from utils.calc_res import (
 
 from utils.w2_branch import W2_branch_column_names
 from utils.ahf_annual_cap_data import ahf_annual_cap_data as aacd
+from apps.RevenueShare.views import total_all_revenue_share
 
 from apps.W2branchYearlyGross.models import (
                                         Category,
@@ -304,9 +305,11 @@ def home(request):
       
       
     }
-    all_revenues = None
+    print("total_all_revenue_share=",total_all_revenue_share)
+
     revenues   =  {
-        all_revenues:RevenueShare.objects.all()
+        "all_revenues":RevenueShare.objects.all(),
+        "total_all_revenue_share":total_all_revenue_share
     }
     bps_from_50_to_250 = []
     branch_for_bps_from_50_to_250 = []

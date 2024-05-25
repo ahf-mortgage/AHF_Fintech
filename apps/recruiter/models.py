@@ -15,8 +15,7 @@ class CompPlan(models.Model):
     def __str__(self) -> str:
         return f"{self.Percentage}"
     
-    # def save(self):
-    #     return 
+ 
     
     
 class Bps(models.Model):
@@ -82,28 +81,19 @@ class Company(models.Model):
  
 class Recruiter(models.Model):
     name  = models.CharField(max_length=100,null=True,blank=True)
-    level = models.IntegerField()
+    amount = models.IntegerField()
     
     def __str__(self):
-        return self.name
+        return f"{self.name} - {self.amount}"
     
 
 class MLO(models.Model):
-	"""
- 
-	a MLO in order to count they must averge 1 in month.
-
-		they have to close deals one loan in month.
-		in order to count to tier person has to do 12 deals per year
-		4 loans in 4th month averge will be 1 that will count
-		4 loans in 5th they don't count
-
-	   say person on level 1 june to may 
-
-	"""
- 
-	user = models.ForeignKey(User,on_delete = models.CASCADE)
-	level = models.IntegerField(max_length=1)
+    user = models.ForeignKey(User,on_delete = models.CASCADE)
+    level = models.IntegerField(max_length=1)
+    def __str__(self):
+        return f"{self.level}+"
+    
+    
 	# name = models.CharField(max_length = 100,blank = True,null = True)
 	# NMLS_ID = models.IntegerField(blank = True,null = True)
 	# NMLS_sponsor_id = models.IntegerField(blank = True,null = True)

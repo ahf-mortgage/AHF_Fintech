@@ -6,3 +6,12 @@ def revenue_view(request):
         
     }
     return render(request,"home/entry.html",context)
+
+
+
+all_revenues  = RevenueShare.objects.all()
+total_all_revenue_share = 0
+for revenue in all_revenues:
+    total_all_revenue_share += revenue.annual_revenue_share.percentage
+    
+
