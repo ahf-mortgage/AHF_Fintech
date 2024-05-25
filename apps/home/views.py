@@ -102,7 +102,7 @@ def home(request):
     
     
     try:
-        bps              = Bps.objects.all().first()
+        bps     = Bps.objects.all().first()
     except Bps.DoesNotExist as e:
         raise e
         
