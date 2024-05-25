@@ -305,12 +305,14 @@ def home(request):
       
       
     }
-    print("total_all_revenue_share=",total_all_revenue_share)
-
+    
     revenues   =  {
         "all_revenues":RevenueShare.objects.all(),
+        'first_revenues':RevenueShare.objects.all()[1],
         "total_all_revenue_share":total_all_revenue_share
     }
+    
+    
     bps_from_50_to_250 = []
     branch_for_bps_from_50_to_250 = []
     gci_for_bps_from_50_to_250 = []

@@ -117,7 +117,7 @@
             {% for revenue in revenues.all_revenues%}
 
             {% if revenue.level == 1 %}
-              <tr class="border-b border-neutral-200 dark:border-white/10 bg-red-100" id="level_{{revenue.level}}">
+              <tr class="border-b border-neutral-200 dark:border-white/10 bg-red-100" >
 
             
                 
@@ -154,7 +154,7 @@
                     ${{ahf_annual_cap_data.test_branch_gross_income|div:ahf_amount|mul:100|mul:revenue.annual_revenue_share.percentage|div:200}}
                   </td>
                   
-                  <td class="whitespace-nowrap px-6 py-4">
+                  <td class="whitespace-nowrap px-6 py-4"  id="top_right">
                     ${{ahf_annual_cap_data.test_branch_gross_income|div:ahf_amount|mul:100|mul:revenue.annual_revenue_share.percentage|div:200}}
                   </td>
                  
@@ -228,7 +228,7 @@
                 </td>
                 
                 <td class="whitespace-nowrap px-6 py-4 font-medium" colspan="2">
-                  ${{ahf_annual_cap_data.test_branch_gross_income|div:ahf_amount|mul:revenues.total_all_revenue_share|intcomma}}
+                 ${{ahf_annual_cap_data.test_branch_gross_income|div:ahf_amount|mul:revenues.total_all_revenue_share|intcomma}}
 
                 </td>
                

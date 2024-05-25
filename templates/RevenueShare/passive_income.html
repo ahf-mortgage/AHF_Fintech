@@ -73,6 +73,9 @@
               </tr>
             </thead>
             <tbody>
+              {% for revenue in revenues.all_revenues%}
+
+              {% if revenue.level ==  1 %}
               <tr class="bg-red-200">
                   <td class="whitespace-nowrap px-6 py-4">
                       1
@@ -80,10 +83,15 @@
                   <td class="whitespace-nowrap px-6 py-4">
                       5
                   </td>
+
+               
       
-                  <td class="whitespace-nowrap px-6 py-4">
-                      ${{4419|mul:5|intcomma}}
+                  <td class="whitespace-nowrap px-6 py-4" id="fullcapper_5">
+                    ${{ahf_annual_cap_data.test_branch_gross_income|div:ahf_amount|mul:100|mul:revenue.annual_revenue_share.percentage|div:200|mul:5}}
+
                   </td>
+
+                 
       
               </tr>
   
@@ -94,11 +102,11 @@
                   <td class="whitespace-nowrap px-6 py-4">
                       25
                   </td>
-      
-                  <td class="whitespace-nowrap px-6 py-4">
-                    ${{5050|mul:25|intcomma}}
-                      
+                  <td class="whitespace-nowrap px-6 py-4" >
+                    ${{ahf_annual_cap_data.test_branch_gross_income|div:ahf_amount|mul:100|mul:revenues.first_revenues.annual_revenue_share.percentage|div:200|mul:25}}  
                   </td>
+
+            
       
               </tr>
   
@@ -111,7 +119,7 @@
                   </td>
       
                   <td class="whitespace-nowrap px-6">
-                      $148,344
+                      $16,156
                   </td>
       
               </tr>
@@ -123,7 +131,8 @@
                 
     
                 <td class="whitespace-nowrap px-6">
-                    $3,330,00
+                 
+                   ${{ahf_annual_cap_data.test_branch_gross_income|mul:30}}
                 </td>
     
             </tr>
@@ -135,7 +144,7 @@
               
   
               <td class="whitespace-nowrap px-6">
-                  $296,688
+                ${{ahf_annual_cap_data.test_branch_gross_income}}
               </td>
   
           </tr>
@@ -147,11 +156,12 @@
             
   
             <td class="whitespace-nowrap px-6">
-                $2,733,313
+              ${{ahf_annual_cap_data.test_branch_gross_income|mul:30}}
             </td>
   
         </tr>
-         
+        {% endif %}
+        {% endfor %}
   
             </tbody>
           </table>
@@ -161,3 +171,4 @@
   </div>
 
 </div>
+

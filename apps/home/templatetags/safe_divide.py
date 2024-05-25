@@ -35,6 +35,11 @@ def  div(value1,value2):
 def  div(value1,value2):
     return float(value1) - float(value2)
 
+
+@register.filter(name='add')
+def  add(value1,value2):
+    return float(value1) + float(value2)
+
 @register.filter(name='divide_by_12')
 def  divide_by_12(value):
     return float(value)/12

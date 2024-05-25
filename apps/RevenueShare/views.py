@@ -15,3 +15,5 @@ for revenue in all_revenues:
     total_all_revenue_share += revenue.annual_revenue_share.percentage
     
 
+    
+
