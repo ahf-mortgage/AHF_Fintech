@@ -56,6 +56,7 @@ from apps.W2branchYearlyGross.models import (
 
 
 from apps.RevenueShare.models import RevenueShare
+from apps.recruiter.models import MLO_AGENT
 
 from utils.bisect_balance import find_root,function
 
@@ -67,7 +68,7 @@ def home(request):
     """
         entry point of the system
     """
-
+  
 
     # Set up the logger
     logger = logging.getLogger(__name__)
@@ -102,7 +103,7 @@ def home(request):
     
     
     try:
-        bps     = Bps.objects.all().first()
+        bps              = Bps.objects.all().first()
     except Bps.DoesNotExist as e:
         raise e
         
@@ -305,11 +306,29 @@ def home(request):
       
       
     }
+    all_revenues = RevenueShare.objects.all()
+    revenue = all_revenues.first()
+    
+    Ak12 = float(ahf_annual_cap_data.get("test_branch_gross_income"))/float(ahf_amount)*100*revenue.annual_revenue_share.percentage/200*5
+    revenue = all_revenues[1]
+    Ak13 = float(ahf_annual_cap_data.get("test_branch_gross_income"))/float(ahf_amount)*100*revenue.annual_revenue_share.percentage/200*25
+    AG14 = Ak12 + Ak13
+    AK16 = float(ahf_annual_cap_data.get("test_branch_gross_income"))
+    ahf_net_gross  = (AK16 * 30) - (Ak12 + Ak13) * 2
+   
+   
+   
+
     
     revenues   =  {
-        "all_revenues":RevenueShare.objects.all(),
+        "all_revenues":all_revenues,
         'first_revenues':RevenueShare.objects.all()[1],
-        "total_all_revenue_share":total_all_revenue_share
+        "total_all_revenue_share":total_all_revenue_share,
+        "AK13":Ak13,
+        "AK12":Ak12,
+        "AG14":AG14,
+        "AK16":AK16,
+        'ahf_net_gross':ahf_net_gross
     }
     
     
@@ -354,6 +373,22 @@ def home(request):
     tolerance    = 1e-6
     balance = credit - debit
   
+  
+    mlo_agent = MLO_AGENT.objects.filter(user = request.user).first()
+    level_balance = {
+        '1':481,
+        '2':550,
+        '3':344,
+        '4':206,
+        '5':138,
+        '6':344 
+        
+    }
+    level = 1
+    while mlo_agent.NMLS_ID_SPONSOR:
+        mlo_agent = mlo_agent.NMLS_ID_SPONSOR
+        logger.warning(f"sponsor id = {mlo_agent} level={level} balance={level_balance[f'{level}']}")
+        level += 1
     
         
     
