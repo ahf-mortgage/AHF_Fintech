@@ -41,7 +41,7 @@ from utils.calc_res import (
 
 from utils.w2_branch import W2_branch_column_names
 from utils.ahf_annual_cap_data import ahf_annual_cap_data as aacd
-from apps.RevenueShare.views import total_all_revenue_share
+from apps.RevenueShare.views import total_all_revenue_share,mlo_linked_list
 
 from apps.W2branchYearlyGross.models import (
                                         Category,
@@ -193,7 +193,7 @@ def home(request):
     
     
     
-        
+ 
 
     q22              = Q22.objects.filter(id=1).first()
     left             = Q22.objects.filter(value = 0).first()
@@ -372,26 +372,9 @@ def home(request):
     credit = _branch_new_gross_income
     tolerance    = 1e-6
     balance = credit - debit
-  
-  
-    mlo_agent = MLO_AGENT.objects.filter(user = request.user).first()
-    level_balance = {
-        '1':481,
-        '2':550,
-        '3':344,
-        '4':206,
-        '5':138,
-        '6':344 
-        
-    }
-    level = 1
-    while mlo_agent.NMLS_ID_SPONSOR:
-        mlo_agent = mlo_agent.NMLS_ID_SPONSOR
-        logger.warning(f"sponsor id = {mlo_agent} level={level} balance={level_balance[f'{level}']}")
-        level += 1
     
-        
-    
+    mlo_linked_list(request)
+
         
          
     context = {

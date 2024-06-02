@@ -35,6 +35,11 @@ class RevenueShare(models.Model):
     def __str__(self):
         return f"level-{self.level} - growth share -{self.growth_share} - ahf charity{self.ahf_charity}"
 
+
+
+
+
+
     
     
     

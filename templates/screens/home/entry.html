@@ -80,7 +80,7 @@
     <h1 class="font-bold">V{{version}}</h1>
   </div>
 
-  <div class="grid-container">
+  <div class="grid-container" id="comp_plan_table_container">
     <div class="grid-item" >
       {% include 'includes/comp_plan_table.html'%}
     </div>
@@ -125,11 +125,6 @@
       <div class="small-grid-item">
         {% include 'RevenueShare/table.html' %}
       </div>
-
-      <div class="small-grid-item">
-        {% include 'RevenueShare/passive_income.html' %}
-      </div>
-
 
 
     </div>
@@ -193,12 +188,10 @@
 
       }
 
-
-
       counter += 1
-
     }
 
+    
 
   </script>
 </body>

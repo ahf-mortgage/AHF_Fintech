@@ -11,7 +11,7 @@ from apps.recruiter.views import (
     change_ahf_loan
     )
 from apps.home.views import home
-
+from apps.RevenueShare.views import visualize_graph
 
 app_name = "home"
 urlpatterns = [
@@ -19,6 +19,7 @@ urlpatterns = [
     path('change_branch_amount/',change_branch_amount,name="change_branch_amount"),
     # path('change_comp_plan/',change_comp_plan,name="change_comp_plan"),
     path('loan_break_point/',loan_break_point,name="loan_break_point"),
+    path('visualize_map/',visualize_graph,name="visualize_graph"),
     path('change_branch_loan/',change_branch_loan,name="change_branch_loan"),
     path('change_ahf_loan/',change_ahf_loan,name="change_ahf_loan"),
     path('comp_plan_change_view/',comp_plan_change_view,name="comp_plan_change_view"),

@@ -56,10 +56,7 @@ class Branch(models.Model):
         return f"{self.commission}"
     
     
-    
-    
-    
-    
+     
 class Loan(models.Model):
 	user = models.ForeignKey(User,blank= True,null=True,on_delete= models.CASCADE)
 	amount = models.FloatField()
@@ -93,14 +90,43 @@ class MLO(models.Model):
     def __str__(self):
         return f"{self.level}+"
     
+
+class MLO_AGENT(models.Model):
+    user            = models.ForeignKey(User,on_delete=models.CASCADE,blank=False,null=True)
+    NMLS_ID         = models.CharField(max_length = 7,primary_key=True)
+    NMLS_ID_SPONSOR = models.ForeignKey('self',on_delete=models.CASCADE,blank=True,null=True)
+    first_name      = models.CharField(max_length = 10)
+    last_name       = models.CharField(max_length = 10)
+    joined_date     = models.DateTimeField(auto_now=True)
+
     
-	# name = models.CharField(max_length = 100,blank = True,null = True)
-	# NMLS_ID = models.IntegerField(blank = True,null = True)
-	# NMLS_sponsor_id = models.IntegerField(blank = True,null = True)
-	# MLO_commision  = models.FloatField(blank = True,null = True)
-	# annual_commision_paid_to_company  = models.IntegerField(blank = True,null = True)
-	# comp = models.FloatField(blank = True,null=True)
-	# gci = models.FloatField(blank = True,null=True)
-	# date_joined = models.DateTimeField(auto_now = True)
-	# break_point  =   models.FloatField(blank = True,null=True)
-	
+    def __str__(self) -> str:
+        return f"{self.user.username}"
+    
+    
+    
+    
+class MLO_AGENT_PRODUCTION(models.Model):
+    NMLS_ID = models.ForeignKey(MLO_AGENT,on_delete=models.CASCADE,null=False,blank=False)
+    loan_id = models.ForeignKey("LOANS",on_delete=models.CASCADE,blank=True,null=True)
+    total  = models.FloatField(default=0)
+    
+    def __str__(self) -> str:
+        return f"production - {self.NMLS_ID}"
+    
+    
+    
+class LOANS(models.Model):
+    NMLS_ID = models.ForeignKey(MLO_AGENT,on_delete=models.CASCADE,blank=True,null=True)
+    date_closed = models.DateTimeField()
+    
+
+
+
+class Edge(models.Model):
+    from_node  = models.ForeignKey(MLO_AGENT, on_delete=models.CASCADE, unique=True, related_name='outgoing_edges')
+    to_node    = models.ForeignKey(MLO_AGENT, on_delete=models.CASCADE, unique=True, related_name='incoming_edges')
+    production = models.FloatField(default=1.0)
+
+    def __str__(self):
+        return f"{self.from_node.user.username} -> {self.to_node.user.username}"
