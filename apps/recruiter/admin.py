@@ -60,6 +60,7 @@ admin.site.register(MLO_AGENT)
 # admin.site.register(Node)
 admin.site.register(Edge)
 admin.site.register(MLO_AGENT_PRODUCTION)
+admin.site.register(MLONode)
 
 
 

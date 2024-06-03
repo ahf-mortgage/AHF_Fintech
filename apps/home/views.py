@@ -372,8 +372,11 @@ def home(request):
     credit = _branch_new_gross_income
     tolerance    = 1e-6
     balance = credit - debit
-    
+  
     mlo_linked_list(request)
+  
+    
+    
 
         
          

@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from utils.base import BaseModelMixin
 from django.contrib.auth.models import User
-
+from django.utils.text import slugify
 
 class CompPlan(models.Model):
     Flat_Fee             = models.FloatField(default=0)
@@ -129,3 +129,20 @@ class Edge(models.Model):
 
     def __str__(self):
         return f"{self.from_node.user.username} -> {self.to_node.user.username}"
+    
+    
+    
+
+
+class MLONode(models.Model):
+    mlo = models.ForeignKey(MLO_AGENT,on_delete= models.CASCADE,related_name='mlo_node',blank=False,null=False ,default=1)
+    slug = models.SlugField(unique=True)
+    neighbors = models.ManyToManyField('self', symmetrical=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.mlo.user.username)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.mlo.user.username
+

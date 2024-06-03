@@ -88,94 +88,108 @@ def mlo_linked_list(request):
     sylvia   = MLO_AGENT.objects.get(user__username = "Sylvia")
     peter    = MLO_AGENT.objects.get(user__username = "Peter")
     bob      = MLO_AGENT.objects.get(user__username = "Bob")
-    
     james    =  MLO_AGENT.objects.get(user__username = "James")
     
+    john_node = MLONode.objects.get(mlo = john)
+    sally_node = MLONode.objects.get(mlo = sally)
+    elif_node = MLONode.objects.get(mlo = elif_)
+    douglas_node   = MLONode.objects.get(mlo = douglas)
+    
+    ll.sponsor(john_node)
+    ll.sponsor(sally)
+    ll.sponsor(elif_node)
+    ll.sponsor(douglas_node)
     
     
     
-    ll.sponsor(ahf)
-    try:
-        edge = Edge.objects.filter(from_node = ahf,to_node = john)
-        if not edge:
-            Edge.objects.create(from_node = ahf,to_node = john,production =550)
-    except Edge.DoesNotExist as e:
-        raise e
+    
+    # ll.sponsor(ahf)
+    # try:
+    #     edge = Edge.objects.filter(from_node = ahf,to_node = john)
+    #     if not edge:
+    #         Edge.objects.create(from_node = ahf,to_node = john,production =550)
+    # except Edge.DoesNotExist as e:
+    #     raise e
         
-    ll.sponsor(john)
+    # ll.sponsor(john)
   
-    try:
-        edge = Edge.objects.filter(from_node = john,to_node = sally)
-        if not edge:
-            Edge.objects.create(from_node = john,to_node = sally,production =550)
+    # try:
+    #     edge = Edge.objects.filter(from_node = john,to_node = sally)
+    #     if not edge:
+    #         Edge.objects.create(from_node = john,to_node = sally,production =550)
        
 
-    except Edge.DoesNotExist as e:
-        raise e
+    # except Edge.DoesNotExist as e:
+    #     raise e
     
 
 
-    ll.sponsor(sally)    
-    try:
-        edge = Edge.objects.filter(from_node = sally,to_node = elif_)
-        if not edge:
-            Edge.objects.create(from_node = sally,to_node = elif_,production =550)
+    # ll.sponsor(sally)    
+    # try:
+    #     edge = Edge.objects.filter(from_node = sally,to_node = elif_)
+    #     if not edge:
+    #         Edge.objects.create(from_node = sally,to_node = elif_,production =550)
 
-    except Edge.DoesNotExist as e:
-        raise e
+    # except Edge.DoesNotExist as e:
+    #     raise e
     
 
 
     
-    ll.sponsor(elif_)
-    try:
-        edge = Edge.objects.filter(from_node = elif_,to_node = douglas)
-        if not edge:
-            Edge.objects.create(from_node = elif_,to_node = douglas,production =550)
-    except Edge.DoesNotExist as e:
-        raise e
+    # ll.sponsor(elif_)
+    # try:
+    #     edge = Edge.objects.filter(from_node = elif_,to_node = douglas)
+    #     if not edge:
+    #         Edge.objects.create(from_node = elif_,to_node = douglas,production =550)
+    # except Edge.DoesNotExist as e:
+    #     raise e
   
     
-    ll.sponsor(douglas)
-    try:
-        edge = Edge.objects.filter(from_node = douglas,to_node = ashton)
-        if not edge:
-            Edge.objects.create(from_node = douglas,to_node = ashton,production =550)
-    except Edge.DoesNotExist as e:
-        raise e
+    # ll.sponsor(douglas)
+    # try:
+    #     edge = Edge.objects.filter(from_node = douglas,to_node = ashton)
+    #     if not edge:
+    #         Edge.objects.create(from_node = douglas,to_node = ashton,production =550)
+    # except Edge.DoesNotExist as e:
+    #     raise e
 
     
     
-    ll.sponsor(ashton)
-    try:
-        edge = Edge.objects.filter(from_node = ashton,to_node = sylvia)
-        if not edge:
-            Edge.objects.create(from_node = ashton,to_node = sylvia,production =550)
-    except Edge.DoesNotExist as e:
-        raise e
+    # ll.sponsor(ashton)
+    # try:
+    #     edge = Edge.objects.filter(from_node = ashton,to_node = sylvia)
+    #     if not edge:
+    #         Edge.objects.create(from_node = ashton,to_node = sylvia,production =550)
+    # except Edge.DoesNotExist as e:
+    #     raise e
 
     
     
-    ll.sponsor(sylvia)
-    try:
-        edge = Edge.objects.filter(from_node = sylvia,to_node = peter)
-        if not edge:
-            Edge.objects.create(from_node = sylvia,to_node = peter,production =550)
-    except Edge.DoesNotExist as e:
-        raise e
+    # ll.sponsor(sylvia)
+    # try:
+    #     edge = Edge.objects.filter(from_node = sylvia,to_node = peter)
+    #     if not edge:
+    #         Edge.objects.create(from_node = sylvia,to_node = peter,production =550)
+    # except Edge.DoesNotExist as e:
+    #     raise e
     
 
-    ll.sponsor(peter)
-    try:
-        edge = Edge.objects.filter(from_node = peter,to_node = bob)
-        if not edge:
-            Edge.objects.create(from_node = peter,to_node = bob,production =550)
-    except Edge.DoesNotExist as e:
-        raise e
+    # ll.sponsor(peter)
+    # try:
+    #     edge = Edge.objects.filter(from_node = peter,to_node = bob)
+    #     if not edge:
+    #         Edge.objects.create(from_node = peter,to_node = bob,production =550)
+    # except Edge.DoesNotExist as e:
+    #     raise e
     
-    ll.sponsor(bob)
-    current_user = MLO_AGENT.objects.get(user = request.user)
-    ll.traverse_from_node(current_user)
+    # ll.sponsor(bob)
+    
+    current_user     = MLO_AGENT.objects.get(user = request.user)
+    current_mlo_node = MLONode.objects.get(mlo = current_user)
+    
+    
+    
+    ll.traverse_from_node(current_mlo_node)
 
 
 
