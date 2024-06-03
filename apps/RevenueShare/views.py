@@ -89,6 +89,11 @@ def mlo_linked_list(request):
     peter    = MLO_AGENT.objects.get(user__username = "Peter")
     bob      = MLO_AGENT.objects.get(user__username = "Bob")
     
+    james    =  MLO_AGENT.objects.get(user__username = "James")
+    
+    
+    
+    
     ll.sponsor(ahf)
     try:
         edge = Edge.objects.filter(from_node = ahf,to_node = john)
@@ -98,6 +103,7 @@ def mlo_linked_list(request):
         raise e
         
     ll.sponsor(john)
+  
     try:
         edge = Edge.objects.filter(from_node = john,to_node = sally)
         if not edge:

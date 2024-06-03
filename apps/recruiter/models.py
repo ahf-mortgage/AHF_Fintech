@@ -122,10 +122,9 @@ class LOANS(models.Model):
     
 
 
-
 class Edge(models.Model):
-    from_node  = models.ForeignKey(MLO_AGENT, on_delete=models.CASCADE, unique=True, related_name='outgoing_edges')
-    to_node    = models.ForeignKey(MLO_AGENT, on_delete=models.CASCADE, unique=True, related_name='incoming_edges')
+    from_node  = models.ForeignKey(MLO_AGENT, on_delete=models.CASCADE, related_name='outgoing_edges')
+    to_node    = models.ForeignKey(MLO_AGENT, on_delete=models.CASCADE, related_name='incoming_edges')
     production = models.FloatField(default=1.0)
 
     def __str__(self):
