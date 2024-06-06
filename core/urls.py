@@ -1,7 +1,7 @@
 
 from django.contrib import admin
 from django.urls import path,include
-from utils.views import AhfSignupView
+# from utils.views import AhfSignupView
 
 urlpatterns = [
     path('',include("apps.home.urls",namespace = "home")),

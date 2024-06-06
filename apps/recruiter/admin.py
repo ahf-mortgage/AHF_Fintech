@@ -55,7 +55,10 @@ admin.site.register(CompPlan)
 # admin.site.register(AHF)
 admin.site.register(Recruiter)
 admin.site.register(Branch)
-admin.site.register(AHF)
+# admin.site.register(AHF)
+admin.site.register(Node)
+admin.site.register(Edge)
+admin.site.register(MLO_AGENT)
 
 
 # calcuate ahf commission from branch commission by using formulae 1 - branch_commission

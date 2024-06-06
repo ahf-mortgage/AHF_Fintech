@@ -1,10 +1,12 @@
 from django.shortcuts import render
-from .models import MLO,Company,Loan
+from .models import MLO,Company,Loan,Node,Edge,MLO_AGENT
 from django.shortcuts import get_object_or_404,redirect
 from .models import Bps,LoanBreakPoint,CompPlan,AHF,Branch
 from apps.W2branchYearlyGross.models import Q22
 from utils.calc_res import get_gci_result
 from utils.bisect_balance import find_root,function
+from django.db import models
+from collections import deque
 
 
 
@@ -232,5 +234,33 @@ def change_ahf_loan(request):
     }
     return render(request,"home/entry.html",context)
     
+
+
+
+
+
+
+def bfs_traversal(request):
+    user = request.user
+    mlo_agent = MLO_AGENT.objects.filter(user = user).first()
+    
+    start_node = Node.objects.get(mlo_agent=mlo_agent)
+    queue = deque([(start_node, None)])
+    visited = set()
+
+    while queue:
+        node, parent_node = queue.popleft()
+        if node.node_id not in visited:
+            visited.add(node.node_id)
+            if parent_node:
+                print(f"{node.mlo_agent}, sponsored by: {parent_node.mlo_agent}")
+            else:
+                print(f"{node.mlo_agent}, sponsored by : AHF")
+
+            for edge in node.outgoing_edges.all():
+                queue.append((edge.target_node, node))
+
+    return visited
+
 
 

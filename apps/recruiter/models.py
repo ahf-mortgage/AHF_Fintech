@@ -94,13 +94,33 @@ class MLO(models.Model):
         return f"{self.level}+"
     
     
-	# name = models.CharField(max_length = 100,blank = True,null = True)
-	# NMLS_ID = models.IntegerField(blank = True,null = True)
-	# NMLS_sponsor_id = models.IntegerField(blank = True,null = True)
-	# MLO_commision  = models.FloatField(blank = True,null = True)
-	# annual_commision_paid_to_company  = models.IntegerField(blank = True,null = True)
-	# comp = models.FloatField(blank = True,null=True)
-	# gci = models.FloatField(blank = True,null=True)
-	# date_joined = models.DateTimeField(auto_now = True)
-	# break_point  =   models.FloatField(blank = True,null=True)
+class MLO_AGENT(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE,blank=False,null=False)
+    NMLS_ID = models.IntegerField(blank = True,null = True)
+    NMLS_sponsor_id = models.IntegerField(blank = True,null = True)
+    MLO_commision  = models.FloatField(blank = True,null = True)
+    date_joined = models.DateTimeField(auto_now = True)
+    
+    def __str__(self) -> str:
+        return self.user.username	
 	
+ 
+ 
+ 
+
+class Node(models.Model):
+    node_id = models.IntegerField(primary_key=True)
+    mlo_agent  = models.ForeignKey(MLO_AGENT,on_delete=models.CASCADE,blank=False,null=False)
+    
+    def __str__(self):
+        return f"{self.mlo_agent}"
+
+class Edge(models.Model):
+    edge_id = models.IntegerField(primary_key=True)
+    source_node = models.ForeignKey(Node, on_delete=models.CASCADE, related_name='outgoing_edges')
+    target_node = models.ForeignKey(Node, on_delete=models.CASCADE, related_name='incoming_edges')
+
+    
+    def __str__(self) -> str:
+        return f"{self.source_node} --> {self.target_node}"
+

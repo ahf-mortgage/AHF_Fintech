@@ -50,12 +50,12 @@ INSTALLED_APPS = [
     'apps.W2branchYearlyGross',
     'apps.RevenueShare',
     # all auth apps
-    'allauth',
-    'allauth.account',
-     # Configure the django-otp package.
-    'django_otp',
-    'django_otp.plugins.otp_totp',
-    'django_otp.plugins.otp_static',
+    # 'allauth',
+    # 'allauth.account',
+    #  # Configure the django-otp package.
+    # 'django_otp',
+    # 'django_otp.plugins.otp_totp',
+    # 'django_otp.plugins.otp_static',
 ]
 
 MIDDLEWARE = [
@@ -67,10 +67,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # Add the account middleware:
-    "allauth.account.middleware.AccountMiddleware",
+    # "allauth.account.middleware.AccountMiddleware",
     # Configure the django-otp package. Note this must be after the
-    # AuthenticationMiddleware.
-    'django_otp.middleware.OTPMiddleware',
+    # # AuthenticationMiddleware.
+    # 'django_otp.middleware.OTPMiddleware',
 
 
 ]
@@ -215,31 +215,31 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 
     # `allauth` specific authentication methods, such as login by email
-    'allauth.account.auth_backends.AuthenticationBackend',
+    # 'allauth.account.auth_backends.AuthenticationBackend',
 
 ]
 
 
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_REQUIRED= True
-ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS=10 
-ACCOUNT_LOGIN_ATTEMPTS_LIMIT=5
-ACCOUNT_EMAIL_VERIFICATION="optional"
-ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT=86400
-ACCOUNT_UNIQUE_EMAIL=True
-ACCOUNT_EMAIL_CONFORMATION=180
-ACCOUNT_REDIRECT_URL='/'
-ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
+# ACCOUNT_AUTHENTICATION_METHOD = 'email'
+# ACCOUNT_EMAIL_REQUIRED= True
+# ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS=10 
+# ACCOUNT_LOGIN_ATTEMPTS_LIMIT=5
+# ACCOUNT_EMAIL_VERIFICATION="optional"
+# ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT=86400
+# ACCOUNT_UNIQUE_EMAIL=True
+# ACCOUNT_EMAIL_CONFORMATION=180
+# ACCOUNT_REDIRECT_URL='/'
+# ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
 
 
 
 # Set the allauth adapter to be the 2FA adapter.
-ACCOUNT_ADAPTER = 'allauth_2fa.adapter.OTPAdapter'
-ACCOUNT_FORMS = {
-    'signup': 'utils.forms.AHFSignupForm'
+# ACCOUNT_ADAPTER = 'allauth_2fa.adapter.OTPAdapter'
+# ACCOUNT_FORMS = {
+#     'signup': 'utils.forms.AHFSignupForm'
   
   
-}
+# }
 
 # Email server configuration
 EMAIL_HOST = 'smtp.gmail.com'

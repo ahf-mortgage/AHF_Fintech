@@ -1,12 +1,13 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from apps.recruiter.models import Bps,LoanBreakPoint,CompPlan,AHF,Branch
+from apps.recruiter.models import Bps,LoanBreakPoint,CompPlan,AHF,Branch,Node
 import math
 import logging
 from colorlog import ColoredFormatter
 from  django.shortcuts import redirect
 from utils.q22 import automate_q22_value
 from django.conf import  settings
+from apps.recruiter.views import bfs_traversal
 
 from utils.calc_res import (
                     calculate_annual_ahf_income,
@@ -170,8 +171,8 @@ def home(request):
    
         
     FLAT_AM0UNT = gci - (gci/1000) * ((loan_below_limits[len(loan_below_limits) - 1] or 0) * 0.1/10000) 
-    
-    
+
+    bfs_traversal(request)
     annual_ahf_cap              = calculate_annual_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
     gross_ahf_income            = calculate_gross_ahf_income(loan_break_point,comp_plan,float(branch.commission))
     gross_income                = calculate_ahf_annual_cap_ahf(loan_break_point,comp_plan,1 - float(branch.commission)) 
