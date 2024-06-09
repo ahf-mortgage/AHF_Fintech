@@ -247,20 +247,42 @@ def bfs_traversal(request):
     start_node = Node.objects.get(mlo_agent=mlo_agent)
     queue = deque([(start_node, None)])
     visited = set()
-
+    parent_to_node = {}
+    node_list = {}
+    level  = 1
+    
     while queue:
         node, parent_node = queue.popleft()
         if node.node_id not in visited:
             visited.add(node.node_id)
             if parent_node:
-                print(f"{node.mlo_agent}, sponsored by: {parent_node.mlo_agent}")
+                if parent_to_node.get(parent_node.mlo_agent)  != None:
+                    parent_to_node[parent_node.mlo_agent.user.username].append(node.mlo_agent.user.username)
+                else:
+                    parent_to_node[parent_node.mlo_agent.user.username] = [node.mlo_agent.user.username]
             else:
-                print(f"{node.mlo_agent}, sponsored by : AHF")
-
+                pass
+            
             for edge in node.outgoing_edges.all():
+                target_mlo_agent = edge.target_node.mlo_agent
+                try:
+                    loans = Loan.objects.filter(mlo_agent = target_mlo_agent)
+                    if loans.exists():
+                        loan = loans.first()
+                        date_joined = target_mlo_agent.date_joined
+                        date_closed = loan.date_closed
+                        difference_date = date_joined - date_closed
+                        if difference_date.days > 6 * 30:
+                            node_list[edge.source_node.mlo_agent.user] = [{"level":level,"node":node.target_node.mlo_agent.user }for node in node.outgoing_edges.all()]
+                        else:
+                            pass
+                    else:
+                        pass
+                except Loan.DoesNotExist as e:
+                    raise e
+                level += 1
                 queue.append((edge.target_node, node))
-
-    return visited
+    return visited,node_list
 
 
 

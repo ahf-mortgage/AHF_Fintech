@@ -49,13 +49,7 @@ INSTALLED_APPS = [
     'apps.home',
     'apps.W2branchYearlyGross',
     'apps.RevenueShare',
-    # all auth apps
-    # 'allauth',
-    # 'allauth.account',
-    #  # Configure the django-otp package.
-    # 'django_otp',
-    # 'django_otp.plugins.otp_totp',
-    # 'django_otp.plugins.otp_static',
+
 ]
 
 MIDDLEWARE = [
@@ -66,13 +60,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # Add the account middleware:
-    # "allauth.account.middleware.AccountMiddleware",
-    # Configure the django-otp package. Note this must be after the
-    # # AuthenticationMiddleware.
-    # 'django_otp.middleware.OTPMiddleware',
-
-
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -94,9 +81,7 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-                
-                
+                'django.contrib.messages.context_processors.messages',        
                 # `allauth` needs this from django
                 'django.template.context_processors.request',
                
@@ -116,11 +101,11 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 
 # Otherwise, provide credentials directly in the configuration (less secure)
-DB_NAME = 'purpose_black_db'
-DB_USER = 'purpose_black__user'  # Double underscores allowed by some DBs
-DB_PASSWORD = '123456789'  # Replace with a strong password
-DB_HOST = 'localhost'  # Adjust if your database is on a different host
-DB_PORT = 5432  # Adjust if your database port is different
+# DB_NAME = 'purpose_black_db'
+# DB_USER = 'purpose_black__user'  # Double underscores allowed by some DBs
+# DB_PASSWORD = '123456789'  # Replace with a strong password
+# DB_HOST = 'localhost'  # Adjust if your database is on a different host
+# DB_PORT = 5432  # Adjust if your database port is different
 
 # DATABASES = {
 #     'default': {
@@ -131,8 +116,6 @@ DB_PORT = 5432  # Adjust if your database port is different
 #         'HOST': DB_HOST,
 #         'PORT': DB_PORT,
 #         'CONN_MAX_AGE': 600,  # Optional: Connection pooling for efficiency
-      
-        
          
 #     }
 # }
@@ -214,32 +197,10 @@ AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
 
-    # `allauth` specific authentication methods, such as login by email
-    # 'allauth.account.auth_backends.AuthenticationBackend',
-
 ]
 
 
-# ACCOUNT_AUTHENTICATION_METHOD = 'email'
-# ACCOUNT_EMAIL_REQUIRED= True
-# ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS=10 
-# ACCOUNT_LOGIN_ATTEMPTS_LIMIT=5
-# ACCOUNT_EMAIL_VERIFICATION="optional"
-# ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT=86400
-# ACCOUNT_UNIQUE_EMAIL=True
-# ACCOUNT_EMAIL_CONFORMATION=180
-# ACCOUNT_REDIRECT_URL='/'
-# ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
 
-
-
-# Set the allauth adapter to be the 2FA adapter.
-# ACCOUNT_ADAPTER = 'allauth_2fa.adapter.OTPAdapter'
-# ACCOUNT_FORMS = {
-#     'signup': 'utils.forms.AHFSignupForm'
-  
-  
-# }
 
 # Email server configuration
 EMAIL_HOST = 'smtp.gmail.com'

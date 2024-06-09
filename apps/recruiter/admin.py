@@ -61,7 +61,3 @@ admin.site.register(Edge)
 admin.site.register(MLO_AGENT)
 
 
-# calcuate ahf commission from branch commission by using formulae 1 - branch_commission
-
-
-

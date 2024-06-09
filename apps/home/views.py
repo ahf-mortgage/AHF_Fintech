@@ -172,7 +172,10 @@ def home(request):
         
     FLAT_AM0UNT = gci - (gci/1000) * ((loan_below_limits[len(loan_below_limits) - 1] or 0) * 0.1/10000) 
 
-    bfs_traversal(request)
+    visited,node_list =  bfs_traversal(request)
+    print(f"{request.user} sponsor mlo with level =",node_list)
+   
+  
     annual_ahf_cap              = calculate_annual_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
     gross_ahf_income            = calculate_gross_ahf_income(loan_break_point,comp_plan,float(branch.commission))
     gross_income                = calculate_ahf_annual_cap_ahf(loan_break_point,comp_plan,1 - float(branch.commission)) 

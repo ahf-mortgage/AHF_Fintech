@@ -32,8 +32,6 @@ class Bps(models.Model):
     
 class LoanBreakPoint(models.Model):
     loan_break_point = models.FloatField(default=1000000)
-   
-
     def __str__(self):
         return f"{self.loan_break_point}"
     
@@ -56,10 +54,7 @@ class Branch(models.Model):
         return f"{self.commission}"
     
     
-    
-    
-    
-    
+   
 class Loan(models.Model):
 	user = models.ForeignKey(User,blank= True,null=True,on_delete= models.CASCADE)
 	amount = models.FloatField()
@@ -98,16 +93,23 @@ class MLO_AGENT(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE,blank=False,null=False)
     NMLS_ID = models.IntegerField(blank = True,null = True)
     NMLS_sponsor_id = models.IntegerField(blank = True,null = True)
-    MLO_commision  = models.FloatField(blank = True,null = True)
+    MLO_commission  = models.FloatField(blank = True,null = True)
     date_joined = models.DateTimeField(auto_now = True)
+    year_to_date = models.FloatField(blank = True,null = True)
     
     def __str__(self) -> str:
         return self.user.username	
+    
+    
+class Loan(models.Model):
+    mlo_agent = models.ForeignKey(MLO_AGENT,on_delete=models.CASCADE,blank=False,null=False)
+    amount    = models.FloatField()
+    date_closed = models.DateTimeField(auto_now_add=False,blank=False,null=False)
+    
+    def __str__(self) -> str:
+        return f"{self.mlo_agent.user.username}-{self.date_closed}"
 	
  
- 
- 
-
 class Node(models.Model):
     node_id = models.IntegerField(primary_key=True)
     mlo_agent  = models.ForeignKey(MLO_AGENT,on_delete=models.CASCADE,blank=False,null=False)
