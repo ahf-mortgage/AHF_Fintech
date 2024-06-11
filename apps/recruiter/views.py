@@ -273,7 +273,7 @@ def bfs_traversal(request):
                         date_closed = loan.date_closed
                         difference_date = date_joined - date_closed
                         if difference_date.days > 6 * 30:
-                            node_list[edge.source_node.mlo_agent.user] = [{"level":level,"node":node.target_node.mlo_agent.user }for node in node.outgoing_edges.all()]
+                            node_list[edge.source_node.mlo_agent.user] = [{"level":level,"node":node.target_node.mlo_agent.user } for node in node.outgoing_edges.all()]
                         else:
                             pass
                     else:
