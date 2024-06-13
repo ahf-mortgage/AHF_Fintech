@@ -4,7 +4,11 @@ import matplotlib.pyplot as plt
 import io
 import base64
 from .views import bfs_traversal
+from django.contrib.auth.decorators import login_required
 
+
+
+@login_required
 def graph_view(request):
     # Call the bfs_traversal function to get the visited nodes and node_list
     visited, node_list = bfs_traversal(request)
@@ -23,13 +27,14 @@ def graph_view(request):
 
     # Create the graph image
     fig = plt.figure(figsize=(8, 6))
-    pos = nx.spring_layout(G)
-    nx.draw(G, pos, with_labels=True, node_color='lightblue', edge_color='gray', font_size=10)
+    
+    pos = nx.circular_layout(G)
+    nx.draw(G, pos, with_labels=True, node_color='lightblue', edge_color='gray', font_size=20)
 
     # Convert the graph image to a base64-encoded string
     buf = io.BytesIO()
     plt.savefig(buf, format='png')
     graph_image = base64.b64encode(buf.getvalue()).decode('utf-8')
-
+    
     # Render the template with the graph image
     return render(request, 'graph.html', {'graph_image': graph_image})

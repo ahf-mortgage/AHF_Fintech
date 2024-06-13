@@ -7,7 +7,7 @@ from utils.calc_res import get_gci_result
 from utils.bisect_balance import find_root,function
 from django.db import models
 from collections import deque
-
+from django.contrib.auth.decorators import login_required
 
 
 def calculate_commission_above_million(loan_id,mlo_id):
@@ -239,7 +239,7 @@ def change_ahf_loan(request):
 
 
 
-
+@login_required
 def bfs_traversal(request):
     user = request.user
     mlo_agent = MLO_AGENT.objects.filter(user = user).first()
@@ -286,3 +286,7 @@ def bfs_traversal(request):
 
 
 
+
+
+
+    

@@ -1,0 +1,17 @@
+.payement {
+    background-color: #FEFCFC;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 15px;
+
+    font-size: 16px;
+    cursor: pointer;
+    display: flexbox;
+    float: right;
+    width: 400px;
+    height: 230px;
+    margin-top: -740px;
+    margin-right: 140px;
+    border: 1px solid black;
+}

@@ -1,0 +1,36 @@
+/* comp plan table section styles */
+.comp_plan {
+    display: flexbox;
+    justify-content: space-between;
+    align-items: start;
+    padding: 40px 0;
+    background-color: #463F3F;
+    color: white;
+    width: 400px;
+    height: 750px;
+    margin: 0px;
+    border-radius: 15px;
+    border-color: black;
+
+}
+
+
+.comp_plan_title_container {
+    display: flex;
+    justify-content: center;
+}
+
+.comp_plan p {
+    width: auto;
+    height: 24px;
+    gap: 0px;
+    opacity: 0px;
+
+    font-family: Inter;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 24.2px;
+    text-align: left;
+
+
+}
