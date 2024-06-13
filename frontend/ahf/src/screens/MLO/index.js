@@ -2,6 +2,9 @@ import React from 'react';
 import "./index.css"
 import "./comp_plan.css"
 import "./payment.css"
+import VideoComponent from '../../components/video';
+
+
 function DashBoard() {
   return (
     <div>
@@ -23,20 +26,103 @@ function DashBoard() {
             
             </nav>
         </div>
+
+
+        {/* comp plan table section */}
         <div class="comp_plan">
             <div class="hero-content">
-
-                <div class="comp_plan_title_container">
-                    <p class="comp_plan_title">Affordability Calculator</p>
-                </div>
-             
-            </div>
-            <div class="hero-image">
-
-               
                 
+                <div class="comp_plan_title_container">
+                    <p class="comp_plan_title">AHF Calculator</p>
+                </div>
+
+            {/* video components */}
+            <div>
+              <VideoComponent />
+            </div>
+
+
+            {/* complan navbar sectiin */}
+            <div className='comp_plan_nav'>
+                <nav>
+                    <ul>
+                        <li><a href="#">Conventional</a></li>
+                        <li><a href="#">FHA</a></li>
+                        <li><a href="#">VA</a></li>
+                        <li><a href="#">USDA</a></li>
+                        <li><a href="#">Jumbo</a></li>
+            
+                    </ul>
+                </nav>
+            </div>
+            </div>
+
+
+            <div className='section'>
+                <div className='section-left'>
+                <p>Gross Income (Monthly)</p>
+
+                <input name='' value="$5,000"/>
+                </div>
+
+                <div className='section-right'>
+                <p>Monthly Debts</p>
+                <input name='' value="$0"/>
+                </div>
+            </div>
+
+            
+
+            
+            <div className='section'>
+                <div className='section-left'>
+                <p>Loan term </p>
+
+                <input name=''/>
+                </div>
+
+                <div className='section-right'>
+                <p>Monthly Debts</p>
+                <input name=''/>
+                </div>
+            </div>
+
+
+            <div className='section'>
+                <div className='section-left'>
+                <p>Home Price</p>
+
+                <input name=''/>
+                </div>
+
+                <div className='section-right'>
+                <p>Down Payment</p>
+                <input name=''/>
+                </div>
+            </div>
+
+
+            <div className='section'>
+                <div className='section-left'>
+                <p>Prop Tax (Yearly) </p>
+
+                <input name=''/>
+                </div>
+
+                <div className='section-right'>
+                <p>Homeowners Insurance(Yearly)</p>
+                <input name=''/>
+                </div>
+            </div>
+        
+
+            <div class="hero-image">
             </div>
         </div>
+
+
+
+
         <div class="payement">
 
         </div>
