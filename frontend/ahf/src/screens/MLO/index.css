@@ -164,23 +164,7 @@ nav a {
     margin-right: -380px;
     border: 1px solid black;
 }
-.summery {
-    background-color: #DEECF7;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 15px;
-    font-size: 16px;
-    cursor: pointer;
-    display: flexbox;
-    float: right;
-    width: 350px;
-    height: 200px;
-    margin-top: -250px;
-    margin-right: -230px;
-    border-color: black;
-    border: 1px solid black;
-}
+
 
 .loan_txt1{
     margin-top: 10px;
@@ -279,3 +263,6 @@ nav a {
     color: #666;
 }
 
+.nav-container {
+  max-height: 21px;
+}

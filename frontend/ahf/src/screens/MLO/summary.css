@@ -1,0 +1,38 @@
+.summery {
+    background-color: #DEECF7;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 15px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flexbox;
+    float: right;
+    width: 350px;
+    height: 200px;
+    margin-top: -250px;
+    margin-right: -230px;  
+    border: 1px solid #578ECF
+}
+.summery title {
+    font-family: Inter;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 24.2px;
+    text-align: left;
+    color: #5A5454;
+
+
+}
+.summery p {
+    font-family: Inter;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 19.36px;
+    text-align: left;
+
+}
+
+.summery .vid-container {
+    z-index: 100;
+}

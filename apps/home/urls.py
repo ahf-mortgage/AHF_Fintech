@@ -11,11 +11,13 @@ from apps.recruiter.views import (
     change_ahf_loan
     )
 from apps.home.views import home
+from apps.home.api import HomeAPIView
 
 
 app_name = "home"
 urlpatterns = [
     path('',home,name="home"),
+    path('api/',HomeAPIView.as_view(),name = "api"),
     path('change_branch_amount/',change_branch_amount,name="change_branch_amount"),
     # path('change_comp_plan/',change_comp_plan,name="change_comp_plan"),
     path('loan_break_point/',loan_break_point,name="loan_break_point"),

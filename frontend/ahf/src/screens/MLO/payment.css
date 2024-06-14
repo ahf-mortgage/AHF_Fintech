@@ -1,10 +1,8 @@
 .payement {
     background-color: #FEFCFC;
-    color: #fff;
     border: none;
     padding: 10px 20px;
     border-radius: 15px;
-
     font-size: 16px;
     cursor: pointer;
     display: flexbox;
@@ -14,4 +12,27 @@
     margin-top: -740px;
     margin-right: 140px;
     border: 1px solid black;
+   
 }
+
+
+.payement p {
+    width: 151px;
+    height: 18px;
+    top: 137px;
+    left: 468px;
+    gap: 0px;
+    opacity: 0px;
+    font-family: Inter;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 18.15px;
+    text-align: left;
+
+    
+}
+
+.payment-bar {
+
+}
+

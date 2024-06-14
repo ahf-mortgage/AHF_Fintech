@@ -9,6 +9,9 @@ from utils.q22 import automate_q22_value
 from django.conf import  settings
 from apps.recruiter.views import bfs_traversal
 
+
+context = {}
+
 from utils.calc_res import (
                     calculate_annual_ahf_income,
                     calculate_gross_ahf_income,
