@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     #thrid party packages
-    'tailwind',
+    # 'tailwind',
     'theme',
     'django_browser_reload',
     'crispy_forms',
