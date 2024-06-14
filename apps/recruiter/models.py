@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 
 
 class CompPlan(models.Model):
+    user                 = models.ForeignKey(User,on_delete=models.CASCADE,blank=False,null=False)
     Flat_Fee             = models.FloatField(default=0)
     Percentage           = models.FloatField()
     Minimum_Compensation = models.FloatField(default=2.75)
@@ -22,6 +23,7 @@ class Bps(models.Model):
     """
 		Table that store bps information interval and maxmium value
     """
+    user                 = models.ForeignKey(User,on_delete=models.CASCADE,blank=False,null=False)
     bps       = models.FloatField(default=275)
     interval  = models.IntegerField(default=50)
     max_value = models.FloatField()
@@ -31,6 +33,7 @@ class Bps(models.Model):
     
     
 class LoanBreakPoint(models.Model):
+    user                 = models.ForeignKey(User,on_delete=models.CASCADE,blank=False,null=False)
     loan_break_point = models.FloatField(default=1000000)
     def __str__(self):
         return f"{self.loan_break_point}"
@@ -46,8 +49,9 @@ class AHF(models.Model):
     
     
 class Branch(models.Model):
-    commission = models.DecimalField(max_digits=10,decimal_places=2,default=0.7)
-    loan_per_year = models.IntegerField(blank=True,null=True)
+    user           = models.ForeignKey(User,on_delete=models.CASCADE,blank=False,null=False)
+    commission     = models.DecimalField(max_digits=10,decimal_places=2,default=0.7)
+    loan_per_year  = models.IntegerField(blank=True,null=True)
     loan_per_month = models.IntegerField(blank=True,null=True)
 
     def __str__(self):

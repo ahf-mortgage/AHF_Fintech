@@ -331,11 +331,9 @@ def home(request):
         bps_from_50_to_250            = [50,100] + [num for num in range(100,250,25)]+[250]
 
         
-    
-    
+
     if comp_plan.Percentage != 0.0:
         gci_for_bps_from_50_to_250    = [gci/(num) * 10000 for num in bps_from_50_to_250] 
-    
         ahf_for_bps_from_50_to_250    = [(1 - branch.commission) * num for num in bps_from_50_to_250] 
         branch_for_bps_from_50_to_250 = [branch.commission* num for num in bps_from_50_to_250]
 
@@ -353,8 +351,6 @@ def home(request):
         bps_to_ahf_commission_dict[key] = value
         
     for key,value in zip(bps_from_50_to_250,branch_for_bps_from_50_to_250):
-     
-            
         bps_to_branch_commission_dict[key] = value
     
     credit = _branch_new_gross_income
