@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",
     'widget_tweaks',
     'rest_framework',
+    'djoser',
+
     # installed apps,
     'apps.recruiter',
     'apps.home',
@@ -100,10 +102,17 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 
 REST_FRAMEWORK = {
+        'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
 
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
+}
+
+SIMPLE_JWT = {
+   'AUTH_HEADER_TYPES': ('JWT',)
 }
 
 DATABASES = {

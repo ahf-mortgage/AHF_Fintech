@@ -5,7 +5,8 @@ from django.urls import path,include
 
 urlpatterns = [
     path('',include("apps.home.urls",namespace = "home")),
-    path('api-auth/', include('rest_framework.urls')),
+    path('auth/', include('djoser.urls')),
+    path('auth/', include('djoser.urls.jwt')),
     path('graph/',include("apps.recruiter.urls")),
     path('user/W2branchYearlyGross/',include('apps.W2branchYearlyGross.urls',namespace="W2branchYearlyGross")),
     path('revenue/',include('apps.RevenueShare.urls',namespace="RevenueShare")),

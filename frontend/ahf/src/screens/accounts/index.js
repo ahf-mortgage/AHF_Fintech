@@ -3,11 +3,40 @@
 
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
 import { useState } from "react";
+import axios from 'axios';
 
 function LoginPage() {
   const [username,setUsername] = useState("MLO")
   const [password,setPassword] = useState("")
+
+  function login(event) {
+    event.preventDefault()
+  
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+    
+    const data = {
+      username: username,
+      password: password
+    };
+    
+    axios.post('https://api.example.com/login', data, config)
+      .then(response => {
+        const token = response.data.token;
+        console.log('Token:', token);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+
+
   return (
+    
       <div style={{
         display:"flex",
         justifyContent:"center",
@@ -18,7 +47,7 @@ function LoginPage() {
         <div className="mb-2 block">
           <Label htmlFor="email1" value="Username" />
         </div>
-        <TextInput id="email1" type="pa" placeholder="ahf" required  value={username} onChange={(event) => setUsername(event.target.value)}/>
+        <TextInput id="email1" type="text" placeholder="ahf" required  value={username} onChange={(event) => setUsername(event.target.value)}/>
       </div>
       <div>
         <div className="mb-2 block">
@@ -30,7 +59,7 @@ function LoginPage() {
         <Checkbox id="remember" />
         <Label htmlFor="remember">Remember me</Label>
       </div>
-      <Button type="submit">Submit</Button>
+      <Button  onClick={(event) => login(event)}>Login</Button>
     </form>
       </div>
   );
