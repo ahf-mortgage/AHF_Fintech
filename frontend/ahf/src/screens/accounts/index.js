@@ -10,9 +10,6 @@ function LoginPage() {
   const [password,setPassword] = useState("")
 
   function login(event) {
-    event.preventDefault()
-  
-
     const config = {
       headers: {
         'Content-Type': 'application/json'
@@ -24,7 +21,7 @@ function LoginPage() {
       password: password
     };
     
-    axios.post('https://api.example.com/login', data, config)
+    axios.post('https://www.ahf.mortgage/auth/jwt/create/', data, config)
       .then(response => {
         const token = response.data.token;
         console.log('Token:', token);
@@ -59,7 +56,8 @@ function LoginPage() {
         <Checkbox id="remember" />
         <Label htmlFor="remember">Remember me</Label>
       </div>
-      <Button  onClick={(event) => login(event)}>Login</Button>
+      <Button onClick = {(event) => login(event)}>Login</Button>
+      
     </form>
       </div>
   );

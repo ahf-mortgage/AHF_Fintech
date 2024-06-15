@@ -27,6 +27,11 @@ CSRF_TRUSTED_ORIGINS = [
     'https://www.ahf.mortgage'
     ]
 
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000/"
+    "http://192.168.0.103:3000/"
+]
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,7 +45,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     #thrid party packages
-    # 'tailwind',
     'theme',
     'django_browser_reload',
     'crispy_forms',
@@ -48,6 +52,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'rest_framework',
     'djoser',
+    'corsheaders',
 
     # installed apps,
     'apps.recruiter',
@@ -58,6 +63,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
