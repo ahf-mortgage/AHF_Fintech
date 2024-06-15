@@ -1,14 +1,29 @@
+import { createHashRouter, Route, RouterProvider, Routes } from "react-router-dom";
+import LoginPage from "./screens/accounts";
+import DashBoard from "./screens/MLO";
 
-import DashBoard from './screens/MLO/';
 
 
+const App = () => {
+  const router = createHashRouter([
+    {
+      path: "/",
+      element: <LoginPage />,
+    },
+    {
+      path: "dashboard",
+      element: <DashBoard />,
+    },
+  ]);
 
-function App() {
   return (
-    <div>
-      <DashBoard />
-    </div>
+    <RouterProvider router={router}>
+      <Routes>
+        <Route path="/" element={<LoginPage />} />
+        <Route path="dashboard/" element={<DashBoard />} />
+      </Routes>
+    </RouterProvider>
   );
-}
+};
 
 export default App;
