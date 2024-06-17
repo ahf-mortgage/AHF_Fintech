@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import "./index.css"
 import "./comp_plan.css"
 import "./payment.css"
@@ -7,9 +7,32 @@ import VideoComponent from '../../components/video';
 import AHfPie from '../../components/charts/pie';
 import { AHFNavbar } from '../../components/Navbar';
 import HorizontalLine from '../../components/Line';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
 
 
 function DashBoard() {
+    const refreshToken = useSelector((state) => state.auth.refreshToken);
+    const [above_data,setAboveData] = useState([])
+
+   
+    function getAboveLoanBreak() {
+        const url = "https://www.ahf.mortgage/api/"
+        const headers = {
+            Authorization: `JWT ${refreshToken}`,
+          };
+          
+        axios.get(url, { headers })
+            .then(response => {
+              setAboveData(response.data)
+            })
+            .catch(error => {
+              console.error(error); 
+            });
+          
+    }
+
+    getAboveLoanBreak()
   return (
     <div>
         <div class="container">

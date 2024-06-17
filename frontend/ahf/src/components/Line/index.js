@@ -1,9 +1,9 @@
 import React from 'react';
 import "./index.css"
 
-const HorizontalLine = () => {
+const HorizontalLine = ({width,color}) => {
   return (
-    <hr className='horizontal-line' />
+    <hr className='horizontal-line' style={{width:width,backgroundColor:color}} />
   );
 };
 

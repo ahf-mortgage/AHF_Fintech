@@ -1,28 +1,37 @@
-import { createHashRouter, Route, RouterProvider, Routes } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LoginPage from "./screens/accounts";
-import DashBoard from "./screens/MLO";
+import DashBoard from "./screens/mlos";
+import AbovebreakpointTable from "./screens/tables";
+import "./App.css"
+import ResetPassword from "./screens/accounts/reset";
 
 
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <LoginPage />,
+  },
+  {
+    path: "/dashboard",
+    element: <DashBoard />,
+  },
+
+  {
+    path: "/resetpassword",
+    element: <ResetPassword />
+  },
+  {
+    path: "/abovebreakpoint",
+    element: <AbovebreakpointTable />,
+  },
+]);
 
 const App = () => {
-  const router = createHashRouter([
-    {
-      path: "/",
-      element: <LoginPage />,
-    },
-    {
-      path: "dashboard",
-      element: <DashBoard />,
-    },
-  ]);
-
   return (
-    <RouterProvider router={router}>
-      <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="dashboard/" element={<DashBoard />} />
-      </Routes>
-    </RouterProvider>
+    <div className="App">
+         <RouterProvider router={router} />
+    </div>
+   
   );
 };
 
