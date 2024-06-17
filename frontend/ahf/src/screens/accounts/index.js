@@ -108,14 +108,14 @@ function LoginPage({ navigation }) {
             {
               showPassword ? (
                 <FaEyeSlash
-                  className="absolute inset-y-[48%] right-[15%] flex items-center cursor-pointer"
+                  className="absolute inset-y-[48%] right-[15%] lg:right-[36%] flex items-center cursor-pointer"
                   onClick={
                     () => toggleShowPassword()
                   }
                 />
               ) : (
                 <FaEye
-                  className="absolute inset-y-[48%] right-[15%] lg:right-[15%] flex items-center cursor-pointer"
+                  className="absolute inset-y-[48%] right-[15%] lg:right-[36%] md:right-[10%] flex items-center cursor-pointer"
                   onClick={() => toggleShowPassword()}
                 />
               )
