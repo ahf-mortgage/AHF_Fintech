@@ -9,7 +9,6 @@ urlpatterns = [
     path('auth/', include('djoser.urls.jwt')),
     path('graph/',include("apps.recruiter.urls")),
     path('user/W2branchYearlyGross/',include('apps.W2branchYearlyGross.urls',namespace="W2branchYearlyGross")),
-    path('revenue/',include('apps.RevenueShare.urls',namespace="RevenueShare")),
-    path('admin_tools_stats/', include('admin_tools_stats.urls')),
+    path('revenue/',include('apps.recruiter.urls',namespace="revenue")),
     path('admin/', admin.site.urls),
 ]

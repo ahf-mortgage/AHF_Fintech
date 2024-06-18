@@ -26,24 +26,13 @@ class MLOForm(forms.ModelForm):
         model = Company
         fields = '__all__'
 
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     # Set the FloatField widget to readonly
-    #     self.fields['gci'].widget.attrs['readonly'] = True
+
 
 
 @admin.register(MLO)
 class MLOAdmin(admin.ModelAdmin):
     form = MLOForm
 
-
-# branch_commission= Branch.objects.all().first().commission
-# @admin.register(AHF)
-# class AHFAdmin(admin.ModelAdmin):
-#     list_display = ['commission']
- 
-    # prepopulated_fields = {'commission':(1 - branch_commission,)},
-    
 
 admin.site.register(Loan)
 

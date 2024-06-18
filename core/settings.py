@@ -21,21 +21,21 @@ ALLOWED_HOSTS = [
     'http://18.144.126.117',
      '127.0.0.1'
      ]
-CSRF_TRUSTED_ORIGINS = [
+# CSRF_TRUSTED_ORIGINS = [
   
-    # 'http://www.ahf.mortgage',
-    'https://www.ahf.mortgage'
-    ]
+#     # 'http://www.ahf.mortgage',
+#     'https://www.ahf.mortgage'
+#     ]
 
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000/"
-    "http://192.168.0.103:3000/"
-]
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000/"
+#     "http://192.168.0.103:3000/"
+# ]
 # Application definition
 
 INSTALLED_APPS = [
-    'admin_tools_stats',  # this must be BEFORE 'admin_tools' and 'django.contrib.admin'
+  
     'django_nvd3',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -210,6 +210,7 @@ EMAIL_HOST_PASSWORD = 'vavkndyvafegycua'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
+PASSWORD_RESET_CONFIRM_UR = "http://12.0.0.1:8000"
 
 
 # django auth config
