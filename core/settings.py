@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from pathlib import Path
 
 
@@ -19,7 +20,8 @@ ALLOWED_HOSTS = [
     'https://www.ahf.mortgage',
     "www.ahf.mortgage",
     'http://18.144.126.117',
-     '127.0.0.1'
+     '127.0.0.1',
+     'localhost'
      ]
 # CSRF_TRUSTED_ORIGINS = [
   
@@ -114,7 +116,11 @@ REST_FRAMEWORK = {
 
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+    ],
+    'SIMPLE_JWT': {
+        'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+        'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    }
 }
 
 SIMPLE_JWT = {
@@ -138,6 +144,15 @@ AUTHENTICATION_BACKENDS = [
 
 ]
 
+DJOSER = {
+    "SEND_ACTIVATION_EMAIL": False,
+    "PASSWORD_RESET_CONFIRM_URL": "/https://www.ahf.morgage/auth/{uid}/{token}",
+    "USERNAME_RESET_CONFIRM_URL": "#/username/reset/confirm/{uid}/{token}",
+    "ACTIVATION_URL": "#/activate/{uid}/{token}",
+    "SOCIAL_AUTH_ALLOWED_REDIRECT_URIS": ["http://test.localhost/"],
+}
+
+PASSWORD_RESET_CONFIRM_URL = "https://www.ahf.morgage/auth/"
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -222,24 +237,24 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
-        "file": {
-            "level": "DEBUG",
-            "class": "logging.FileHandler",
-            "filename": BASE_DIR / 'logs' / 'debug.log'
-        },
-    },
-    "loggers": {
-        "django": {
-            "handlers": ["file"],
-            "level": "DEBUG",
-            "propagate": True,
-        }, 
-    },
-}
+# LOGGING = {
+#     "version": 1,
+#     "disable_existing_loggers": False,
+#     "handlers": {
+#         "file": {
+#             "level": "DEBUG",
+#             "class": "logging.FileHandler",
+#             "filename": BASE_DIR / 'logs' / 'debug.log'
+#         },
+#     },
+#     "loggers": {
+#         "django": {
+#             "handlers": ["file"],
+#             "level": "DEBUG",
+#             "propagate": True,
+#         }, 
+#     },
+# }
 
 #Hello 
 # Configure your default site. See

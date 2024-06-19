@@ -79,8 +79,6 @@ def graph_view(request):
     buf = io.BytesIO()
     plt.savefig(buf, format='png')
     graph_image = base64.b64encode(buf.getvalue()).decode('utf-8')
-    
-    # Render the template with the graph image
     return render(request, 'graph.html', {'graph_image': graph_image})
 
 

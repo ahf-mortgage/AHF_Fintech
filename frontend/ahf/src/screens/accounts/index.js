@@ -14,10 +14,6 @@ import { Dots } from "react-activity";
 import Dot from "../../components/activity";
 
 
-
-
-
-
 function LoginPage({ navigation }) {
   const refreshToken = useSelector((state) => state.auth.refreshToken);
   const [username, setUsername] = useState("MLO")

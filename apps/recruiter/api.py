@@ -90,3 +90,127 @@ class RecruiterAPIView(APIView):
             'result': data
         }
         return Response(processed_data, status=201)
+
+
+
+class CompPlanAPIView(APIView):
+    """
+    A simple API view that returns a JSON response.
+    """
+    def get_queryset(self,*args,**kwargs):
+    
+
+
+        return CompPlan.objects.all()
+
+
+    def get(self,request,*args,**kwargs):
+        user = request.user
+        loan_break_point     = LoanBreakPoint.objects.filter(user = user).first()
+        comp_plan_obj        = CompPlan.objects.filter(user = user).first()
+        branch               = Branch.objects.filter(user = user).first()
+        data = {
+            "flatFee":comp_plan_obj.Flat_Fee,
+            "ff1000":comp_plan_obj.FF_MIN_LOAN,
+            "percentage":comp_plan_obj.Percentage,
+            "max":comp_plan_obj.MAX_GCI,
+            "loanBreakPoint":loan_break_point.loan_break_point,
+            "split":branch.commission
+        }
+        return Response(data)
+    
+
+    def comp_plan_change_view(self,request):
+        """
+            This function handle comp plane changes
+            
+            Flat_Fee=max_gci*loan_below_limits[len(loan_below_limits) -1]/10000
+
+        """
+        user   = request.user
+        maximumMompensation = request.data.get('maximumMompensation',None)
+        maxGci              = request.data.get('maxGci',None)
+        compPlan            = request.data.get('compPlan',None)
+        FFMINLOAN           = request.data.get('FFMINLOAN',None)
+        loanBreak           = request.data.get('loanBreak',None)
+        branchAmount        = request.data.get('branchAmount',None)
+
+
+        loan_break_point     = LoanBreakPoint.objects.filter(user = user).first()
+        comp_plan_obj        = CompPlan.objects.filter(user = user).first()
+        branch               = Branch.objects.filter(user = user).first()
+
+        Maximum_Compensation =  maximumMompensation
+        max_gci              =  maxGci  
+        FF_MIN_LOAN          =  compPlan  
+        comp_plan            =  FFMINLOAN
+        loan_break           =  loanBreak   
+        branch_amount        =  branchAmount
+        
+        if branch_amount != None:
+            branch_amount = float(branch_amount)
+            if branch_amount > 99:
+                branch_amount = 99
+    
+        MIN_LOAN               =  100000 
+        bps                    =  Bps.objects.all().first()
+        rows                   = [50] +  [num for num in range(100,275,25)]
+        row_counter            = [i-7 for i in range(7,7+ len(rows))]
+        
+        
+        loan_below_limits      = [num for num in range(int(loan_break_point.loan_break_point),MIN_LOAN - MIN_LOAN,-MIN_LOAN)]  
+        gci_result             = [(comp_plan_obj.Percentage * 100) * num / 10000 for num in range(int(loan_break_point.loan_break_point),MIN_LOAN - MIN_LOAN,-MIN_LOAN)]
+        peak_loan_below_limits = loan_below_limits[len(loan_below_limits) - 1]
+        peak_gci_results       = gci_result[len(gci_result)-1]     
+        Flat_Fee               = comp_plan_obj.FF_MIN_LOAN - ((float(comp_plan) * peak_loan_below_limits)/100)
+        
+    
+
+        if float(max_gci) > float(Maximum_Compensation):
+            max_gci = Maximum_Compensation
+                    
+        if FF_MIN_LOAN != None:
+            comp_plan_obj.FF_MIN_LOAN = float(FF_MIN_LOAN)
+            comp_plan_obj.save()
+            
+        
+        if branch_amount:
+            comp_plan_obj.FF_MIN_LOAN           =  float(FF_MIN_LOAN)
+            comp_plan_obj.MAX_GCI               =  max_gci
+            comp_plan_obj.Maximum_Compensation  =  float(Maximum_Compensation)
+            comp_plan_obj.Flat_Fee              =  Flat_Fee
+            comp_plan_obj.Percentage            =  float(comp_plan)
+            loan_break_point.loan_break_point   =  loan_break
+            branch_amount                       =  int(branch_amount) / 100
+            branch.commission                   =  branch_amount
+            bps.bps                             =  float(comp_plan) * 100
+            
+            bps.save()
+            loan_break_point.save()
+            comp_plan_obj.save()
+            branch.save()
+            return Response({
+                "saved":True
+            })  
+        return Response({
+                "saved":False
+            })  
+
+
+
+    def post(self, request):
+        response = self.comp_plan_change_view(request)
+        print("response = ",response)
+        data = request.data
+        print("data = ",data)
+        processed_data = {
+            'message': 'Data processed successfully',
+            'result': data
+        }
+
+        return response
+
+
+
+
+

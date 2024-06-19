@@ -210,6 +210,17 @@ def comp_plan_change_view(request):
     }
     return render(request,"home/entry.html",context)
 
+
+
+
+
+
+
+
+
+
+
+
 def change_branch_loan(request):
     if request.method == "POST":
         
