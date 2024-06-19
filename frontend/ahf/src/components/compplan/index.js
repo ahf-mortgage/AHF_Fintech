@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import VideoComponent from '../video';
 import "./index.css"
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 
 const CompPlan = () => {
@@ -13,15 +14,19 @@ const CompPlan = () => {
   const [max,setMax]  = useState(0)
   const [loanBreakPoint,setloanBreakPoint]  = useState(0)
   const [split,setSplit] = useState(0)
+  const refreshToken = useSelector((state) => state.auth.refreshToken);
 
-  useEffect(() => {
+  const headers = {
+    Authorization: `JWT ${refreshToken}`,
+  };
 
-    axios.get(`http://127.0.0.1:8000/api/comp-plan/`)
+  function getData() {  
+    axios.get(`http://127.0.0.1:8000/api/comp-plan/`,{ headers })
       .then((res) => res.json())
       .then((data) => console.log("data=",data))
       .catch((error) => console.error(error))
-
-  },[])
+  }
+  getData()
 
   return (
     <div className="comp_plan">

@@ -23,8 +23,8 @@ function DashBoard() {
           
         axios.get(url, { headers })
             .then(response => {
+                console.log("response=",response)
 
-              setAboveData(response.data)
             })
             .catch(error => {
               console.error(error); 
