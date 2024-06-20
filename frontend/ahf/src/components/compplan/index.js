@@ -14,19 +14,36 @@ const CompPlan = () => {
   const [max,setMax]  = useState(0)
   const [loanBreakPoint,setloanBreakPoint]  = useState(0)
   const [split,setSplit] = useState(0)
-  const refreshToken = useSelector((state) => state.auth.refreshToken);
+  const authToken = useSelector((state) => state.auth);
+  const refreshToken = authToken.auth.refreshToken
+
 
   const headers = {
     Authorization: `JWT ${refreshToken}`,
   };
 
   function getData() {  
-    axios.get(`http://127.0.0.1:8000/api/comp-plan/`,{ headers })
-      .then((res) => res.json())
-      .then((data) => console.log("data=",data))
+      axios.get(`https://www.ahf.mortgage/api/comp-plan/`,{ headers })
+      .then((res) => {
+        const flatFee= res.data.flatFee;
+        const ff1000= res.data.ff1000;
+        const loanBreakPoint= res.data.loanBreakPoint;
+        const percentage= res.data.percentage;
+        const split= res.data.split;
+
+        setFlatFee(flatFee)
+        setFF1000(ff1000)
+        setloanBreakPoint(loanBreakPoint)
+        setPercentage(percentage)
+        setSplit(split)
+      })
       .catch((error) => console.error(error))
   }
+ 
+useEffect(()=> {
   getData()
+},[flatFee,percentage,max,loanBreakPoint,split])
+
 
   return (
     <div className="comp_plan">

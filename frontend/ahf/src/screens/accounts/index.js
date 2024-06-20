@@ -15,16 +15,20 @@ import Dot from "../../components/activity";
 
 
 function LoginPage({ navigation }) {
-  const refreshToken = useSelector((state) => state.auth.refreshToken);
-  const [username, setUsername] = useState("MLO")
-  const [password, setPassword] = useState("")
-  const [showPassword,setShowPassword] = useState(false)
-  const [loading,setLoading] = useState(false)
-  const [errorMsg,setErrorMsg] = useState("")
-  const [errorKey,setErrorKey] = useState("")
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const authToken = useSelector((state) => state.auth);
+  const refreshToken = authToken.auth.refreshToken
+  console.log("token = ",refreshToken)
 
+
+  const [username, setUsername]        = useState("John")
+  const [password, setPassword]        = useState("")
+  const [showPassword,setShowPassword] = useState(false)
+  const [loading,setLoading]           = useState(false)
+  const [errorMsg,setErrorMsg]         = useState("")
+  const [errorKey,setErrorKey]         = useState("")
+  const navigate                       = useNavigate();   
+  const dispatch                       = useDispatch();
+                      
 
   function toggleShowPassword() {
     setShowPassword(!showPassword)
@@ -33,7 +37,6 @@ function LoginPage({ navigation }) {
   function login(event) {
     event.preventDefault()
     setLoading(true)
-
     const config = {
       headers: {
         'Content-Type': 'application/json'
@@ -53,7 +56,6 @@ function LoginPage({ navigation }) {
         setLoading(false)
       })
       .catch(error => {
-
         const errors = Object.entries(error.response.data)
         errors.filter(item => {
           setErrorKey(item[0])

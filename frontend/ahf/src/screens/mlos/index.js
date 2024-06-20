@@ -13,9 +13,8 @@ import CompPlan from '../../components/compplan';
 
 function DashBoard() {
     const refreshToken = useSelector((state) => state.auth.refreshToken);
-
-
     useLayoutEffect(() => {
+
         const url = "https://www.ahf.mortgage/api/"
         const headers = {
             Authorization: `JWT ${refreshToken}`,
