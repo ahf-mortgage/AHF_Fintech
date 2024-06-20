@@ -2,6 +2,71 @@ from django.contrib.auth.models import AnonymousUser
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from apps.recruiter.models import (CompPlan,Bps,LoanBreakPoint,Branch)
+import numpy as np
+
+
+data = {
+    "bps_from_min_to_max": [
+        50,
+        100,
+        100,
+        125,
+        150,
+        175,
+        200,
+        225,
+        250
+    ],
+    "gci_for_bps_from_min_to_max": [
+        246913400,
+        123456700,
+        123456700,
+        98765360,
+        82304466.66666667,
+        70546685.71428572,
+        61728350,
+        54869644.44444445,
+        49382680
+    ],
+    "branch_for_bps_from_min_to_max": [
+        49.5,
+        99,
+        99,
+        123.75,
+        148.5,
+        173.25,
+        198,
+        222.75,
+        247.5
+    ],
+    "ahf_for_bps_from_min_to_max ": [
+        0.5,
+        1,
+        1,
+        1.25,
+        1.5,
+        1.75,
+        2,
+        2.25,
+        2.5
+    ]
+}
+
+# Convert the data to a NumPy array
+data_array = np.array([
+    data["bps_from_min_to_max"],
+    data["gci_for_bps_from_min_to_max"],
+    data["branch_for_bps_from_min_to_max"],
+    data["ahf_for_bps_from_min_to_max "]
+]).T
+
+# Convert the NumPy array to a list of dictionaries
+rows = [
+    dict(zip(data.keys(), row))
+    for row in data_array
+]
+
+print(rows)
 
 
 
@@ -63,12 +128,15 @@ class RecruiterAPIView(APIView):
                     gci_for_bps_from_min_to_max      = [gci/(num) * 10000 for num in bps_from_min_to_max] 
                     ahf_for_bps_from_min_to_max      = [(1 - branch.commission) * num for num in bps_from_min_to_max] 
                     branch_for_bps_from_min_to_max   = [branch.commission * num for num in bps_from_min_to_max]
-                    
-            
-                data['bps_from_min_to_max']            = bps_from_min_to_max
-                data['gci_for_bps_from_min_to_max']    = gci_for_bps_from_min_to_max  
-                data['branch_for_bps_from_min_to_max'] = branch_for_bps_from_min_to_max
-                data['ahf_for_bps_from_min_to_max ']   = ahf_for_bps_from_min_to_max 
+        
+
+                data = {
+                bps_from_min_to_max,
+                gci_for_bps_from_min_to_max,
+                branch_for_bps_from_min_to_max,
+                ahf_for_bps_from_min_to_max
+                }
+                print("data=",data)
                     
             else:
                 return Response({

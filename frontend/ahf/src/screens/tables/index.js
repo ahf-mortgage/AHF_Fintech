@@ -44,7 +44,6 @@ const data = [
 
 const AbovebreakpointTable = () => {
   const authToken = useSelector((state) => state.auth);
-
   const refreshToken = authToken.auth.refreshToken
   const headers = {
     'Authorization': `JWT ${refreshToken}`, 
@@ -72,13 +71,13 @@ const AbovebreakpointTable = () => {
 const columns = useMemo(
   () => [
     {
-      accessorKey: 'name', //access nested data with dot notation
+      accessorKey: 'name',
       header: 'Name',
       size: 150,
     },
    
     {
-      accessorKey: 'address', //normal accessorKey
+      accessorKey: 'address',
       header: 'Address',
       size: 200,
     },

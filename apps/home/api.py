@@ -2,6 +2,7 @@ from django.contrib.auth.models import AnonymousUser
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from apps.recruiter.models import (CompPlan,Bps,LoanBreakPoint,Branch)
+import numpy as np
 
 
 
@@ -63,17 +64,22 @@ class HomeAPIView(APIView):
                     branch_for_bps_from_min_to_max   = [branch.commission * num for num in bps_from_min_to_max]
                     
             
-                data['bps_from_min_to_max']            = bps_from_min_to_max
-                data['gci_for_bps_from_min_to_max']    = gci_for_bps_from_min_to_max  
-                data['branch_for_bps_from_min_to_max'] = branch_for_bps_from_min_to_max
-                data['ahf_for_bps_from_min_to_max ']   = ahf_for_bps_from_min_to_max 
-                    
+                data = [
+                    bps_from_min_to_max,
+                    gci_for_bps_from_min_to_max,
+                    branch_for_bps_from_min_to_max,
+                    ahf_for_bps_from_min_to_max
+                ]
+
+                data_np = np.array(data)
+                data_transposed = np.transpose(data_np)
+    
             else:
                 return Response({
                     'msg':f'no comp plan found for user {request.user}'
                 })
             
-            return Response(data)
+            return Response(data_transposed)
         else:
             return Response({
                     'msg':f'no comp plan found for user {request.user}'
