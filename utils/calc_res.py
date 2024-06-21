@@ -459,7 +459,7 @@ def calculate_gross__new_branch_income(loan_break_amount,comp_plan,gci,value = 2
         H10     = ahf.loan_per_year
     else:
         H10 = 0
-        
+
     if K10 <= H10:
         return E8 * K10
     else:
