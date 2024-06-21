@@ -30,17 +30,19 @@ CSRF_TRUSTED_ORIGINS = [
     ]
 
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000/"
-    "http://192.168.0.103:3000/"
-]
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000/"
+#     "http://192.168.0.103:3000/"
+# ]
 # Application definition
 
 INSTALLED_APPS = [
   
     'django_nvd3',
+    "account",
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.sites',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -73,6 +75,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "account.middleware.LocaleMiddleware",
+    "account.middleware.TimezoneMiddleware",
+    "account.middleware.ExpiredPasswordMiddleware",
+
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -97,6 +103,8 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',        
                 # `allauth` needs this from django
                 'django.template.context_processors.request',
+                "account.context_processors.account",
+
                
 
             ],

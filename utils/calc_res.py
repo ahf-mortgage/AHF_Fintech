@@ -13,10 +13,6 @@ from apps.W2branchYearlyGross.models import *
 from utils.formatter import logger
 
 
-
-
-
-
 bps = Bps.objects.all().first().bps
 
 def calculate_above_loan_break_point_ahf_commission(loan_break_point,comp_plan,branch):
@@ -435,14 +431,35 @@ def calculate_gross__new_branch_income(loan_break_amount,comp_plan,gci,value = 2
         ahf gross income commission 
         K8=IF(K10<=H10,E8*K10,H8+$C8*(K10-H$10))
     """
-    branch  = Branch.objects.all().first()
-    ahf     = AHF.objects.all().first()   # left side table
-    E8      = calculate_above_loan_break_point_ahf_commission(loan_break_amount,comp_plan,branch)
-    H8      = E8 * ahf.loan_per_year
-    C8      = gci
-    K10     = branch.loan_per_year
-    H10     = ahf.loan_per_year
 
+    try:
+
+        branch  = Branch.objects.all().first()
+    except Branch.DoesNotExist as e:
+        raise e
+    try:
+        ahf     = AHF.objects.all().first()   # left side table
+    except AHF.DoesNotExist as e:
+        raise e
+    if branch != None:
+        E8      = calculate_above_loan_break_point_ahf_commission(loan_break_amount,comp_plan,branch)
+    else:
+        pass
+    if ahf != None:
+        H8      = E8 * ahf.loan_per_year
+    else:
+        pass
+    C8      = gci
+    if branch != None:
+        K10     = branch.loan_per_year
+    else:
+        K10 = 0
+
+    if ahf != None:
+        H10     = ahf.loan_per_year
+    else:
+        H10 = 0
+        
     if K10 <= H10:
         return E8 * K10
     else:

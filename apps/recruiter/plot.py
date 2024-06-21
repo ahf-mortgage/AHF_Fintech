@@ -2,17 +2,32 @@ from django.shortcuts import render
 import networkx as nx
 import matplotlib.pyplot as plt
 import io
+import cv2
+import numpy as np
+from PIL import Image
 import base64
 from .views import bfs_traversal
 from django.contrib.auth.decorators import login_required
 import random
 from matplotlib.colors import to_hex
 
+def invert_image(image):
+    """
+    Inverts the colors of an image.
+    
+    Args:
+        image (numpy.ndarray): A 3D numpy array representing the image.
+        
+    Returns:
+        numpy.ndarray: The inverted image.
+    """
+    return 255 - image
+
 
 @login_required
 def graph_view(request):
     # Call the bfs_traversal function to get the visited nodes and node_list
-    visited, node_list,total_mlo_sponsored = bfs_traversal(request)
+    start_node,visited, node_list,total_mlo_sponsored = bfs_traversal(request)
 
     # Create the directed graph
     G = nx.DiGraph()
@@ -43,7 +58,7 @@ def graph_view(request):
             edge_label = f"{request.user.username} get {level_for_amount[f'{level}']} from {child['node']}"
             G.add_edge(parent_username, f"{child['node'].username}")
             edge_labels[(parent.username, f"{child['node'].username}")] = edge_label
-                      # Generate a random color
+            # Generate a random color
             r = random.uniform(0, 1)
             g = random.uniform(0, 1)
             b = random.uniform(0, 1)
@@ -56,9 +71,11 @@ def graph_view(request):
 
     # Create the graph image
     fig = plt.figure(figsize=(8, 6))
+    start_node = start_node.username
     
-    pos = nx.circular_layout(G)
-    nx.draw(G, pos, with_labels=True, node_color='lightblue', edge_color='gray', font_size=20)
+    pos = nx.bfs_layout(G,start_node,align="horizontal")
+  
+    nx.draw(G, pos, with_labels=True, node_color='lightblue', node_size = 1000 * 3,edge_color='gray', font_size=10)
     nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=10)
     
     # Create the legend
@@ -73,12 +90,21 @@ def graph_view(request):
     ]
     
     # legend_elements = [plt.Line2D([0], [0], color= list(unique_edge_colors)[0], lw=2, label=f'{request.user.username} gets  ${total}')]
-    plt.legend(handles=legend_elements, loc='upper right', fontsize=10)
+    plt.legend(handles=legend_elements, loc='lower left', fontsize=10)
 
     # Convert the graph image to a base64-encoded string
     buf = io.BytesIO()
     plt.savefig(buf, format='png')
-    graph_image = base64.b64encode(buf.getvalue()).decode('utf-8')
+
+    img = cv2.imdecode(np.frombuffer(buf.getvalue(), np.uint8), cv2.IMREAD_COLOR)
+    img_inverted = cv2.bitwise_not(img)
+    graph_image_flipped = cv2.flip(img, 0)
+
+     # Convert the inverted image back to a buffer
+    _, buffer   = cv2.imencode('.png', img_inverted)
+    graph_image = base64.b64encode(buffer).decode('utf-8')
+
+    # graph_image = base64.b64encode(buf.getvalue()).decode('utf-8')
     return render(request, 'graph.html', {'graph_image': graph_image})
 
 

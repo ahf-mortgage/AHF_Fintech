@@ -7,6 +7,10 @@ import { AHFNavbar } from '../../components/Navbar';
 import HorizontalLine from '../../components/Line';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+
+
+
 
 
 const data = [
@@ -45,6 +49,7 @@ const data = [
 const AbovebreakpointTable = () => {
   const authToken = useSelector((state) => state.auth);
   const refreshToken = authToken.auth.refreshToken
+  const datum = []
   const headers = {
     'Authorization': `JWT ${refreshToken}`, 
   };
@@ -57,9 +62,15 @@ const AbovebreakpointTable = () => {
         
       axios.get(url, { headers })
           .then(response => {
-              // setData(response.data)
+     
               console.log(response.data)
+              const list_of_data  = response.data
+              for(let data of list_of_data) {
+                datum.push(data)
 
+              }
+              console.log("datum=",datum)
+ 
           })
           .catch(error => {
             console.error(error); 
@@ -72,7 +83,7 @@ const columns = useMemo(
   () => [
     {
       accessorKey: 'name',
-      header: 'Name',
+      header: ['Name', 'First Name',"Last name"],
       size: 150,
     },
    
@@ -88,9 +99,23 @@ const columns = useMemo(
     },
     {
       accessorKey: 'state',
-      header: 'State',
+      header: ['State',"AHF"],
+      Header: ({ column }) => (
+        <i style={{ color: 'red'}}>
+          {column.columnDef.header} 
+        
+          </i> 
+      ), 
+
+      Cell: ({ renderedCellValue, row }) => (
+        <Link to={`/profile/${row.original.username}`}>
+          {renderedCellValue}
+        </Link>
+      ),
       size: 150,
     },
+
+    
 
 
   ],
@@ -109,7 +134,7 @@ return (
     <AHFNavbar />
     <HorizontalLine />
     <div className='lg:w-[1260px] sm:w-[646px] lg:mx-5'>
-        <MaterialReactTable table={table} />
+        <MaterialReactTable table={table}  />
     </div>
 
   </div>

@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+# from django.contrib.auth.decorators import login_required
+from account.decorators import login_required
 from apps.recruiter.models import Bps,LoanBreakPoint,CompPlan,AHF,Branch,Node
 import math
 import logging
@@ -66,7 +67,7 @@ from utils.bisect_balance import find_root,function
 
 
 
-
+@login_required
 def home(request):
     """
         entry point of the system
@@ -175,8 +176,8 @@ def home(request):
         
     FLAT_AM0UNT = gci - (gci/1000) * ((loan_below_limits[len(loan_below_limits) - 1] or 0) * 0.1/10000) 
 
-    visited,node_list,total_mlo_sponsored =  bfs_traversal(request)
-    # print(f"{request.user} sponsor mlo with level =",node_list)
+    start_node,visited,node_list,total_mlo_sponsored =  bfs_traversal(request)
+
    
   
     annual_ahf_cap              = calculate_annual_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
