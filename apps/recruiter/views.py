@@ -304,9 +304,9 @@ def bfs_traversal(request):
                     raise e
                 level += 1
                 queue.append((edge.target_node, node))
+    print("visited =",list(node_list.keys())[0])
     start_node = list(node_list.keys())[0]
     return start_node,visited,node_list,total_mlo_sponsored
-
 
 
 
