@@ -139,6 +139,11 @@ SIMPLE_JWT = {
    'AUTH_HEADER_TYPES': ('JWT',)
 }
 
+# Authentication settings
+LOGIN_URL = '/account/login/'
+LOGOUT_URL = 'logout'
+LOGIN_REDIRECT_URL = 'home'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
