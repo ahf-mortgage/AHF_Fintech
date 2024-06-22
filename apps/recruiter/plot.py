@@ -7,12 +7,14 @@ from .views import bfs_traversal
 from django.contrib.auth.decorators import login_required
 import random
 from matplotlib.colors import to_hex
+from .models import MLO_AGENT,Node
 
 
 @login_required
 def graph_view(request):
     # Call the bfs_traversal function to get the visited nodes and node_list
-    visited, node_list,total_mlo_sponsored = bfs_traversal(request)
+    visited, node_list,total_mlo_sponsored,start_node = bfs_traversal(request)
+  
 
     # Create the directed graph
     G = nx.DiGraph()
@@ -57,7 +59,7 @@ def graph_view(request):
     # Create the graph image
     fig = plt.figure(figsize=(8, 6))
     
-    pos = nx.circular_layout(G)
+    pos = nx.bfs_layout(G,start_node)
     nx.draw(G, pos, with_labels=True, node_color='lightblue', edge_color='gray', font_size=20)
     nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=10)
     

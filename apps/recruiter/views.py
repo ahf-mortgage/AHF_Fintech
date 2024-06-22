@@ -252,6 +252,7 @@ def change_ahf_loan(request):
 
 @login_required
 def bfs_traversal(request):
+ 
     user = request.user
     mlo_agent = MLO_AGENT.objects.filter(user = user).first()
     
@@ -304,7 +305,11 @@ def bfs_traversal(request):
                     raise e
                 level += 1
                 queue.append((edge.target_node, node))
-    return visited,node_list,total_mlo_sponsored
+                new_queue = queue.copy()
+                start_node = new_queue.pop()[1]
+                # print(type(start_node),start_node[1])
+                print("start_node=",new_queue)
+    return visited,node_list,total_mlo_sponsored,start_node
 
 
 
