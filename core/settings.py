@@ -30,17 +30,18 @@ CSRF_TRUSTED_ORIGINS = [
     ]
 
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000/"
-    "http://192.168.0.103:3000/"
-]
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000/"
+#     "http://192.168.0.103:3000/"
+# ]
 # Application definition
 
 INSTALLED_APPS = [
-  
+
     'django_nvd3',
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.sites',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -55,12 +56,14 @@ INSTALLED_APPS = [
     'rest_framework',
     'djoser',
     'corsheaders',
+    'compressor', 
 
     # installed apps,
     'apps.recruiter',
     'apps.home',
     'apps.W2branchYearlyGross',
     'apps.RevenueShare',
+    'apps.accounts',
 
 ]
 
@@ -73,6 +76,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+   
+
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -97,6 +102,8 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',        
                 # `allauth` needs this from django
                 'django.template.context_processors.request',
+            
+
                
 
             ],
@@ -106,6 +113,11 @@ TEMPLATES = [
     },
 ]
 
+COMPRESS_ROOT = BASE_DIR / 'static'
+
+COMPRESS_ENABLED = True
+
+STATICFILES_FINDERS = ('compressor.finders.CompressorFinder',)
 WSGI_APPLICATION = 'core.wsgi.application'
 
 
@@ -118,7 +130,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
     'SIMPLE_JWT': {
-        'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+        'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
         'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     }
 }
