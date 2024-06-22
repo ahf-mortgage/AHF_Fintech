@@ -13,10 +13,10 @@ from matplotlib.colors import to_hex
 @login_required
 def graph_view(request):
     # Call the bfs_traversal function to get the visited nodes and node_list
-    visited, node_list,total_mlo_sponsored = bfs_traversal(request)
+    start_node,visited, node_list,total_mlo_sponsored = bfs_traversal(request)
     user = request.user
     start_mlo = MLO_AGENT.objects.filter(user = user).first()
-    start_node  = Node.objects.filter(mlo_agent = start_mlo).first()
+    # start_node  = Node.objects.filter(mlo_agent = start_mlo).first()
 
 
     # Create the directed graph
@@ -64,7 +64,7 @@ def graph_view(request):
     fig = plt.figure(figsize=(8, 6))
     # start_node = list(node_list.items())[0][0]
 
-    pos = nx.spiral_layout(G)
+    pos = nx.bfs_layout(G,start_node,align="horizontal")
     nx.draw(G, pos, with_labels=True, node_color='lightblue', edge_color='gray', font_size=20)
     nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=10)
     
