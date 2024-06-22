@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import io
 import base64
 from .views import bfs_traversal
+from .models import MLO_AGENT,Node
 from django.contrib.auth.decorators import login_required
 import random
 from matplotlib.colors import to_hex
@@ -13,6 +14,10 @@ from matplotlib.colors import to_hex
 def graph_view(request):
     # Call the bfs_traversal function to get the visited nodes and node_list
     visited, node_list,total_mlo_sponsored = bfs_traversal(request)
+    user = request.user
+    start_mlo = MLO_AGENT.objects.filter(user = user).first()
+    start_node  = Node.objects.filter(mlo_agent = start_mlo).first()
+
 
     # Create the directed graph
     G = nx.DiGraph()
@@ -37,13 +42,14 @@ def graph_view(request):
     total = 0
     edge_colors = []
     for parent, children in node_list.items():
+        # print("parent = ",parent)
         parent_username = parent.username
         for child in children:
             total += level_for_amount[f'{level}']
             edge_label = f"{request.user.username} get {level_for_amount[f'{level}']} from {child['node']}"
             G.add_edge(parent_username, f"{child['node'].username}")
             edge_labels[(parent.username, f"{child['node'].username}")] = edge_label
-                      # Generate a random color
+            # Generate a random color
             r = random.uniform(0, 1)
             g = random.uniform(0, 1)
             b = random.uniform(0, 1)
@@ -56,8 +62,9 @@ def graph_view(request):
 
     # Create the graph image
     fig = plt.figure(figsize=(8, 6))
-    
-    pos = nx.circular_layout(G)
+    # start_node = list(node_list.items())[0][0]
+
+    pos = nx.spiral_layout(G)
     nx.draw(G, pos, with_labels=True, node_color='lightblue', edge_color='gray', font_size=20)
     nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=10)
     
