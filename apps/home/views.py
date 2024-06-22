@@ -1,5 +1,5 @@
 from django.shortcuts import render
-# from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
 from apps.recruiter.models import Bps,LoanBreakPoint,CompPlan,AHF,Branch,Node
 import math
 import logging
@@ -8,10 +8,6 @@ from  django.shortcuts import redirect
 from utils.q22 import automate_q22_value
 from django.conf import  settings
 from apps.recruiter.views import bfs_traversal
-# from account.decorators import login_required
-
-
-context = {}
 
 from utils.calc_res import (
                     calculate_annual_ahf_income,
@@ -59,15 +55,13 @@ from apps.W2branchYearlyGross.models import (
                                 
                                         )
 
-
 from apps.RevenueShare.models import RevenueShare
-
 from utils.bisect_balance import find_root,function
 
 
+context = {}
 
-
-# @login_required()
+@login_required()
 def home(request):
     """
         entry point of the system
