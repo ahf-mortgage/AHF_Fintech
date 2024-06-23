@@ -50,18 +50,26 @@ function LoginPage({ navigation }) {
 
     axios.post('https://www.ahf.mortgage/auth/jwt/create/', data, config)
       .then(response => {
-        const token = response.data.access
-        dispatch(setRefreshToken(token));
-        navigate("/dashboard")
-        setLoading(false)
+        console.log("response = ",response)
+        if(response != null) {
+          const token = response.data.access
+          dispatch(setRefreshToken(token));
+          navigate("/dashboard")
+          setLoading(false)
+        }
+        else {
+          navigate("/")
+        }
+    
       })
       .catch(error => {
-        const errors = Object.entries(error.response.data)
-        errors.filter(item => {
-          setErrorKey(item[0])
-          setErrorMsg(item[1])
-        })
-        setLoading(false)
+        console.log("error=",error)
+        // const errors = Object.entries(error.response.data)
+        // errors.filter(item => {
+        //   setErrorKey(item[0])
+        //   setErrorMsg(item[1])
+        // })
+        // setLoading(false)
       });
   }
 
