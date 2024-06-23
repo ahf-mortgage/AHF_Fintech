@@ -8,6 +8,7 @@ from utils.bisect_balance import find_root,function
 from django.db import models
 from collections import deque
 from django.contrib.auth.decorators import login_required
+from collections import defaultdict
 
 
 def calculate_commission_above_million(loan_id,mlo_id):
@@ -312,4 +313,56 @@ def bfs_traversal(request):
 
 
 
-    
+
+
+def dfs_traversal(request):
+    user = request.user
+    mlo_agent = MLO_AGENT.objects.filter(user=user).first()
+
+    start_node = Node.objects.get(mlo_agent=mlo_agent)
+    visited = set()
+    parent_to_node = {}
+    node_list = {}
+    level = 1
+    total_mlo_sponsored = 1
+
+    def dfs(node, parent_node):
+        nonlocal level, total_mlo_sponsored
+
+        visited.add(node.node_id)
+        if parent_node:
+            if parent_to_node.get(parent_node.mlo_agent.user.username) is not None:
+                parent_to_node[parent_node.mlo_agent.user.username].append(node.mlo_agent.user.username)
+            else:
+                parent_to_node[parent_node.mlo_agent.user.username] = [node.mlo_agent.user.username]
+        else:
+            pass
+
+        for edge in node.outgoing_edges.all():
+            target_mlo_agent = edge.target_node.mlo_agent
+            try:
+                loans = Loan.objects.filter(mlo_agent=target_mlo_agent)
+                if loans.exists():
+                    loan = loans.first()
+                    date_joined = target_mlo_agent.date_joined
+                    date_closed = loan.date_closed
+                    difference_date = date_joined - date_closed
+                    if difference_date.days > 6 * 30:
+                        total_mlo_sponsored += len(node.outgoing_edges.all())
+                        node_list[edge.source_node.mlo_agent.user] = [{"level": level, "node": node.target_node.mlo_agent.user} for node in node.outgoing_edges.all()]
+                    else:
+                        pass
+                else:
+                    pass
+            except Loan.DoesNotExist as e:
+                raise e
+        level += 1
+
+        for edge in node.outgoing_edges.all():
+            if edge.target_node.node_id not in visited:
+                dfs(edge.target_node, node)
+
+    dfs(start_node, None)
+    print("visited =", list(node_list.keys())[0])
+    start_node = list(node_list.keys())[0]
+    return start_node, visited, node_list, total_mlo_sponsored

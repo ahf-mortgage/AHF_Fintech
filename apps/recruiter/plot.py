@@ -3,21 +3,19 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import io
 import base64
-from .views import bfs_traversal
+from .views import bfs_traversal,dfs_traversal
 from .models import MLO_AGENT,Node
 from django.contrib.auth.decorators import login_required
 import random
 from matplotlib.colors import to_hex
+import cv2
+import numpy as np
 
 
 @login_required
 def graph_view(request):
     # Call the bfs_traversal function to get the visited nodes and node_list
-    start_node,visited, node_list,total_mlo_sponsored = bfs_traversal(request)
-    user = request.user
-    start_mlo = MLO_AGENT.objects.filter(user = user).first()
-    # start_node  = Node.objects.filter(mlo_agent = start_mlo).first()
-
+    start_node,visited, node_list,total_mlo_sponsored = dfs_traversal(request)
 
     # Create the directed graph
     G = nx.DiGraph()
@@ -42,7 +40,6 @@ def graph_view(request):
     total = 0
     edge_colors = []
     for parent, children in node_list.items():
-        # print("parent = ",parent)
         parent_username = parent.username
         for child in children:
             total += level_for_amount[f'{level}']
@@ -62,12 +59,13 @@ def graph_view(request):
 
     # Create the graph image
     fig = plt.figure(figsize=(8, 6))
-    # start_node = list(node_list.items())[0][0]
-
-    pos = nx.bfs_layout(G,start_node,align="horizontal")
-    nx.draw(G, pos, with_labels=True, node_color='lightblue', edge_color='gray', font_size=20)
-    nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=10)
+    start_node = start_node.username
     
+    pos = nx.bfs_layout(G,start_node,align="horizontal")
+
+    nx.draw(G, pos, with_labels=True, node_color='lightblue', node_size = 1000 * 3,edge_color='gray', font_size=10)
+    nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=10)
+
     # Create the legend
     labels_data = [
         f"gets ${total}",
@@ -80,12 +78,20 @@ def graph_view(request):
     ]
     
     # legend_elements = [plt.Line2D([0], [0], color= list(unique_edge_colors)[0], lw=2, label=f'{request.user.username} gets  ${total}')]
-    plt.legend(handles=legend_elements, loc='upper right', fontsize=10)
+    plt.legend(handles=legend_elements, loc='lower left', fontsize=10)
 
     # Convert the graph image to a base64-encoded string
     buf = io.BytesIO()
     plt.savefig(buf, format='png')
-    graph_image = base64.b64encode(buf.getvalue()).decode('utf-8')
+
+    img = cv2.imdecode(np.frombuffer(buf.getvalue(), np.uint8), cv2.IMREAD_COLOR)
+    img_inverted = cv2.bitwise_not(img)
+    graph_image_flipped = cv2.flip(img, 0)
+
+     # Convert the inverted image back to a buffer
+    _, buffer   = cv2.imencode('.png', img_inverted)
+    graph_image = base64.b64encode(buffer).decode('utf-8')
+
     return render(request, 'graph.html', {'graph_image': graph_image})
 
 

@@ -6,10 +6,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-xapy24exjy5!26b1d+7$v5wkh+44&(3rk^tfd=cbj#_$+dfb31'
 
@@ -224,12 +220,6 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-
-
-
-
-
-
 # Email server configuration
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'tinsingjobs2k@gmail.com'
@@ -241,8 +231,9 @@ PASSWORD_RESET_CONFIRM_UR = "http://12.0.0.1:8000"
 
 
 # django auth config
-LOGIN_REDIRECT_URL = "/"
 
+LOGIN_URL = '/account/login'
+LOGIN_REDIRECT_URL = '/'
 
 # crispy form config
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
@@ -267,6 +258,8 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 #         }, 
 #     },
 # }
+
+
 
 #Hello 
 # Configure your default site. See

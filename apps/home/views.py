@@ -67,7 +67,6 @@ def home(request):
         entry point of the system
     """
 
-
     # Set up the logger
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
@@ -170,7 +169,7 @@ def home(request):
         
     FLAT_AM0UNT = gci - (gci/1000) * ((loan_below_limits[len(loan_below_limits) - 1] or 0) * 0.1/10000) 
 
-    visited,node_list,total_mlo_sponsored =  bfs_traversal(request)
+    start_node,visited, node_list,total_mlo_sponsored =  bfs_traversal(request)
     # print(f"{request.user} sponsor mlo with level =",node_list)
    
   
@@ -251,10 +250,7 @@ def home(request):
  
     ahf_annual_cap_data = aacd
     
-  
-  
-   
-    
+
     # Employee withholding data
     _calculate_social_security              = calculate_social_security(_branch_new_gross_income,total_expense,q22) 
     CA_Unemployment                         = calculate_CA_Unemployment(branch_gross,total_expense,q22)
