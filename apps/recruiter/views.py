@@ -323,11 +323,13 @@ def dfs_traversal(request):
     visited = set()
     parent_to_node = {}
     node_list = {}
+    agent_list = {}
     level = 1
     total_mlo_sponsored = 1
+    mlo_sponsored = 0
 
     def dfs(node, parent_node):
-        nonlocal level, total_mlo_sponsored
+        nonlocal level, total_mlo_sponsored,mlo_sponsored
 
         visited.add(node.node_id)
         if parent_node:
@@ -338,6 +340,8 @@ def dfs_traversal(request):
         else:
             pass
 
+
+
         for edge in node.outgoing_edges.all():
             target_mlo_agent = edge.target_node.mlo_agent
             try:
@@ -347,9 +351,14 @@ def dfs_traversal(request):
                     date_joined = target_mlo_agent.date_joined
                     date_closed = loan.date_closed
                     difference_date = date_joined - date_closed
-                    if difference_date.days > 6 * 30:
+                    if difference_date.days > 6 * 30:# must come from database not hard code.
+
+                        if level == 1:
+                            mlo_sponsored += len(node.outgoing_edges.all())
+
                         total_mlo_sponsored += len(node.outgoing_edges.all())
                         node_list[edge.source_node.mlo_agent.user] = [{"level": level, "node": node.target_node.mlo_agent.user} for node in node.outgoing_edges.all()]
+                        agent_list[edge.source_node.mlo_agent] = [{"level": level, "node": node.target_node.mlo_agent.user} for node in node.outgoing_edges.all()]
                     else:
                         pass
                 else:
@@ -363,6 +372,7 @@ def dfs_traversal(request):
                 dfs(edge.target_node, node)
 
     dfs(start_node, None)
-    print("visited =", list(node_list.keys())[0])
+
     start_node = list(node_list.keys())[0]
-    return start_node, visited, node_list, total_mlo_sponsored
+
+    return start_node, visited, node_list, mlo_sponsored,agent_list

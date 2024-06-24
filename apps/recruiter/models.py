@@ -95,7 +95,7 @@ class MLO(models.Model):
     
 class MLO_AGENT(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE,blank=False,null=False)
-    NMLS_ID = models.IntegerField(blank = True,null = True)
+    NMLS_ID = models.IntegerField(blank = False,null = False) # unique 7 digits number  3000000 auto increment min_value = 3000000,auto_increment = True
     NMLS_sponsor_id = models.IntegerField(blank = True,null = True)
     MLO_commission  = models.FloatField(blank = True,null = True)
     date_joined = models.DateTimeField(auto_now = True)

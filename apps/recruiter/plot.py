@@ -14,7 +14,7 @@ from .draw import draw
 
 @login_required
 def graph_view(request):
-    start_node,visited, node_list,total_mlo_sponsored = dfs_traversal(request)
+    start_node,visited, node_list,total_mlo_sponsored,agent_list = dfs_traversal(request)
     node_graphs = []
     # list(node_list.keys())[0]
     for child in node_list.keys():

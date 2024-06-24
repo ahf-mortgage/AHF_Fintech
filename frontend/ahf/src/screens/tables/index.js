@@ -7,47 +7,39 @@ import { AHFNavbar } from '../../components/Navbar';
 import HorizontalLine from '../../components/Line';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+import Header from '../../components/Header';
 
 
-const data = [
-  {
-    name:'John',  
-    address: '261 Erdman Ford',
-    city: 'East Daphne',
-    state: 'Kentucky',
-  },
-  {
-    name: 'Jane', 
-    address: '769 Dominic Grove',
-    city: 'Columbus',
-    state: 'Ohio',
-  },
-  {
-    name: 'Joe',
-    address: '566 Brakus Inlet',
-    city: 'South Linda',
-    state: 'West Virginia',
-  },
-  {
-    name:  'Kevin',
-    address: '722 Emie Stream',
-    city: 'Lincoln',
-    state: 'Nebraska',
-  },
-  {
-    name: 'Joshua', 
-    address: '32188 Larkin Turnpike',
-    city: 'Charleston',
-    state: 'South Carolina',
-  },
-];
 
 const AbovebreakpointTable = () => {
   const authToken = useSelector((state) => state.auth);
   const refreshToken = authToken.auth.refreshToken
+  // const [data,setData] = useState([])
   const headers = {
     'Authorization': `JWT ${refreshToken}`, 
   };
+
+  const first_columns = ["","Flat fee","Bps"]
+  const second_columns = ["GCI","64,750.0 ","GCI"]
+  const thrid_columns = ["AHF","$25,900.0","60%"]
+  const fourth_columns = ["Branch","38850.0","40%"]
+
+
+const data = [
+
+];
+
+for(let item of data) {
+  data.push(
+    {
+      bps:item[0],  
+      gci: item[1],
+      ahf: item[2],
+      branch: item[3]
+    }
+  )
+
+}
 
   useLayoutEffect(() => {
       const url = "https://www.ahf.mortgage/api/"
@@ -71,24 +63,52 @@ const AbovebreakpointTable = () => {
 const columns = useMemo(
   () => [
     {
-      accessorKey: 'name',
-      header: 'Name',
+      accessorKey: 'bps',
+      header: 'BPS',
+      Header: ({ column }) => (
+        <div className='flex flex-col justify-center'>{
+          first_columns.map((item) => {
+            return <p>{item}</p>
+          })
+        }</div> 
+      ),
       size: 150,
     },
    
     {
-      accessorKey: 'address',
-      header: 'Address',
+      accessorKey: 'gci',
+      header: 'GCI',
+      Header: ({ column }) => (
+        <div className='flex flex-col justify-center'>{
+          second_columns.map((item) => {
+            return <p>{item}</p>
+          })
+        }</div> 
+      ),
       size: 200,
     },
     {
-      accessorKey: 'city',
-      header: 'City',
+      accessorKey: 'ahf',
+      header: '40.00%',
+      Header: ({ column }) => (
+        <div className='flex flex-col justify-center'>{
+          thrid_columns.map((item) => {
+            return <p>{item}</p>
+          })
+        }</div> 
+      ),
       size: 150,
     },
     {
-      accessorKey: 'state',
-      header: 'State',
+      accessorKey: 'branch',
+      header: '60.00%',
+      Header: ({ column }) => (
+        <div className='flex flex-col justify-center'>{
+          fourth_columns.map((item) => {
+            return <p>{item}</p>
+          })
+        }</div> 
+      ),
       size: 150,
     },
 
@@ -101,13 +121,16 @@ const table = useMaterialReactTable({
   columns,
   data,
   enableFullScreenToggle: true,
+
 });
 
 return (
 
   <div className="flex flex-col">
     <AHFNavbar />
+
     <HorizontalLine />
+
     <div className='lg:w-[1260px] sm:w-[646px] lg:mx-5'>
         <MaterialReactTable table={table} />
     </div>

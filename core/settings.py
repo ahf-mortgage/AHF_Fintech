@@ -26,10 +26,10 @@ CSRF_TRUSTED_ORIGINS = [
     ]
 
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000/"
-    "http://192.168.0.103:3000/"
-]
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000/"
+#     "http://192.168.0.103:3000/"
+# ]
 # Application definition
 
 INSTALLED_APPS = [
