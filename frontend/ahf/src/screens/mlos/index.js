@@ -15,7 +15,7 @@ function DashBoard() {
     const refreshToken = useSelector((state) => state.auth.refreshToken);
     useLayoutEffect(() => {
 
-        const url = "https://www.ahf.mortgage/api/"
+        const url = "http://127.0.0.1:8000/auth/jwt/create/api/"
         const headers = {
             Authorization: `JWT ${refreshToken}`,
           };

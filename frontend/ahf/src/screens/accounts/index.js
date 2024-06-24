@@ -87,10 +87,10 @@ function LoginPage({ navigation }) {
       <form className="flex flex-col gap-4">
         <div>
           <div className="mb-2 block">
-            <Label htmlFor="email1" value="Username" />
+            <Label htmlFor="username" value="Username" />
           </div>
           <TextInput 
-              id="email1"
+              id="username"
               type="text" 
               className="w-[369px] h-[38px]" placeholder="John" required
               value={username}

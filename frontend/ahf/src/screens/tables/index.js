@@ -1,47 +1,37 @@
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import {
   MaterialReactTable,
   useMaterialReactTable,
+  useMRT_Rows
 } from 'material-react-table';
 import { AHFNavbar } from '../../components/Navbar';
 import HorizontalLine from '../../components/Line';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import Header from '../../components/Header';
+import { faL } from '@fortawesome/free-solid-svg-icons';
 
 
 
 const AbovebreakpointTable = () => {
   const authToken = useSelector((state) => state.auth);
   const refreshToken = authToken.auth.refreshToken
-  // const [data,setData] = useState([])
-  const headers = {
-    'Authorization': `JWT ${refreshToken}`, 
-  };
+  const [isLoading,setIsLoading] = useState(true)
 
+  const [data,setData] = useState([])
+  const [construct_data,setConstructData] = useState([])
+  const [bps,setBps] = useState(0)
   const first_columns = ["","Flat fee","Bps"]
   const second_columns = ["GCI","64,750.0 ","GCI"]
   const thrid_columns = ["AHF","$25,900.0","60%"]
   const fourth_columns = ["Branch","38850.0","40%"]
 
 
-const data = [
 
-];
 
-for(let item of data) {
-  data.push(
-    {
-      bps:item[0],  
-      gci: item[1],
-      ahf: item[2],
-      branch: item[3]
-    }
-  )
+  useEffect(() => {
+    const new_data = []
 
-}
-
-  useLayoutEffect(() => {
       const url = "https://www.ahf.mortgage/api/"
       const headers = {
           Authorization: `JWT ${refreshToken}`,
@@ -49,8 +39,17 @@ for(let item of data) {
         
       axios.get(url, { headers })
           .then(response => {
-              // setData(response.data)
-              console.log(response.data)
+            const data = response.data
+            for(let d of data) {
+              new_data.push({
+                bps:d[0],
+                gci:d[1],
+                ahf:d[2],
+                branch:d[3]
+              })
+            }
+            setData(new_data)
+            setIsLoading(false)
 
           })
           .catch(error => {
@@ -59,7 +58,8 @@ for(let item of data) {
       
   },[])
 
- 
+  
+
 const columns = useMemo(
   () => [
     {
@@ -116,6 +116,8 @@ const columns = useMemo(
   ],
   [],
 );
+console.log("construct data =",data)
+
 
 const table = useMaterialReactTable({
   columns,
@@ -126,13 +128,29 @@ const table = useMaterialReactTable({
 
 return (
 
-  <div className="flex flex-col">
+  <div className="flex flex-col justify-evenly">
     <AHFNavbar />
 
     <HorizontalLine />
 
     <div className='lg:w-[1260px] sm:w-[646px] lg:mx-5'>
-        <MaterialReactTable table={table} />
+ <MaterialReactTable 
+        // table={table}
+        columns={columns}
+        data={data}
+        state={{ isLoading: isLoading }}
+        muiCircularProgressProps={{
+          color: 'secondary',
+          thickness: 5,
+          size: 55,
+        }}
+        muiSkeletonProps={{
+          animation: 'pulse',
+          height: 28,
+        }}
+        
+        />
+
     </div>
 
   </div>
