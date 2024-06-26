@@ -123,8 +123,8 @@ class Node(models.Model):
 
 class Edge(models.Model):
     edge_id = models.IntegerField(primary_key=True)
-    source_node = models.ForeignKey(Node, on_delete=models.CASCADE, related_name='outgoing_edges')
-    target_node = models.ForeignKey(Node, on_delete=models.CASCADE, related_name='incoming_edges')
+    source_node = models.ForeignKey(Node, on_delete=models.CASCADE, related_name='outgoing_edges')#,unique=True)
+    target_node = models.ForeignKey(Node, on_delete=models.CASCADE, related_name='incoming_edges')#,unique=True)
 
     
     def __str__(self) -> str:

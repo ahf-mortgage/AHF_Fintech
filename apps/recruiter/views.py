@@ -255,7 +255,6 @@ def change_ahf_loan(request):
 def bfs_traversal(request):
     user = request.user
     mlo_agent = MLO_AGENT.objects.filter(user = user).first()
-    
     start_node = Node.objects.get(mlo_agent=mlo_agent)
     queue = deque([(start_node, None)])
     visited = set()
@@ -263,6 +262,7 @@ def bfs_traversal(request):
     node_list = {}
     level  = 1
     total_mlo_sponsored = 1
+    loans = None
     
     while queue:
         node, parent_node = queue.popleft()
@@ -281,10 +281,10 @@ def bfs_traversal(request):
                 target_mlo_agent = edge.target_node.mlo_agent
                 try:
                     loans = Loan.objects.filter(mlo_agent = target_mlo_agent)
+                 
                     if loans.exists():
                         loan = loans.first()
-                        
-                        
+                    
                         date_joined = target_mlo_agent.date_joined
                         date_closed = loan.date_closed
                         
@@ -305,9 +305,13 @@ def bfs_traversal(request):
                     raise e
                 level += 1
                 queue.append((edge.target_node, node))
-    print("visited =",list(node_list.keys())[0])
-    start_node = list(node_list.keys())[0]
-    return start_node,visited,node_list,total_mlo_sponsored
+    if loans:
+        start_node = list(node_list.keys())[0]
+        return start_node,visited,node_list,total_mlo_sponsored
+    else:
+        start_node = user
+        return start_node,visited,node_list,total_mlo_sponsored
+
 
 
 

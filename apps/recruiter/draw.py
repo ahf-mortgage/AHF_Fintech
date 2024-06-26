@@ -14,7 +14,7 @@ import numpy as np
 
 def draw(request,child):
     # Call the bfs_traversal function to get the visited nodes and node_list
-    start_node,visited, node_list,total_mlo_sponsored,agent_list = dfs_traversal(request)
+    start_node,visited, node_list,total_mlo_sponsored = bfs_traversal(request)
     G = nx.DiGraph()
     level_for_amount = {
         "1":481.25,
@@ -22,7 +22,8 @@ def draw(request,child):
         "3":343.75,
         "4":137.5,
         "5":343.75,
-        "6":687.5
+        "6":687.5,
+        "7":0
         
         
     }
@@ -36,35 +37,32 @@ def draw(request,child):
     level = 1
     total = 0
     edge_colors = []
-    for parent, children in agent_list.items():
-        parent_username = parent.NMLS_ID
+    for parent, children in node_list.items():
+        parent_username = parent.username
         for child in children:
-            total += level_for_amount[f'{level}']
-            edge_label = f"{parent_username} get {level_for_amount[f'{level}']} from {child['node']}"
-            G.add_edge(parent_username, f"{child['node']}")
-            edge_labels[(parent, f"{child['node']}")] = edge_label
+            total += level_for_amount.get(f'{level}',0)
+            edge_label = f"{parent_username} get {level_for_amount.get(f'{level}')} from {child['node'].username}"
+            G.add_edge(parent_username, f"{child['node'].username}")
+            edge_labels[(parent, f"{child['node'].username}")] = edge_label
             # Generate a random color
             r = random.uniform(0, 1)
             g = random.uniform(0, 1)
             b = random.uniform(0, 1)
             edge_color = to_hex((r, g, b))
-            G.add_edge(parent.username, f"{child['node']}")
-            edge_labels[(parent.username, f"{child['node'].username}")] = edge_label
+            G.add_edge(parent_username, f"{child['node'].username}")
+            edge_labels[(parent, f"{child['node'].username}")] = edge_label
             edge_colors.append(edge_color)
-        # print(f"{request.user.username} gets {total} in level {level} from {children}")
         level += 1
 
     # Create the graph image
     fig = plt.figure(figsize=(8, 6))
     
     start_node = start_node.username
-
-    
     pos = nx.bfs_layout(G,start_node,align="horizontal")
 
-
     nx.draw(G, pos, with_labels=True, node_color='lightblue', node_size = 1000,edge_color='gray', font_size=10)
-    nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=10)
+    # nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=10)
+    print("edge_labels",edge_labels)
 
     # Create the legend
     labels_data = [
@@ -73,12 +71,12 @@ def draw(request,child):
     ]
     unique_edge_colors = set(edge_colors)
     legend_elements = [
-        plt.Line2D([0], [0], color=list(unique_edge_colors)[random.randint(1,3)], lw=2, label=f'{request.user.username} {data} ')
+        plt.Line2D([0], [0], color=list(unique_edge_colors)[0], lw=2, label=f'{request.user.username} {data} ')
         for data in labels_data
     ]
     
     # legend_elements = [plt.Line2D([0], [0], color= list(unique_edge_colors)[0], lw=2, label=f'{request.user.username} gets  ${total}')]
-    plt.legend(handles=legend_elements, loc='lower left', fontsize=10)
+    plt.legend(handles=legend_elements, loc='lower left', fontsize=5)
 
     # Convert the graph image to a base64-encoded string
     buf = io.BytesIO()

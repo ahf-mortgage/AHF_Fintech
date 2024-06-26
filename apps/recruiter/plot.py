@@ -14,9 +14,11 @@ from .draw import draw
 
 @login_required
 def graph_view(request):
-    start_node,visited, node_list,total_mlo_sponsored,agent_list = dfs_traversal(request)
+    start_node,visited,node_list,total_mlo_sponsored = bfs_traversal(request)
     node_graphs = []
+    graph_image = None
     # list(node_list.keys())[0]
+    print("node list = ",node_list)
     for child in node_list.keys():
         graph_image = draw(request,child)
         node_graphs.append(child)
