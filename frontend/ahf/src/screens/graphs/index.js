@@ -1,7 +1,11 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import Graph from 'react-graph-vis';
 
+
+
 const GraphComponent = () => {
+
   const graph = {
     nodes: [
       { id: 1, label: 'Node 1' },
@@ -23,14 +27,13 @@ const GraphComponent = () => {
   const options = {
     layout: {
       hierarchical: {
-        direction: 'TB', // Top-Bottom (root at top)
+        direction: 'UD', // Top-Bottom (root at top)
         sortMethod: 'directed', // Sort based on edge direction
-        // Adjust levelSeparation to control spacing between levels
         levelSeparation: 150, // Increase for more space
       },
     },
     physics: {
-      enabled: false, // Disable physics simulation (animation)
+      enabled: true, // Disable physics simulation (animation)
     },
     edges: {
       color: '#000000',
@@ -47,6 +50,22 @@ const GraphComponent = () => {
     },
   };
 
+  useEffect(() => {
+    axios.get('http://127.0.0.1:8000/api/nodes_views/')
+          .then((data) =>{
+            const response = data.data
+            console.log("response=",response)
+           
+          })
+          .catch((error) => console.error(error))
+
+      axios.get('http://127.0.0.1:8000/api/edges_views/')
+          .then((data) => {
+            const response = data.data
+          
+          })
+          .catch((error) => console.error(error))
+  },[])
   return (
     <div>
       <Graph graph={graph} options={options} events={events} style={{ height: '800px' }} />

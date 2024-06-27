@@ -1,7 +1,10 @@
 from django.contrib.auth.models import AnonymousUser
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from apps.recruiter.models import (CompPlan,Bps,LoanBreakPoint,Branch)
+from rest_framework.generics import ListAPIView
+from apps.recruiter.models import (CompPlan,Bps,LoanBreakPoint,Branch,Edge,Node)
+from utils.pagination import EdgePagination
+from .serialzers import NodeSerializer,EdgeSerializer
 import numpy as np
 
 
@@ -282,3 +285,39 @@ class CompPlanAPIView(APIView):
 
 
 
+class NodeGraphView(ListAPIView):
+    queryset = Node.objects.all()
+    serializer_class = NodeSerializer
+
+    def get(self, request, *args, **kwargs):
+        nodes = Node.objects.all()
+        data_ = []
+        for obj in nodes:
+            if obj.node_id not in data_:
+                data = {
+                    "id":obj.node_id,
+                    "label": obj.mlo_agent.user.username
+                }
+                data_.append(data)
+            else:
+                print("data=",data)
+           
+        return Response(data_)
+
+
+
+
+class EdgeGraphView(APIView):
+    queryset = Edge.objects.all()
+    serializer_class = EdgeSerializer
+
+    def get(self, request, *args, **kwargs):
+        edges = Edge.objects.all()
+        data_ = []
+        for obj in edges:
+            data = {
+                "from":obj.source_node.mlo_agent.user.username,
+                "to": obj.target_node.mlo_agent.user.username
+            }
+            data_.append(data)
+        return Response(data_)

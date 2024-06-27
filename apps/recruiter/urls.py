@@ -7,6 +7,7 @@ app_name = "revenue"
 urlpatterns = [
     path('',plot.graph_view,name="graph"),
     path('api/',api.RecruiterAPIView.as_view(),name='api-view'),
+    path('mlo_views/',api.NodeGraphView.as_view(),name = "mlo-views")
    
    
 ]

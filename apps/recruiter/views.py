@@ -120,8 +120,6 @@ def change_comp_plan(request):
 
 def loan_break_point(request):
     loan_break_point = LoanBreakPoint.objects.all().first()
-    
-
 
     if request.method == "POST":
         loan_break= request.POST.get("loan_break_point")
@@ -289,13 +287,9 @@ def bfs_traversal(request):
                         date_closed = loan.date_closed
                         
                         difference_date = date_joined - date_closed
-                        
-                        
-                        
+
                         if difference_date.days > 6 * 30:
                             total_mlo_sponsored += len( node.outgoing_edges.all())
-                           
-                           
                             node_list[edge.source_node.mlo_agent.user] = [{"level":level,"node":node.target_node.mlo_agent.user } for node in node.outgoing_edges.all()]
                         else:
                             pass

@@ -37,6 +37,9 @@ def draw(request,child):
     level = 1
     total = 0
     edge_colors = []
+
+
+    
     for parent, children in node_list.items():
         parent_username = parent.username
         for child in children:
@@ -54,16 +57,18 @@ def draw(request,child):
             edge_colors.append(edge_color)
         level += 1
 
+
+
     # Create the graph image
-    fig = plt.figure(figsize=(8, 6))
-    
+    fig = plt.figure(figsize=(15, 10))
     start_node = start_node.username
     pos = nx.bfs_layout(G,start_node,align="horizontal")
-
     nx.draw(G, pos, with_labels=True, node_color='lightblue', node_size = 1000,edge_color='gray', font_size=10)
-    # nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=10)
-    print("edge_labels",edge_labels)
 
+
+
+
+  
     # Create the legend
     labels_data = [
         f"gets ${total}",
@@ -75,16 +80,22 @@ def draw(request,child):
         for data in labels_data
     ]
     
+
+
     # legend_elements = [plt.Line2D([0], [0], color= list(unique_edge_colors)[0], lw=2, label=f'{request.user.username} gets  ${total}')]
     plt.legend(handles=legend_elements, loc='lower left', fontsize=5)
-
     # Convert the graph image to a base64-encoded string
     buf = io.BytesIO()
     plt.savefig(buf, format='png')
 
+
+
     img = cv2.imdecode(np.frombuffer(buf.getvalue(), np.uint8), cv2.IMREAD_COLOR)
     img_inverted = cv2.bitwise_not(img)
     graph_image_flipped = cv2.flip(img, 0)
+
+
+
 
      # Convert the inverted image back to a buffer
     _, buffer   = cv2.imencode('.png', img_inverted)

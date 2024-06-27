@@ -19,19 +19,17 @@ ALLOWED_HOSTS = [
      '127.0.0.1',
      'localhost'
      ]
-CSRF_TRUSTED_ORIGINS = [
-  
-    'http://www.ahf.mortgage',
-    'https://www.ahf.mortgage'
-    ]
+# CSRF_TRUSTED_ORIGINS = [
+#     'http://www.ahf.mortgage',
+#     'https://www.ahf.mortgage'
+#     ]
 
 
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:3000/"
-#     "http://192.168.0.103:3000/"
-# ]
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+]
+
 # Application definition
-
 INSTALLED_APPS = [
 
     'django_nvd3',
@@ -118,17 +116,19 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 
 REST_FRAMEWORK = {
-        'DEFAULT_AUTHENTICATION_CLASSES': (
+    'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-
+    
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
     'SIMPLE_JWT': {
         'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
         'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    }
+    },
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 50
 }
 
 SIMPLE_JWT = {
