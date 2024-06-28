@@ -4,7 +4,8 @@ import DashBoard from "./screens/mlos";
 import AbovebreakpointTable from "./screens/tables";
 import "./App.css"
 import ResetPassword from "./screens/accounts/reset";
-import GraphComponent from "./screens/graphs";
+import SimpleDirectedGraph from "./screens/graphs";
+
 
 
 const router = createBrowserRouter([
@@ -30,7 +31,7 @@ const router = createBrowserRouter([
 const App = () => {
   return (
     <div className="App">
-      <GraphComponent />
+      <SimpleDirectedGraph />
 
          {/* <RouterProvider router={router} /> */}
     </div>
