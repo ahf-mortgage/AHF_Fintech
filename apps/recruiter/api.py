@@ -290,19 +290,44 @@ class NodeGraphView(ListAPIView):
     serializer_class = NodeSerializer
 
     def get(self, request, *args, **kwargs):
-        nodes = Node.objects.all()
+        john_edges = Edge.objects.filter(source_node__mlo_agent__user__username = "John")
+        ashaton3_edges = Edge.objects.filter(source_node__mlo_agent__user__username = "ashaton3")
+
+        edges =  Edge.objects.all() # john_edges.union(ashaton3_edges)
+
+        node_list = Node.objects.all()
+        level = 1
+   
         data_ = []
-        for obj in nodes:
-            if obj.node_id not in data_:
-                data = {
-                    "id":obj.node_id,
-                    "label": obj.mlo_agent.user.username
-                }
-                data_.append(data)
-            else:
-                print("data=",data)
-           
-        return Response(data_)
+        nodes = []
+        _edges = []
+        level_source_target = {}
+        level = 1
+        counter  = {
+
+        }
+
+        for node in node_list:
+            nodes.append({
+                "id":f"{node.pk}",
+                "label":node.mlo_agent.user.username
+            })
+
+        for edge in edges:
+            _edges.append({
+                "id": edge.pk,
+                "source": f"{edge.source_node.pk}",
+                "target": f"{edge.target_node.pk}",
+                "label": f'{edge.source_node.mlo_agent.user.username} sponsored {edge.target_node.mlo_agent.user.username}'
+                })
+            level = 1
+        for item in _edges:
+            print("source=",item.get("source"))
+            print("target=",item.get("target"))
+        return Response({
+            'nodes':nodes,
+            "edges":_edges
+        })
 
 
 
@@ -313,11 +338,56 @@ class EdgeGraphView(APIView):
 
     def get(self, request, *args, **kwargs):
         edges = Edge.objects.all()
+        level = 1
         data_ = []
         for obj in edges:
             data = {
-                "from":obj.source_node.mlo_agent.user.username,
-                "to": obj.target_node.mlo_agent.user.username
+               "id":obj.edge_id,
+                "source":obj.source_node.mlo_agent.user.username,
+                "target": obj.target_node.mlo_agent.user.username
             }
             data_.append(data)
+            print("level=",level)
+            level += 1
         return Response(data_)
+
+
+
+class GetNodeInfo(APIView):
+    queryset = Node.objects.all()
+    def get(self, request, *args, **kwargs):
+       
+        query = request.GET
+        found = False
+        id = query.get('id',None)
+        parent_id = query.get('parent_id',None)
+        children = []
+        first_node = Node.objects.all()[0]
+        first_edge = Edge.objects.filter(source_node=first_node)
+        try:
+            node = Node.objects.filter(pk = id).first()
+            parent_node = Node.objects.filter(pk = parent_id).first()
+        except Node.DoesNotExist as e:
+            raise e
+        try:
+            edges = Edge.objects.filter(source_node= node)
+            for child in edges:
+                children.append(child.target_node.mlo_agent.user.username)
+            
+        except Edge.DoesNotExist as e:
+            raise e
+
+       
+        return Response({
+            'parent':parent_node.mlo_agent.user.username,
+            'mlo':node.mlo_agent.user.username,
+            'number_childern':len(edges),
+            'children':children
+        })
+
+
+
+
+
+
+

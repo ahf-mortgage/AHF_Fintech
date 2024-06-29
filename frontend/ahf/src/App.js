@@ -26,14 +26,17 @@ const router = createBrowserRouter([
     path: "/abovebreakpoint",
     element: <AbovebreakpointTable />,
   },
+
+  {
+    path: "/graph",
+    element: <SimpleDirectedGraph />,
+  },
 ]);
 
 const App = () => {
   return (
     <div className="App">
-      <SimpleDirectedGraph />
-
-         {/* <RouterProvider router={router} /> */}
+    <RouterProvider router={router} />
     </div>
    
   );
