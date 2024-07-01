@@ -2,10 +2,12 @@ from django.contrib.auth.models import AnonymousUser
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView
+from collections import deque
 from apps.recruiter.models import (CompPlan,Bps,LoanBreakPoint,Branch,Edge,Node)
 from utils.pagination import EdgePagination
 from .serialzers import NodeSerializer,EdgeSerializer
 import numpy as np
+
 
 
 data = {
@@ -320,10 +322,8 @@ class NodeGraphView(ListAPIView):
                 "target": f"{edge.target_node.pk}",
                 "label": f'{edge.source_node.mlo_agent.user.username} sponsored {edge.target_node.mlo_agent.user.username}'
                 })
-            level = 1
-        for item in _edges:
-            print("source=",item.get("source"))
-            print("target=",item.get("target"))
+        
+   
         return Response({
             'nodes':nodes,
             "edges":_edges
@@ -388,6 +388,46 @@ class GetNodeInfo(APIView):
 
 
 
+class GetLevelInfo(APIView):
+    queryset = Node.objects.all()
+    def get(self, request, *args, **kwargs):
+        nodes = Node.objects.all()
+        edges = Edge.objects.all()
+
+        level_info = {}
+        level = 0
+        counter = {}
+
+        for edge in edges:
+            source_id = str(edge.source_node.pk)
+            target_id = str(edge.target_node.pk)
+
+            if source_id not in level_info:
+                level_info[source_id] = {
+                    "label": edge.source_node.mlo_agent.user.username,
+                    "level": level,
+                    "in_degree": 0,
+                    "out_degree": 0
+                }
+                counter[source_id] = 0
+
+            if target_id not in level_info:
+                level_info[target_id] = {
+                    "label": edge.target_node.mlo_agent.user.username,
+                    "level": level + 1,
+                    "in_degree": 0,
+                    "out_degree": 0
+                }
+                counter[target_id] = 0
+
+            level_info[source_id]["out_degree"] += 1
+            level_info[target_id]["in_degree"] += 1
+            counter[source_id] += 1
+            
+            if counter[source_id] == 1:
+                level += 1
+                
+        return Response(level_info)
 
 
 

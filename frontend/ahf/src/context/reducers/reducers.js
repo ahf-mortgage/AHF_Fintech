@@ -2,7 +2,8 @@ import persistReducer from "redux-persist/es/persistReducer";
 import storage from "redux-persist/lib/storage";
 
 const initialState = {
-  refreshToken: ""
+  refreshToken: "",
+  showModal:false
 };
 
 const persistConfig = {
@@ -18,6 +19,23 @@ const authReducer1 = (state = initialState, action) => {
       return state;
   }
 };
+
+
+const showModalReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case 'SET_SHOW_MODAL':
+      return { ...state, showModal: action.payload };
+    default:
+      return state;
+  }
+};
+
 const authReducer = persistReducer(persistConfig, authReducer1);
-export default authReducer;
+const _showModalReducer = persistReducer(persistConfig, showModalReducer);
+
+// export default authReducer;
+modules.export = {
+  authReducer,
+  _showModalReducer
+}
 
