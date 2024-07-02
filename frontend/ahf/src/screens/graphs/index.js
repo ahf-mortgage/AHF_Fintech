@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { GraphCanvas } from 'reagraph';
 import Dot from '../../components/activity';
 import { ModalBox } from '../../components/modal';
+import { useDispatch, useSelector } from 'react-redux';
+import { setShowModal } from '../../context/action';
 
 
 
@@ -13,12 +15,13 @@ import { ModalBox } from '../../components/modal';
 const SimpleDirectedGraph = () => {
   const [fetchedNodes, setFetchedNodes] = useState([])
   const [fetchedEdges, setFetchedEdges] = useState([])
-  const [bfsNodes, setBFSNodes] = useState([]);
-  const [showModal, setShowModal] = useState(false)
-  const [node_id, setNodeId] = useState(0)
-  const [parent_id, setParentId] = useState(0)
+  const [bfsNodes, setBFSNodes]         = useState([]);
+  const [node_id, setNodeId]            = useState(0)
+  const [parent_id, setParentId]        = useState(0)
+  const dispatch                        = useDispatch();
+  const showModal                       = useSelector((state) => state._showModalReducer)
 
-
+  console.log("showModal=",showModal)
 
   useEffect(() => {
     async function getData() {
@@ -63,18 +66,14 @@ const SimpleDirectedGraph = () => {
                     sizingType='none'
                     minNodeSize={20}
                     minDistance={60}
-                    // onNodePointerOver={
-                    //   (node) => {
-                    //     setNodeId(node.id)
-                    //     setParentId(node.parents[0].id)
-                    //     setShowModal(true)
-                    //   }
-                    // }
-                    // onNodePointerOut={
-                    //   (node) => {
-                    //     setShowModal(false)
-                    //   }
-                    // }
+                    onNodePointerOver={
+                      (node) => {
+                        setNodeId(node.id)
+                        setParentId(node.parents[0].id)
+                        dispatch(setShowModal(true));
+                      }
+                    }
+                  
                     nodes={filteredNodes}
                     edges={fetchedEdges}
 

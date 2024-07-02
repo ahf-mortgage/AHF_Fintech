@@ -3,3 +3,10 @@ export const setRefreshToken = (refreshToken) => ({
     payload: refreshToken,
   });
   
+
+
+export const setShowModal = (showModal) => ({
+    type: "SET_SHOW_MODAL",
+    payload: showModal,
+  });
+  

@@ -391,43 +391,21 @@ class GetNodeInfo(APIView):
 class GetLevelInfo(APIView):
     queryset = Node.objects.all()
     def get(self, request, *args, **kwargs):
-        nodes = Node.objects.all()
-        edges = Edge.objects.all()
+        starting_node = Node.objects.all().first()
+        queue = deque([(starting_node, 0)])
+        node_levels = {starting_node: 0}
 
-        level_info = {}
-        level = 0
-        counter = {}
+        while queue:
+            node, level = queue.popleft()
+            for edge in node.outgoing_edges.all():
+                target_node = edge.target_node
+                if target_node not in node_levels:
+                    node_levels[target_node] = level + 1
+                    queue.append((target_node, level + 1))
 
-        for edge in edges:
-            source_id = str(edge.source_node.pk)
-            target_id = str(edge.target_node.pk)
+        print("node_levels=", node_levels.values())
 
-            if source_id not in level_info:
-                level_info[source_id] = {
-                    "label": edge.source_node.mlo_agent.user.username,
-                    "level": level,
-                    "in_degree": 0,
-                    "out_degree": 0
-                }
-                counter[source_id] = 0
-
-            if target_id not in level_info:
-                level_info[target_id] = {
-                    "label": edge.target_node.mlo_agent.user.username,
-                    "level": level + 1,
-                    "in_degree": 0,
-                    "out_degree": 0
-                }
-                counter[target_id] = 0
-
-            level_info[source_id]["out_degree"] += 1
-            level_info[target_id]["in_degree"] += 1
-            counter[source_id] += 1
-            
-            if counter[source_id] == 1:
-                level += 1
-                
-        return Response(level_info)
-
-
+        return Response({
+            'msg':'hello world'
+        })
 

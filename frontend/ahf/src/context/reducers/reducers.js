@@ -3,7 +3,7 @@ import storage from "redux-persist/lib/storage";
 
 const initialState = {
   refreshToken: "",
-  showModal:false
+  modal:false
 };
 
 const persistConfig = {
@@ -30,12 +30,10 @@ const showModalReducer = (state = initialState, action) => {
   }
 };
 
-const authReducer = persistReducer(persistConfig, authReducer1);
+const authReducer       = persistReducer(persistConfig, authReducer1);
 const _showModalReducer = persistReducer(persistConfig, showModalReducer);
 
-// export default authReducer;
-modules.export = {
-  authReducer,
-  _showModalReducer
-}
+export default authReducer
+  
+
 
