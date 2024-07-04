@@ -3,7 +3,17 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView
 from collections import deque
-from apps.recruiter.models import (CompPlan,Bps,LoanBreakPoint,Branch,Edge,Node)
+from django.contrib.auth.models import User
+from collections import Counter
+from apps.recruiter.models import (
+    CompPlan,
+    Bps,
+    LoanBreakPoint,
+    Branch,
+    Edge,
+    Node,
+    MLO_AGENT,
+    Loan)
 from utils.pagination import EdgePagination
 from .serialzers import NodeSerializer,EdgeSerializer
 import numpy as np
@@ -356,7 +366,6 @@ class EdgeGraphView(APIView):
 class GetNodeInfo(APIView):
     queryset = Node.objects.all()
     def get(self, request, *args, **kwargs):
-       
         query = request.GET
         found = False
         id = query.get('id',None)
@@ -391,21 +400,73 @@ class GetNodeInfo(APIView):
 class GetLevelInfo(APIView):
     queryset = Node.objects.all()
     def get(self, request, *args, **kwargs):
-        starting_node = Node.objects.all().first()
-        queue = deque([(starting_node, 0)])
-        node_levels = {starting_node: 0}
+        node_id = request.GET.get('node_id',1)
+ 
+        starting_node = Node.objects.filter(node_id =node_id).first()
+        queue         = deque([(starting_node, 0)])
+        node_levels   = {starting_node.mlo_agent.user.username: 0}
+        data          = []
+        level_to_commission = {
+            1:481,
+            2:550,
+            3:344,
+            4:206,
+            5:138,
+            6:344,
+            7:688
+        }
+
+        while queue:
+            node, level = queue.popleft()
+            for edge in node.outgoing_edges.all():
+                target_node = edge.target_node
+            
+                if target_node not in node_levels:
+                    node_levels[target_node.mlo_agent.user.username] = level + 1
+                    
+                   
+                    queue.append((target_node, level + 1))
+
+        for mlo in node_levels:
+  
+            user      = User.objects.filter(username = mlo).first()
+            mlo_agent = MLO_AGENT.objects.filter(user=user).first()
+            loan      = Loan.objects.filter(mlo_agent=mlo_agent).first()
+            
+    
+            _data = {
+                'mlo':mlo,
+                'level':node_levels.get(mlo,None),
+                'commission':level_to_commission.get(node_levels.get(mlo,None),0),
+                'loan':loan.amount     
+            }
+            data.append(_data)
+        return Response(data)
+
+
+class GetMloLevelInfo(APIView):
+    queryset = Node.objects.all()
+    def get(self, request, *args, **kwargs):
+        mlo_id = request.GET.get('mlo_id',None)
+        mlo = MLO_AGENT.objects.filter(id =mlo_id).first()
+        # starting_node = Node.objects.filter(mlo_agent=mlo).first()
+
+        user          = request.user
+        request_mlo   = MLO_AGENT.objects.filter(user = user).first()
+        request_agent = Node.objects.filter(mlo_agent= request_mlo).first()
+        starting_node = request_agent
+        queue         = deque([(starting_node, 0)])
+        node_levels   = {starting_node.mlo_agent.user.username: 0}
 
         while queue:
             node, level = queue.popleft()
             for edge in node.outgoing_edges.all():
                 target_node = edge.target_node
                 if target_node not in node_levels:
-                    node_levels[target_node] = level + 1
+                    node_levels[target_node.mlo_agent.user.username] = level + 1
                     queue.append((target_node, level + 1))
-
-        print("node_levels=", node_levels.values())
-
+        # print("node_levels=",node_levels.get(mlo.user.username))
+    
         return Response({
-            'msg':'hello world'
+            'level':node_levels.get(mlo.user.username)
         })
-

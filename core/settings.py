@@ -124,12 +124,14 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
     'SIMPLE_JWT': {
-        'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+        'ACCESS_TOKEN_LIFETIME': timedelta(days=3),
         'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     },
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 50
 }
+
+
 
 SIMPLE_JWT = {
    'AUTH_HEADER_TYPES': ('JWT',)
@@ -152,12 +154,9 @@ AUTHENTICATION_BACKENDS = [
 
 ]
 
-DJOSER = {
-    "SEND_ACTIVATION_EMAIL": False,
-    "PASSWORD_RESET_CONFIRM_URL": "/https://www.ahf.morgage/auth/{uid}/{token}",
-    "USERNAME_RESET_CONFIRM_URL": "#/username/reset/confirm/{uid}/{token}",
-    "ACTIVATION_URL": "#/activate/{uid}/{token}",
-    "SOCIAL_AUTH_ALLOWED_REDIRECT_URIS": ["http://test.localhost/"],
+
+DJANGO_SECURE_OBJECT_REGISTRY = {
+    'TOKEN_LIFESPAN': timedelta(hours=2),  # Set the default lifespan to 2 hours
 }
 
 PASSWORD_RESET_CONFIRM_URL = "https://www.ahf.morgage/auth/"
@@ -238,26 +237,6 @@ LOGIN_REDIRECT_URL = '/'
 # crispy form config
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
-
-
-# LOGGING = {
-#     "version": 1,
-#     "disable_existing_loggers": False,
-#     "handlers": {
-#         "file": {
-#             "level": "DEBUG",
-#             "class": "logging.FileHandler",
-#             "filename": BASE_DIR / 'logs' / 'debug.log'
-#         },
-#     },
-#     "loggers": {
-#         "django": {
-#             "handlers": ["file"],
-#             "level": "DEBUG",
-#             "propagate": True,
-#         }, 
-#     },
-# }
 
 
 

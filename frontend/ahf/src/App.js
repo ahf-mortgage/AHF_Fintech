@@ -5,6 +5,7 @@ import AbovebreakpointTable from "./screens/tables";
 import "./App.css"
 import ResetPassword from "./screens/accounts/reset";
 import SimpleDirectedGraph from "./screens/graphs";
+import { MloDetail } from "./screens/mlos/detail";
 
 
 
@@ -30,6 +31,11 @@ const router = createBrowserRouter([
   {
     path: "/graph",
     element: <SimpleDirectedGraph />,
+  },
+
+  {
+    path: "/detail",
+    element: <MloDetail />,
   },
 ]);
 

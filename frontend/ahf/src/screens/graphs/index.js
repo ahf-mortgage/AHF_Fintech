@@ -6,6 +6,7 @@ import Dot from '../../components/activity';
 import { ModalBox } from '../../components/modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { setShowModal } from '../../context/action';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -16,12 +17,11 @@ const SimpleDirectedGraph = () => {
   const [fetchedNodes, setFetchedNodes] = useState([])
   const [fetchedEdges, setFetchedEdges] = useState([])
   const [bfsNodes, setBFSNodes]         = useState([]);
-  const [node_id, setNodeId]            = useState(0)
+  const [node_id, setNodeId]            = useState(1)
   const [parent_id, setParentId]        = useState(0)
   const dispatch                        = useDispatch();
   const showModal                       = useSelector((state) => state._showModalReducer)
-
-  console.log("showModal=",showModal)
+  const navigate                        = useNavigate(); 
 
   useEffect(() => {
     async function getData() {
@@ -47,8 +47,6 @@ const SimpleDirectedGraph = () => {
   });
 
 
-
-
   return (
     <div>
       {
@@ -66,9 +64,10 @@ const SimpleDirectedGraph = () => {
                     sizingType='none'
                     minNodeSize={20}
                     minDistance={60}
-                    onNodePointerOver={
+                    onNodeClick={
                       (node) => {
                         setNodeId(node.id)
+                        navigate(`/detail/?id=${node.id}`)
                         setParentId(node.parents[0].id)
                         dispatch(setShowModal(true));
                       }
@@ -76,10 +75,7 @@ const SimpleDirectedGraph = () => {
                   
                     nodes={filteredNodes}
                     edges={fetchedEdges}
-
                   />
-
-
                 </div>
 
             }

@@ -16,10 +16,7 @@ import Dot from "../../components/activity";
 
 function LoginPage({ navigation }) {
   const authToken = useSelector((state) => state.auth);
-  const refreshToken = authToken.auth.refreshToken
-  console.log("token = ",refreshToken)
-
-
+  
   const [username, setUsername]        = useState("John")
   const [password, setPassword]        = useState("")
   const [showPassword,setShowPassword] = useState(false)
@@ -29,6 +26,7 @@ function LoginPage({ navigation }) {
   const navigate                       = useNavigate();   
   const dispatch                       = useDispatch();
                       
+
 
   function toggleShowPassword() {
     setShowPassword(!showPassword)
@@ -48,7 +46,7 @@ function LoginPage({ navigation }) {
       password: password
     };
 
-    axios.post('https://www.ahf.mortgage/auth/jwt/create/', data, config)
+    axios.post('http://127.0.0.1:8000/auth/jwt/create/', data, config)
       .then(response => {
         console.log("response = ",response)
         if(response != null) {
