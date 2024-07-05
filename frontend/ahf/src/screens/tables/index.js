@@ -14,8 +14,8 @@ import { faL } from '@fortawesome/free-solid-svg-icons';
 
 
 const AbovebreakpointTable = () => {
-  const authToken = useSelector((state) => state.auth);
-  const refreshToken = authToken.auth.refreshToken
+  const refreshToken = useSelector((state) => state.auth.refreshToken);
+
   const [isLoading, setIsLoading] = useState(true)
 
   const [data, setData]                    = useState([])
