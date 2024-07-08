@@ -11,6 +11,7 @@ import { AHFNavbar } from "../../components/Navbar";
 export function MloDetail() {
   const [isLoading, setIsLoading] = useState(true)
   const refreshToken = useSelector((state) => state.auth.refreshToken);
+  console.log("refreshToken=",refreshToken)
   const [data,setData] = useState([])
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);

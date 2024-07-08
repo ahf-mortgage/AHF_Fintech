@@ -48,8 +48,9 @@ function LoginPage({ navigation }) {
 
     axios.post('http://127.0.0.1:8000/auth/jwt/create/', data, config)
       .then(response => {
-        console.log("response = ",response)
-        if(response != null) {
+        console.log(response.status)
+     
+        if(response.status == 200) {
           const token = response.data.access
           dispatch(setRefreshToken(token));
           navigate("/dashboard")

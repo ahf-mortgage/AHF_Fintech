@@ -407,7 +407,7 @@ class GetLevelInfo(APIView):
         node_levels   = {starting_node.mlo_agent.user.username: 0}
         data          = []
         level_to_commission = {
-            1:481,
+            1:481,#AE12/2,$AD$9*AD12
             2:550,
             3:344,
             4:206,
@@ -438,7 +438,7 @@ class GetLevelInfo(APIView):
                 'mlo':mlo,
                 'level':node_levels.get(mlo,None),
                 'commission':level_to_commission.get(node_levels.get(mlo,None),0),
-                'loan':loan.amount     
+                'loan':loan.amount  * 1000   
             }
             data.append(_data)
         return Response(data)
@@ -465,7 +465,7 @@ class GetMloLevelInfo(APIView):
                 if target_node not in node_levels:
                     node_levels[target_node.mlo_agent.user.username] = level + 1
                     queue.append((target_node, level + 1))
-        # print("node_levels=",node_levels.get(mlo.user.username))
+ 
     
         return Response({
             'level':node_levels.get(mlo.user.username)

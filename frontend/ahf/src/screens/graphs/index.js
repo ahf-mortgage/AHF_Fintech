@@ -11,8 +11,6 @@ import { useNavigate } from 'react-router-dom';
 
 
 
-
-
 const SimpleDirectedGraph = () => {
   const [fetchedNodes, setFetchedNodes] = useState([])
   const [fetchedEdges, setFetchedEdges] = useState([])
@@ -67,7 +65,12 @@ const SimpleDirectedGraph = () => {
                     onNodeClick={
                       (node) => {
                         setNodeId(node.id)
-                        navigate(`/detail/?id=${node.id}`)
+                        if(!node.id) {
+                          navigate(`/detail/?id=${1}`)
+                        } else {
+                          navigate(`/detail/?id=${node.id}`)
+                        }
+              
                         setParentId(node.parents[0].id)
                         dispatch(setShowModal(true));
                       }
@@ -81,9 +84,7 @@ const SimpleDirectedGraph = () => {
             }
 
           </div>
-
           :
-
           <div className='h-screen w-screen flex flex-col justify-center text-center'>
             <Dot size={40} />
 
