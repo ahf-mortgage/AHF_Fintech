@@ -12,8 +12,10 @@ from apps.recruiter.models import (
     Branch,
     Edge,
     Node,
-    MLO_AGENT,
+    MLO_AGENT
+    ,
     Loan)
+from apps.RevenueShare.models import AnnualRevenueShare
 from utils.pagination import EdgePagination
 from utils.ahf_annual_cap_data import ahf_annual_cap_data as aacd
 from .serialzers import NodeSerializer,EdgeSerializer
@@ -411,7 +413,10 @@ class GetLevelInfo(APIView):
         data          = []
         level_to_commission = {}
         levels = [i for i in range(1,8)]
-        annual_revenue_shares = [ 0.035,0.040,0.025,0.015,0.01,0.02,0.045]
+        all_revenue_shares = AnnualRevenueShare.objects.all()
+        annual_revenue_shares = []
+        for share in all_revenue_shares:
+            annual_revenue_shares.append(share.percentage/100)
 
         AD9  = aacd.get("test_branch_gross_income",None)
         for level,AD12 in zip(levels,annual_revenue_shares):

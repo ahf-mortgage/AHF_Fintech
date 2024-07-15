@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { Label } from 'flowbite-react';
 import React, { useState, useEffect } from 'react';
 import { GraphCanvas } from 'reagraph';
 import Dot from '../../components/activity';
@@ -16,7 +15,6 @@ import { useNavigate } from 'react-router-dom';
 const SimpleDirectedGraph = () => {
   const [fetchedNodes, setFetchedNodes] = useState([])
   const [fetchedEdges, setFetchedEdges] = useState([])
-  const [bfsNodes, setBFSNodes]         = useState([]);
   const [node_id, setNodeId]            = useState(1)
   const [parent_id, setParentId]        = useState(0)
   const dispatch                        = useDispatch();
