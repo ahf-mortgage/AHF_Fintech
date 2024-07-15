@@ -1,16 +1,17 @@
 import os
 from datetime import timedelta
 from pathlib import Path
+from decouple import config
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-xapy24exjy5!26b1d+7$v5wkh+44&(3rk^tfd=cbj#_$+dfb31'
+SECRET_KEY = config('SECRET_KEY') #'django-insecure-xapy24exjy5!26b1d+7$v5wkh+44&(3rk^tfd=cbj#_$+dfb31'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool) #True
 
 ALLOWED_HOSTS = [
     'https://www.ahf.mortgage',
@@ -196,7 +197,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = '/static/'
-# STATIC_URL = '/static/'
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')  # Replace BASE_DIR with your project's base directory
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
@@ -219,12 +219,18 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
+
+
+
+EMAIL_PORT = config('EMAIL_PORT', default=25, cast=int)
+
+
 # Email server configuration
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'tinsingjobs2k@gmail.com'
-EMAIL_HOST_PASSWORD = 'vavkndyvafegycua'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+EMAIL_HOST          = config('EMAIL_HOST', default='smtp.gmail.com') 
+EMAIL_HOST_USER     = config('EMAIL_HOST_USER', default=25)
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default=25) 
+EMAIL_PORT          = config('EMAIL_PORT', default=25, cast=int)
+EMAIL_USE_TLS       = config('EMAIL_USE_TLS', default=25) #True
 
 PASSWORD_RESET_CONFIRM_UR = "http://12.0.0.1:8000"
 

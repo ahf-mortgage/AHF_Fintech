@@ -15,6 +15,7 @@ from apps.recruiter.models import (
     MLO_AGENT,
     Loan)
 from utils.pagination import EdgePagination
+from utils.ahf_annual_cap_data import ahf_annual_cap_data as aacd
 from .serialzers import NodeSerializer,EdgeSerializer
 import numpy as np
 
@@ -400,21 +401,24 @@ class GetNodeInfo(APIView):
 class GetLevelInfo(APIView):
     queryset = Node.objects.all()
     def get(self, request, *args, **kwargs):
-        node_id = request.GET.get('node_id',1)
+        node_id = request.GET.get('node_id',None)
+        if node_id == None:
+            starting_node = Node.objects.all().first()
  
         starting_node = Node.objects.filter(node_id =node_id).first()
         queue         = deque([(starting_node, 0)])
         node_levels   = {starting_node.mlo_agent.user.username: 0}
         data          = []
-        level_to_commission = {
-            1:481,
-            2:550,
-            3:344,
-            4:206,
-            5:138,
-            6:344,
-            7:688
-        }
+        level_to_commission = {}
+        levels = [i for i in range(1,8)]
+        annual_revenue_shares = [ 0.035,0.040,0.025,0.015,0.01,0.02,0.045]
+
+        AD9  = aacd.get("test_branch_gross_income",None)
+        for level,AD12 in zip(levels,annual_revenue_shares):
+            
+            AE12 = AD9*AD12
+            AG12 = AE12/2
+            level_to_commission[level] = AG12
 
         while queue:
             node, level = queue.popleft()
@@ -441,6 +445,7 @@ class GetLevelInfo(APIView):
                 'loan':loan.amount     
             }
             data.append(_data)
+    
         return Response(data)
 
 

@@ -66,9 +66,18 @@ const SimpleDirectedGraph = () => {
                     minDistance={60}
                     onNodeClick={
                       (node) => {
+                        console.log("node id = ",node.id)
+
                         setNodeId(node.id)
-                        navigate(`/detail/?id=${node.id}`)
-                        setParentId(node.parents[0].id)
+                        navigate(`/detail/?id=${node_id}`)
+                        if(node_id == 1) {
+                          setParentId(0)
+                        } 
+                        else {
+                          setParentId(node.parents[0].id)
+
+                        }
+                      
                         dispatch(setShowModal(true));
                       }
                     }
