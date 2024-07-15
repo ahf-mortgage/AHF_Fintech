@@ -406,7 +406,6 @@ class GetLevelInfo(APIView):
         node_id = request.GET.get('node_id',None)
         if node_id == None:
             starting_node = Node.objects.all().first()
- 
         starting_node = Node.objects.filter(node_id =node_id).first()
         queue         = deque([(starting_node, 0)])
         node_levels   = {starting_node.mlo_agent.user.username: 0}
@@ -415,12 +414,12 @@ class GetLevelInfo(APIView):
         levels = [i for i in range(1,8)]
         all_revenue_shares = AnnualRevenueShare.objects.all()
         annual_revenue_shares = []
+        AD9  = aacd.get("test_branch_gross_income",None)
+
         for share in all_revenue_shares:
             annual_revenue_shares.append(share.percentage/100)
 
-        AD9  = aacd.get("test_branch_gross_income",None)
         for level,AD12 in zip(levels,annual_revenue_shares):
-            
             AE12 = AD9*AD12
             AG12 = AE12/2
             level_to_commission[level] = AG12
@@ -429,11 +428,8 @@ class GetLevelInfo(APIView):
             node, level = queue.popleft()
             for edge in node.outgoing_edges.all():
                 target_node = edge.target_node
-            
                 if target_node not in node_levels:
                     node_levels[target_node.mlo_agent.user.username] = level + 1
-                    
-                   
                     queue.append((target_node, level + 1))
 
         for mlo in node_levels:

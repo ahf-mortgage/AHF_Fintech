@@ -8,14 +8,10 @@ import { setShowModal } from '../../context/action';
 import { useNavigate } from 'react-router-dom';
 
 
-
-
-
-
 const SimpleDirectedGraph = () => {
   const [fetchedNodes, setFetchedNodes] = useState([])
   const [fetchedEdges, setFetchedEdges] = useState([])
-  const [node_id, setNodeId]            = useState(1)
+  const [node_id, setNodeId]            = useState(0)
   const [parent_id, setParentId]        = useState(0)
   const dispatch                        = useDispatch();
   const showModal                       = useSelector((state) => state._showModalReducer)
@@ -62,13 +58,13 @@ const SimpleDirectedGraph = () => {
                     sizingType='none'
                     minNodeSize={20}
                     minDistance={60}
+                
                     onNodeClick={
                       (node) => {
-                        console.log("node id = ",node.id)
-
+                        console.log("node id =",node.id)
                         setNodeId(node.id)
-                        navigate(`/detail/?id=${node_id}`)
-                        if(node_id == 1) {
+                        navigate(`/detail/?id=${node.id}`)
+                        if(node.id == 1) {
                           setParentId(0)
                         } 
                         else {
