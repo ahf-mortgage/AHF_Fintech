@@ -10,7 +10,6 @@ sys.path.append("/home/tinsae/Desktop/projects/AHF_Fintech/utils/")
 import calc_res
 
 
-print("sys path ",sys.path)
 
 def function(q22):
     branch_gross = 275000
@@ -44,5 +43,3 @@ tolerance = 1e-6
 
 # Find the root using the bisection method
 root = find_root(function, left, right, tolerance)
-print("Root:", root)
-print("Function value at the root:", function(root))

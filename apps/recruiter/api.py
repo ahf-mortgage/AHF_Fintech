@@ -20,6 +20,7 @@ from utils.pagination import EdgePagination
 from utils.ahf_annual_cap_data import ahf_annual_cap_data as aacd
 from .serialzers import NodeSerializer,EdgeSerializer
 import numpy as np
+import math
 
 
 
@@ -412,9 +413,16 @@ class GetLevelInfo(APIView):
         data          = []
         level_to_commission = {}
         levels = [i for i in range(1,8)]
+
         all_revenue_shares = AnnualRevenueShare.objects.all()
+
+        
         annual_revenue_shares = []
-        AD9  = aacd.get("test_branch_gross_income",None)
+        test_branch_gross_income  = aacd.get("test_branch_gross_income",None)
+        ahf_amount                = aacd.get("ahf_amount",1)
+        # ahf_annual_cap_data.test_branch_gross_income|div:ahf_amount|mul:100
+        AD9     =  math.ceil(float(test_branch_gross_income)/float(ahf_amount) * 100)
+       
 
         for share in all_revenue_shares:
             annual_revenue_shares.append(share.percentage/100)

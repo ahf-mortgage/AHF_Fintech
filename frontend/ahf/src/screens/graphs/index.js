@@ -61,7 +61,6 @@ const SimpleDirectedGraph = () => {
                 
                     onNodeClick={
                       (node) => {
-                        console.log("node id =",node.id)
                         setNodeId(node.id)
                         navigate(`/detail/?id=${node.id}`)
                         if(node.id == 1) {
@@ -69,9 +68,7 @@ const SimpleDirectedGraph = () => {
                         } 
                         else {
                           setParentId(node.parents[0].id)
-
                         }
-                      
                         dispatch(setShowModal(true));
                       }
                     }
