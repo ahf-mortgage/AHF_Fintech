@@ -1,11 +1,10 @@
 
-"use client";
-import { Button, Label, TextInput, Card, Checkbox, ListGroup } from "flowbite-react";
+import { Button, Label, Card,ListGroup } from "flowbite-react";
 import { useState } from "react";
-import { Formik } from 'formik';
+import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
-import "./index.css"
 import { setRefreshToken } from "../../context/action";
 import { useDispatch, useSelector } from "react-redux";
 import HorizontalLine from '../../components/Line';
@@ -13,12 +12,11 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { FaGoogle, FaEye, FaEyeSlash } from "react-icons/fa";
 import { Dots } from "react-activity";
 import Dot from "../../components/activity";
+import { LoginSchema } from "../../utils/validations";
 
 
-function LoginPage({ navigation }) {
+const  LoginPage = ({ navigation }) => {
   const authToken = useSelector((state) => state.auth);
-
-
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [errorMsg, setErrorMsg] = useState("")
@@ -26,22 +24,16 @@ function LoginPage({ navigation }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-
-
   function toggleShowPassword() {
     setShowPassword(!showPassword)
   }
 
-  function login(values,event) {
-    event.preventDefault()
-    console.log("formik Library is here")
-
+  const handleSubmit =  (values, { event })  => {
     const config = {
       headers: {
         'Content-Type': 'application/json'
       }
     };
-
     const data = {
       username: values.username,
       password: values.password
@@ -49,7 +41,6 @@ function LoginPage({ navigation }) {
 
     axios.post('http://127.0.0.1:8000/auth/jwt/create/', data, config)
       .then(response => {
-        console.log("response = ", response)
         if (response != null) {
           const token = response.data.access
           dispatch(setRefreshToken(token));
@@ -71,20 +62,14 @@ function LoginPage({ navigation }) {
 
     <div className="h-screen w-screen bg-[#F2F7FA]">
       <div className="flex justify-center items-center h-screen">
-
         <Card className="w-[546px] h-[550px] justify-center items-center">
-
           <p className="text-[#2A3135] text-[32px] font-['Roboto_Slab'] text-center">Sign into your account </p>
           <p className="text-red-500 font-['Roboto_Slab'] text-center">{errorKey} {errorMsg}</p>
           <Formik
             initialValues={{ username: '', password: '' }}
-            validate={values => {
-              console.log("values=",values)
-            }}
-            onSubmit={(values,{ event }) => {
-              login(event)
-            }}
-          >
+            validationSchema={LoginSchema}
+            onSubmit={handleSubmit}
+            >
             {({
               values,
               errors,
@@ -92,16 +77,15 @@ function LoginPage({ navigation }) {
               handleChange,
               handleBlur,
               handleSubmit,
-              isSubmitting,
-              /* and other goodies */
+              isSubmitting
             }) => (
 
-              <form className="flex flex-col gap-4">
+              <Form className="flex flex-col gap-4">
                 <div>
                   <div className="mb-2 block">
                     <Label htmlFor="username" value="Username" />
                   </div>
-                  <TextInput
+                  <Field
                     id="username"
                     type="text"
                     className="w-[369px] h-[38px]" placeholder="John" required
@@ -111,25 +95,32 @@ function LoginPage({ navigation }) {
                     value={values.username}
 
                   />
+                  {errors.username && touched.username ? (
+                  <div class="text-red-400">
+                    {errors.username}</div>
+                  ) : null}
                 </div>
                 <div>
                   <div className="mb-0 block">
-                    <Label htmlFor="password1" value="Password" />
+                    <Label htmlFor="password" value="Password" />
                   </div>
                   <div>
 
                   </div>
                   <div className="">
-                    <TextInput
+                    <Field
                       id="password"
                       className="w-[369px] h-[38px]" type={showPassword ? 'text' : 'password'} required
                       name="password"
+                      placeholder="**********************"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       value={values.password}
                     />
-
-
+                    {errors.password && touched.password ? (
+                    <div class="text-red-400">
+                      {errors.password}</div>
+                    ) : null}
                     {
                       showPassword ? (
                         <FaEyeSlash
@@ -161,13 +152,11 @@ function LoginPage({ navigation }) {
                     </div>
                     :
                     <Button
-                      type="submit"
-                      className="w-[369px] h-[38px] text-center"
-                    >
-                       Sign in
+                          type="submit"
+                          className="w-[369px] h-[38px] text-center"
+                        >
+                          Sign in
                     </Button>
-            
-
                 }
 
                 <div className="flex items-center">
@@ -176,7 +165,7 @@ function LoginPage({ navigation }) {
                   <HorizontalLine width={95} color={'#FFFFFF'} className="" />
                 </div>
 
-              </form>
+              </Form>
 
             )}
           </Formik>

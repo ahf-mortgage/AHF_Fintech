@@ -20,7 +20,7 @@ function DashBoard() {
             Authorization: `JWT ${refreshToken}`,
           };
           
-        axios.get(url, { headers })
+        axios.post(url, { headers })
             .then(response => {
                 console.log("response=",response)
 
