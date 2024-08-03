@@ -34,17 +34,24 @@ class MLOAdmin(admin.ModelAdmin):
     form = MLOForm
 
 
-admin.site.register(Loan)
 
+@admin.register(Loan)
+class MLOAdmin(admin.ModelAdmin):
+    search_fields = 'mlo_agent',
+
+
+
+# admin.site.register(Loan)
+admin.site.register(LoanAmount)
 admin.site.register(Bps)
+
 
 admin.site.register(LoanBreakPoint)
 admin.site.register(CompPlan)
 
-# admin.site.register(AHF)
+admin.site.register(AHF)
 admin.site.register(Recruiter)
 admin.site.register(Branch)
-# admin.site.register(AHF)
 admin.site.register(Node)
 admin.site.register(Edge)
 admin.site.register(MLO_AGENT)

@@ -6,6 +6,7 @@ import "./App.css"
 import ResetPassword from "./screens/accounts/reset";
 import SimpleDirectedGraph from "./screens/graphs";
 import { MloDetail } from "./screens/mlos/detail";
+import LoanDetail from "./screens/loans/detail";
 
 
 
@@ -36,6 +37,11 @@ const router = createBrowserRouter([
   {
     path: "/detail",
     element: <MloDetail />,
+  },
+
+  {
+    path: "/loan_detail",
+    element: <LoanDetail />,
   },
 ]);
 

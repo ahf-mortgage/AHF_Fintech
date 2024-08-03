@@ -141,7 +141,7 @@ SIMPLE_JWT = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'db4.sqlite4',
     }
 }
 
@@ -149,12 +149,9 @@ DATABASES = {
 
 # django all auth configs
 AUTHENTICATION_BACKENDS = [
-
     # Needed to login by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
-
 ]
-
 
 DJANGO_SECURE_OBJECT_REGISTRY = {
     'TOKEN_LIFESPAN': timedelta(hours=2),  # Set the default lifespan to 2 hours

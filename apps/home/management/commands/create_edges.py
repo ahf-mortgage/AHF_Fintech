@@ -6,16 +6,15 @@ import random
 class Command(BaseCommand):
     help = 'Creates edges from a text file'
     def handle(self, *args, **options):
-        nodes = Node.objects.all()[160:200]
-        edges = Edge.objects.all()[101:150]
-        counter = 110000
-        ashaton_4 = MLO_AGENT.objects.filter(user__username = "ashaton_4").first()
-        ashaton_3_node = Node.objects.filter(mlo_agent=ashaton_4).first()
+        nodes        = Node.objects.all()
+        edges        = Edge.objects.all()
+        counter      = 110015
+        start_mlo    = MLO_AGENT.objects.all()[1]
+        start_node   = Node.objects.filter(mlo_agent = start_mlo).first()
 
-        for edge,node in zip(edges,nodes):
-            Edge.objects.create(source_node=ashaton_3_node,target_node=node,edge_id=counter)
+        for node in nodes[::2]:
+            Edge.objects.create(source_node=start_node,target_node=node,edge_id=counter)
             counter += 1
-        
         self.stdout.write(f'Created edge: {len(nodes)}')
      
                     

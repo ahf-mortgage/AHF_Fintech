@@ -34,12 +34,12 @@ def find_root(function, left, right, tolerance):
         if function(left) * function(right) >= 0:
             raise ValueError("Root not found in the given interval.")
         
-        _left = left.value
+        _left = left.value if left != None else 0
         _right = right.value
         midpoint = None
         while abs(_right - _left) > tolerance:
         
-            _left = left.value
+            _left = left.value if left != None else 0
             _right = right.value
             _midpoint = (_left + _right) / 2
             midpoint  = Q22(value = _midpoint)

@@ -23,7 +23,7 @@ class Bps(models.Model):
     """
 		Table that store bps information interval and maxmium value
     """
-    user                 = models.ForeignKey(User,on_delete=models.CASCADE,blank=False,null=False)
+    user      = models.ForeignKey(User,on_delete=models.CASCADE,blank=False,null=False)
     bps       = models.FloatField(default=275)
     interval  = models.IntegerField(default=50)
     max_value = models.FloatField()
@@ -58,13 +58,8 @@ class Branch(models.Model):
         return f"{self.commission}"
     
     
-   
-class Loan(models.Model):
-	user = models.ForeignKey(User,blank= True,null=True,on_delete= models.CASCADE)
-	amount = models.FloatField()
 
-	def __str__(self):
- 		return self.amount
+
 
 
 
@@ -105,13 +100,30 @@ class MLO_AGENT(models.Model):
         return self.user.username	
     
     
+class  LoanAmount(models.Model):
+    id = models.AutoField(primary_key=True)
+    loan_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    loan_date = models.DateField()
+    repayment_date = models.DateField()
+    status = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f"loan amount = {self.loan_amount}"
+
+
+
+
 class Loan(models.Model):
-    mlo_agent = models.ForeignKey(MLO_AGENT,on_delete=models.CASCADE,blank=False,null=False)
-    amount    = models.FloatField()
-    date_closed = models.DateTimeField(auto_now_add=False,blank=False,null=False)
+    mlo_agent = models.ForeignKey(MLO_AGENT,blank= True,null=True,on_delete= models.CASCADE)
+    amount    = models.ManyToManyField(LoanAmount,default=1)
+    bps       = models.FloatField()
+    File_reference = models.CharField(max_length=100,blank=False)
+    # date_funded = models.DateField(auto_now_add=True,auto_now=False)
+    # BPS	GCI	Split	Branch commission	AHF	Branch commission	AHF		AHF commission cap	Branch override
     
-    def __str__(self) -> str:
-        return f"{self.mlo_agent.user.username}-{self.date_closed}"
+    def __str__(self):
+        return f"loan of {self.mlo_agent.user.username}"
+
 	
  
 class Node(models.Model):

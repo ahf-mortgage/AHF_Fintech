@@ -218,7 +218,12 @@ def calculate_social_security(branch_gross,total_expense,q22):
     
     N2 = branch_gross
     N20 = N2 -total_expense
-    N22 = N20 * q22.value/100
+    N22 = None
+    if q22 != None:
+        N22 = N20 * q22.value/100
+    else:
+        N22 = N20 * 0/100
+
     R24 = BranchPayrollLiabilitieR.objects.all().first().Social_Security
     Q24 = BranchPayrollLiabilitieQ.objects.all().first().Social_Security/100
 
@@ -239,7 +244,11 @@ def calculate_medicare(branch_gross,total_expense,q22):
     T25 = R25 * Q25 #   2900
     N2 = branch_gross
     N20 = N2 -total_expense
-    N22 = N20 * q22.value/100   
+    N22 = None
+    if q22 != None:
+        N22 = N20 * q22.value/100  
+    else:
+          N22 = N20 * 0/100  
 
    
 
@@ -357,7 +366,11 @@ def calculate_ett(branch_gross,total_expense,q22):
     R35 = BranchPayrollLiabilitieR.objects.all().first().Employment_Training_Tax
     Q35 = BranchPayrollLiabilitieQ.objects.all().first().Employment_Training_Tax/100
     T35 = R35 * Q35
-    N22 = (int(branch_gross - total_expense)* q22.value/100)
+    N22 = None
+    if q22 != None:
+        N22 = (int(branch_gross - total_expense)* q22.value/100)
+    else:
+        N22 = (int(branch_gross - total_expense)* 0/100)
 
     if N22 <= R35:
         return N22 * Q35
@@ -374,7 +387,12 @@ def calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22 )
     """
     N33=IF($N$22<=R33,$N$22*Q33,T33)
     """
-    N22 = math.ceil(int(branch_gross - total_expense)* q22.value/100)
+    N22 = None
+    if q22 != None:
+        N22 = math.ceil(int(branch_gross - total_expense)* q22.value/100)
+    else:
+        N22 = math.ceil(int(branch_gross - total_expense)* 0/100)
+
     N33 = 0
     R33 = BranchPayrollLiabilitieR.objects.all().first().Fed_Unemploy
     Q33 = BranchPayrollLiabilitieQ.objects.all().first().Fed_Unemploy
@@ -391,8 +409,11 @@ def calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22
     """
     N34=IF($N$22<=R34,$N$22*Q34,T34)
     """
-   
-    N22 = math.ceil(int(branch_gross - total_expense)* q22.value/100)
+    N22 = None
+    if q22 != None:
+        N22 = math.ceil(int(branch_gross - total_expense)* q22.value/100)
+    else:
+        N22 = math.ceil(int(branch_gross - total_expense)* 0/100)
     
     R34 = BranchPayrollLiabilitieR.objects.all().first().CA_Unemployment
     Q34 = BranchPayrollLiabilitieQ.objects.all().first().CA_Unemployment / 100
@@ -409,7 +430,10 @@ def calculate_branch_payroll_liabilities_total(branch_gross,total_expense,q22):
 
     
 def calculate_total_employee_with_holding_expense(branch_gross,total_expense,q22):
-    return (branch_gross - total_expense)* q22.value/100
+    if q22 != None:
+        return (branch_gross - total_expense)* (q22.value)/100
+    else:
+        return (branch_gross - total_expense)* (0)/100
 
 
 

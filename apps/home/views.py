@@ -228,10 +228,10 @@ def home(request):
         bplqr_dict[column] = getattr(bplr,column)
         
     for column in bpl_columns:
-        bplq_dict[column] = getattr(bplq,column)
+        bplq_dict[column] = getattr(bplq,column) or 0
         
     for column in ewl_columns:
-        ewl_dict[column] = getattr(ewlq,column)
+        ewl_dict[column] = getattr(ewlq,column) or 0
         
  
         

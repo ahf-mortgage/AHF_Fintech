@@ -58,18 +58,17 @@ const SimpleDirectedGraph = () => {
                     sizingType='none'
                     minNodeSize={20}
                     minDistance={60}
-                
                     onNodeClick={
                       (node) => {
                         setNodeId(node.id)
                         navigate(`/detail/?id=${node.id}`)
-                        if(node.id == 1) {
+                        if(node.id == 30011) {
                           setParentId(0)
                         } 
                         else {
                           setParentId(node.parents[0].id)
                         }
-                        dispatch(setShowModal(true));
+                       
                       }
                     }
                   

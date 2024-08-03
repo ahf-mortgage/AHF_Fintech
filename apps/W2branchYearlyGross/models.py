@@ -31,9 +31,9 @@ class EmployeeWithholding(models.Model):
 		verbose_name = "Employee Withholding"
 		verbose_name_plural = "Employee Withholding"
  
-	def save(self, *args, **kwargs):
-		self.total = f'Employee with holdings {self.Social_Security}' #self.Social_Security + self.Medicare + self.CA_disability 
-		super().save(*args, **kwargs)
+	# def save(self, *args, **kwargs):
+	# 	self.total = f'Employee with holdings {self.Social_Security}' #self.Social_Security + self.Medicare + self.CA_disability 
+	# 	super().save(*args, **kwargs)
      
 	
 	def __str__(self) -> str:

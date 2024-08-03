@@ -2,10 +2,10 @@ import { List, Avatar } from "flowbite-react";
 import { Table } from "flowbite-react";
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Dot from "../../components/activity";
-import { MaterialReactTable } from "material-react-table";
+import { MaterialReactTable, useMaterialReactTable } from "material-react-table";
 import { AHFNavbar } from "../../components/Navbar";
 
 export function MloDetail() {
@@ -15,7 +15,7 @@ export function MloDetail() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get('id');
-
+  const navigate     = useNavigate(); 
 
   useEffect(()=> {
     const token = refreshToken
@@ -30,12 +30,18 @@ export function MloDetail() {
           setData(data.data)
           setIsLoading(false)
          })
+         .catch((error) => {
+          console.log("error=",error)
+         })
 
   },[])
   const first_columns                      = ["MLO"]
   const second_columns                     = ["Level"]
-  const thrid_columns                      = ["Loan"]
-  const fourth_columns                     = ["Commission"]
+  const third_columns                      = ["Loan"]
+  const fourth_columns                     = ["Loan amounts"]
+  const fifth_columns                      =  ["Commission"]
+
+
   const columns = useMemo(
     () => [
       {
@@ -68,7 +74,7 @@ export function MloDetail() {
         header: 'Loan',
         Header: ({ column }) => (
           <div className='flex flex-col justify-center'>{
-            thrid_columns.map((item) => {
+            third_columns.map((item) => {
               return <p>{item}</p>
             })
           }</div>
@@ -76,8 +82,8 @@ export function MloDetail() {
         size: 150,
       },
       {
-        accessorKey: 'commission',
-        header: 'Commission',
+        accessorKey: 'total_amount',
+        header: 'Total_amount',
         Header: ({ column }) => (
           <div className='flex flex-col justify-center'>{
             fourth_columns.map((item) => {
@@ -89,17 +95,66 @@ export function MloDetail() {
       },
 
 
+      {
+        accessorKey: 'commission',
+        header: 'Commission',
+        Header: ({ column }) => (
+          <div className='flex flex-col justify-center'>{
+            fifth_columns.map((item) => {
+              return <p>{item}</p>
+            })
+          }</div>
+        ),
+        size: 150,
+      },
+
+
     ],
     [],
   );
+
+
+  const table = useMaterialReactTable({
+    columns,
+    data,
+    muiTableBodyRowProps: ({ row }) => ({
+      onClick: (event) => {
+        navigate(`/detail/?id=${row.id}`)
+        console.info(event, row.id);
+      },
+      sx: {
+        cursor: 'pointer', //you might want to change the cursor too when adding an onClick
+      },
+    }),
+
+
+
+  });
+
+  const getRowProps = (row) => {
+    return {
+      onClick: (event) => {
+        const loanData = event.target.textContent;
+        navigate(`/loan_detail?loan_detail=${loanData}`)
+      },
+    };
+  };
+
+  const memoizedGetRowProps = useMemo(() => getRowProps, []);
+
+
   return (
     <div className="w-screen justify-center">
       <AHFNavbar />
      { data?
       <div className='lg:w-[1260px] sm:w-[646px] lg:mx-5'>
+
       <MaterialReactTable
         columns={columns}
         data={data}
+        muiTableBodyRowProps={
+          memoizedGetRowProps
+        }
         state={{ isLoading: isLoading }}
         muiCircularProgressProps={{
           color: 'secondary',
@@ -112,6 +167,9 @@ export function MloDetail() {
         }}
 
       />
+
+
+      
       </div>
           :
       <div className='h-screen w-screen flex flex-col justify-center text-center'>

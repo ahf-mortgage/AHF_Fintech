@@ -14,10 +14,8 @@ import { faL } from '@fortawesome/free-solid-svg-icons';
 
 
 const AbovebreakpointTable = () => {
-  const refreshToken = useSelector((state) => state.auth.refreshToken);
-
-  const [isLoading, setIsLoading] = useState(true)
-
+  const refreshToken                       = useSelector((state) => state.auth.refreshToken);
+  const [isLoading, setIsLoading]          = useState(true)
   const [data, setData]                    = useState([])
   const [construct_data, setConstructData] = useState([])
   const [bps, setBps]                      = useState(0)
@@ -25,6 +23,7 @@ const AbovebreakpointTable = () => {
   const second_columns                     = ["GCI", "64,750.0 ", "GCI"]
   const thrid_columns                      = ["AHF", "$25,900.0", "60%"]
   const fourth_columns                     = ["Branch", "38850.0", "40%"]
+
 
 
 
@@ -135,7 +134,6 @@ const AbovebreakpointTable = () => {
 
       <div className='lg:w-[1260px] sm:w-[646px] lg:mx-5'>
         <MaterialReactTable
-          // table={table}
           columns={columns}
           data={data}
           state={{ isLoading: isLoading }}
