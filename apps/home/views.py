@@ -39,11 +39,9 @@ from utils.calc_res import (
                     calculate_ahf_annual_cap_ahf              
 
     )
-
 from utils.w2_branch import W2_branch_column_names
 from utils.ahf_annual_cap_data import ahf_annual_cap_data as aacd
 from apps.RevenueShare.views import total_all_revenue_share
-
 from apps.W2branchYearlyGross.models import (
                                         Category,
                                         EmployeeWithholding,
@@ -54,7 +52,6 @@ from apps.W2branchYearlyGross.models import (
                                         Q22
                                 
                                         )
-
 from apps.RevenueShare.models import RevenueShare
 from utils.bisect_balance import find_root,function
 
@@ -173,14 +170,12 @@ def home(request):
     # print(f"{request.user} sponsor mlo with level =",node_list)
    
   
-    annual_ahf_cap              = calculate_annual_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
-    gross_ahf_income            = calculate_gross_ahf_income(loan_break_point,comp_plan,float(branch.commission))
-    gross_income                = calculate_ahf_annual_cap_ahf(loan_break_point,comp_plan,1 - float(branch.commission)) 
-    branch_gross                = calculate_gross_branch_income(loan_break_point,comp_plan,float(branch.commission))
-    _branch_gross_income        = calculate_branch_gross_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
-    
-    _branch_new_gross_income    = calculate_gross__new_branch_income(loan_break_point,comp_plan,gci,branch)
-
+    annual_ahf_cap                        = calculate_annual_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
+    gross_ahf_income                      = calculate_gross_ahf_income(loan_break_point,comp_plan,float(branch.commission))
+    gross_income                          = calculate_ahf_annual_cap_ahf(loan_break_point,comp_plan,1 - float(branch.commission)) 
+    branch_gross                          = calculate_gross_branch_income(loan_break_point,comp_plan,float(branch.commission))
+    _branch_gross_income                  = calculate_branch_gross_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
+    _branch_new_gross_income              = calculate_gross__new_branch_income(loan_break_point,comp_plan,gci,branch)
     flat_fee_gci                          = int((comp_plan.Percentage * 100) * loan_break_point.loan_break_point / 10000) 
     above_loan_break_point_ahf_commission = calculate_above_loan_break_point_ahf_commission(loan_break_point,comp_plan,branch)
     E23                                   = (bps.bps * loan_break_point.loan_break_point )/ 10000 + comp_plan.Flat_Fee 

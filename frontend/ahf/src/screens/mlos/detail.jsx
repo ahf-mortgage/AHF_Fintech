@@ -7,11 +7,13 @@ import { useSelector } from "react-redux";
 import Dot from "../../components/activity";
 import { MaterialReactTable, useMaterialReactTable } from "material-react-table";
 import { AHFNavbar } from "../../components/Navbar";
+import { TableCell, TableRow } from "@mui/material";
 
 export function MloDetail() {
   const [isLoading, setIsLoading] = useState(true)
   const refreshToken = useSelector((state) => state.auth.refreshToken);
   const [data,setData] = useState([])
+  const [mlo,setMlo]  = useState("")
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get('id');
@@ -29,17 +31,25 @@ export function MloDetail() {
          .then((data) => {
           setData(data.data)
           setIsLoading(false)
+          setMlo(data.data[0].mlo)
+       
          })
          .catch((error) => {
           console.log("error=",error)
          })
 
-  },[])
+  },[mlo])
   const first_columns                      = ["MLO"]
   const second_columns                     = ["Level"]
   const third_columns                      = ["Loan"]
   const fourth_columns                     = ["Loan amounts"]
   const fifth_columns                      =  ["Commission"]
+
+
+
+
+
+
 
 
   const columns = useMemo(
@@ -148,6 +158,13 @@ export function MloDetail() {
       <AHFNavbar />
      { data?
       <div className='lg:w-[1260px] sm:w-[646px] lg:mx-5'>
+        <TableRow>
+          <TableCell>
+          {
+           mlo
+          }
+          </TableCell>       
+        </TableRow>
 
       <MaterialReactTable
         columns={columns}

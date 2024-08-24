@@ -7,7 +7,7 @@ import ResetPassword from "./screens/accounts/reset";
 import SimpleDirectedGraph from "./screens/graphs";
 import { MloDetail } from "./screens/mlos/detail";
 import LoanDetail from "./screens/loans/detail";
-
+import LevelTable from "./screens/graphs/table";
 
 
 const router = createBrowserRouter([
@@ -43,6 +43,11 @@ const router = createBrowserRouter([
     path: "/loan_detail",
     element: <LoanDetail />,
   },
+
+  {
+    path: "/level_table",
+    element: <LevelTable />,
+  },
 ]);
 
 const App = () => {
@@ -53,9 +58,5 @@ const App = () => {
    
   );
 };
-
-
-
-
 
 export default App;

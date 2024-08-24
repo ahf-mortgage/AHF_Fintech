@@ -10,11 +10,48 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import Header from '../../components/Header';
 import { faL } from '@fortawesome/free-solid-svg-icons';
+import { Link, useLocation } from 'react-router-dom';
+import { Box, Stack, TableCell, TableRow } from '@mui/material';
+import { Button } from 'flowbite-react';
+
 
 
 
 const LoanDetail = () => {
+  const [data, setData]                   = useState([])
+  const [mlo, setMlo]                    = useState("") 
+  const [parents, setParentMlo]          = useState(["John","Fuff"]) 
+  const [total_mlo,setTotalMlo] = useState(0)
+  const [_totalCommission,setTotalCommission] = useState(0)
+  const [totalAhfCommission,setTotalAhfCommission] =  useState(0)
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const total = 0
+  const loan_detail = searchParams.get('loan_detail');
 
+
+  useEffect(() => {
+    axios.get(`http://127.0.0.1:8000/api/get_loan_detail/?loan_detail=${loan_detail}`)
+          .then((response) => {
+             setData(response.data)
+             setTotalCommission(response.data[response.data.length-1].total_commission)
+             setTotalAhfCommission(response.data[response.data.length-1].total_ahf_commission)
+             setMlo(response.data[response.data.length-1].mlo)  
+             setTotalMlo(response.data[response.data.length - 1].total_mlo)
+             console.log("total_mlo=",response.data[response.data.length - 1].total_mlo);
+          
+          })
+          .catch((error) => {
+            console.log("error=",error);
+
+          })
+
+  },[_totalCommission,totalAhfCommission,total_mlo])
+
+
+
+console.log("totalAhfCommission=",totalAhfCommission);
+console.log("totalAhfCommission=",totalAhfCommission);
   const columns = useMemo(
     () => [
       {
@@ -67,6 +104,7 @@ const LoanDetail = () => {
           }</div>
         ),
         size: 150,
+        
       },
 
 
@@ -110,8 +148,14 @@ const LoanDetail = () => {
           }</div>
         ),
         size: 150,
-      },
+        Footer: () => (
+          <Stack>
+            Total Branch commission:<Box color="warning.main">$85,000</Box>
+          </Stack>
+        ),
 
+      },
+   
 
       {
         accessorKey: 'branch_commission',
@@ -124,13 +168,38 @@ const LoanDetail = () => {
           }</div>
         ),
         size: 150,
+        Footer: () => (
+          <Stack>
+            Total AHF commission:<Box color="warning.main">$21,450</Box>
+          </Stack>
+        ),
+      
+      },
+
+      {
+        accessorKey: 'recruiter_commission',
+        header: 'Recruiter commission',
+        Header: ({ column }) => (
+          <div className='flex flex-col justify-center'>{
+            ninth_columns.map((item) => {
+              return <p>{item}</p>
+            })
+          }</div>
+        ),
+        size: 150,
+        Footer: () => (
+          <Stack>
+            Total Recruiter commission:<Box color="warning.main">$42,500</Box>
+          </Stack>
+        ),
+      
       },
      
     ],
     [],
   );
 
-  const [data, setData]                    = useState([])
+ 
   const [construct_data, setConstructData] = useState([])
   const [bps, setBps]                      = useState(0)
   const first_columns                      = ["File reference"]
@@ -140,7 +209,8 @@ const LoanDetail = () => {
   const fifth_columns                      = ["GCI"]
   const sixth_columns                      = ["Split"]
   const seventh_columns                    = ["Branch commission"]
-  const eight_columns                      = ["AHF commission"]
+  const eight_columns                      = ["AHF commission"] 
+  const ninth_columns                      = ["Revenue commission"]
 
   const table = useMaterialReactTable({
     columns,
@@ -148,26 +218,34 @@ const LoanDetail = () => {
     enableFullScreenToggle: true,
 
   });
-
-  useEffect(() => {
-    axios.get(" http://127.0.0.1:8000/api/get_level_info/?node_id=30011")
-          .then((response) => {
-             setData(response.data)
-          })
-          .catch((error) => {
-            console.log("error=",error);
-
-          })
-
-  },[])
+ 
 
 
   return (
 
     <div className="flex flex-col justify-evenly">
       <AHFNavbar />
-
       <HorizontalLine />
+
+        <TableRow>
+          
+          <TableCell>
+          <div className='flex flex-row'>
+            
+          {parents.map((item, index) => (<a key={index} href='/detail/?id=30011'>{ "AHF" + "--> " + item }</a>))}
+            </div>
+          </TableCell>
+       
+        </TableRow>
+
+        <TableRow>
+          
+          <TableCell>
+            Recruited MLO:{total_mlo}
+         
+          </TableCell>
+       
+        </TableRow>
 
       <div className='lg:w-[1260px] sm:w-[646px] lg:mx-5'>
         <MaterialReactTable
@@ -183,7 +261,7 @@ const LoanDetail = () => {
             animation: 'pulse',
             height: 28,
           }}
-
+          enableStickyFooter 
         />
 
       </div>

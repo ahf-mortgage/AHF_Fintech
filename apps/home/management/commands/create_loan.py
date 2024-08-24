@@ -13,13 +13,16 @@ one_year_ago = today.replace(year=today.year - 1)
 
 
 class Command(BaseCommand):
+   
     help = 'Creates mlo from a text file'
     def handle(self, *args, **options):
         mlo_agents = MLO_AGENT.objects.all()
         mlo_id = 30010
+        index = 1
 
 
         for agent in mlo_agents:
-           Loan.objects.create(mlo_agent = agent)#,date_closed = one_year_ago)
+           Loan.objects.create(mlo_agent = agent,bps=2.75,File_reference=f"12{index} Any street, California 97720")#,date_closed = one_year_ago)
+           index += 1
            self.stdout.write(f'Created mlo: {mlo_agents}')
                 

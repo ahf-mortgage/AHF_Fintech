@@ -18,7 +18,9 @@ from apps.recruiter.api import (
                                     EdgeGraphView,
                                     GetNodeInfo,
                                     GetLevelInfo,
-                                    GetMloLevelInfo
+                                    GetMloLevelInfo,
+                                    LoanDetailView
+
 )
 
 app_name = "home"
@@ -30,8 +32,8 @@ urlpatterns = [
     path('api/edges_views/',EdgeGraphView.as_view(),name = "edges-views"),
     path('api/get_node_info/',GetNodeInfo.as_view(),name = "get_node_info"),
     path('api/get_level_info/',GetLevelInfo.as_view(),name = "get_level_info"),
+    path('api/get_loan_detail/',LoanDetailView.as_view(),name= "loan_detail"),
     path('api/get_mlo_level_info/',GetMloLevelInfo.as_view(),name = "get_level_info"),
-
     path('change_branch_amount/',change_branch_amount,name="change_branch_amount"),
     path('loan_break_point/',loan_break_point,name="loan_break_point"),
     path('change_branch_loan/',change_branch_loan,name="change_branch_loan"),

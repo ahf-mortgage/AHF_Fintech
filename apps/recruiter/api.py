@@ -13,6 +13,7 @@ from apps.recruiter.models import (
     Edge,
     Node,
     MLO_AGENT,
+    LoanAmount,
     Loan)
 from apps.RevenueShare.models import AnnualRevenueShare
 from utils.pagination import EdgePagination
@@ -86,7 +87,6 @@ rows = [
     for row in data_array
 ]
 
-print(rows)
 
 
 
@@ -156,7 +156,7 @@ class RecruiterAPIView(APIView):
                 branch_for_bps_from_min_to_max,
                 ahf_for_bps_from_min_to_max
                 }
-                print("data=",data)
+              
                     
             else:
                 return Response({
@@ -288,9 +288,9 @@ class CompPlanAPIView(APIView):
 
     def post(self, request):
         response = self.comp_plan_change_view(request)
-        print("response = ",response)
+    
         data = request.data
-        print("data = ",data)
+    
         processed_data = {
             'message': 'Data processed successfully',
             'result': data
@@ -308,8 +308,57 @@ class NodeGraphView(ListAPIView):
  
 
     def get(self, request, *args, **kwargs):
-        # john_edges = Edge.objects.filter(source_node__mlo_agent__user__username = "tinsae")
-        # ashaton3_edges = Edge.objects.filter(source_node__mlo_agent__user__username = "tinsae")
+    
+
+        edges =  Edge.objects.all() # john_edges.union(ashaton3_edges)
+
+        node_list = Node.objects.all()
+        print("node list=",node_list)
+        level = 1
+   
+        data_ = []
+        nodes = []
+        _edges = []
+        level_source_target = {}
+        level = 1
+        counter  = {
+
+        }
+
+     
+
+        for node in node_list:
+            nodes.append({
+                "id":f"{node.pk}",
+                "label":node.mlo_agent.user.username
+            })
+
+        for edge in edges:
+            _edges.append({
+                "id": edge.pk,
+                "source": f"{edge.source_node.pk}",
+                "target": f"{edge.target_node.pk}",
+                "label": f'{edge.source_node.mlo_agent.user.username} sponsored {edge.target_node.mlo_agent.user.username}'
+                })
+        
+
+        return Response({
+            'nodes':nodes,
+            "edges":_edges
+        })
+
+
+
+
+
+
+class NodeTableView(ListAPIView):
+    queryset = Node.objects.all()
+    serializer_class = NodeSerializer
+ 
+
+    def get(self, request, *args, **kwargs):
+    
 
         edges =  Edge.objects.all() # john_edges.union(ashaton3_edges)
 
@@ -341,9 +390,10 @@ class NodeGraphView(ListAPIView):
         
    
         return Response({
-            'nodes':nodes,
-            "edges":_edges
+            'parents':nodes,
+            "children":_edges
         })
+
 
 
 
@@ -363,7 +413,7 @@ class EdgeGraphView(APIView):
                 "target": obj.target_node.mlo_agent.user.username
             }
             data_.append(data)
-            print("level=",level)
+  
             level += 1
         return Response(data_)
 
@@ -434,8 +484,7 @@ class GetLevelInfo(APIView):
             loan_break_point = LoanBreakPoint.objects.all().first()
         except LoanBreakPoint.DoesNotExist as e:
             raise e
-        
-
+ 
             
         try:
             comp_plan        = CompPlan.objects.all().first()
@@ -454,6 +503,7 @@ class GetLevelInfo(APIView):
         AD9                       =  math.ceil(float(test_branch_gross_income)/float(ahf_amount) * 100)
         split                     = Branch.objects.filter().first().commission
         gci                       =   (comp_plan.Percentage * 100) * loan_break_point.loan_break_point/10000  + comp_plan.Flat_Fee
+        index = 0
 
         for share in all_revenue_shares:
             annual_revenue_shares.append(share.percentage/100)
@@ -461,8 +511,8 @@ class GetLevelInfo(APIView):
         for level,AD12 in zip(levels,annual_revenue_shares):
             level_to_commission[0] =  calculate_commission_for_level_0(starting_node,AD9,split)
             AE12 = AD9*AD12
+          
             AG12 = AE12/2
-        
             level_to_commission[level] = AG12
 
         while queue:
@@ -472,29 +522,134 @@ class GetLevelInfo(APIView):
                 if target_node not in node_levels:
                     node_levels[target_node.mlo_agent.user.username] = level + 1
                     queue.append((target_node, level + 1))
+
+
         for mlo in node_levels:
-            mlo_agent = MLO_AGENT.objects.filter(user__username = mlo)
+            mlo_agent = MLO_AGENT.objects.filter(user__username = "tinsae").first()
             user      = User.objects.filter(username = mlo).first()
             mlo_agent = MLO_AGENT.objects.filter(user=user).first()
-            loan      = Loan.objects.filter(mlo_agent= mlo_agent).first()
-        
-            print("commission = ",level_to_commission.get(node_levels.get(mlo,None),0))
+            loan      = Loan.objects.all()[2]
+          
+           
+  
             _data = {
                 'mlo':mlo,
                 'level':node_levels.get(mlo,None),
-                'commission': level_to_commission.get(node_levels.get(mlo,None),0),
+                'commission': f"{math.ceil(level_to_commission.get(node_levels.get(mlo,None),0)):,}",
                 'loan': len(loan.amount.all()) if loan  != None  else 0,
-                'total_amount':sum([amount.loan_amount if loan != None else 0 for amount in loan.amount.all() ]),
+                'total_amount':f"{math.ceil(sum([amount.loan_amount if loan != None else 0 for amount in loan.amount.all()])):,}",
                 "split":f"{split * 100}%",
                 'file_reference':loan.File_reference,
                 'loan_amount':loan.amount.all().first().loan_amount,
                 'date_funded':loan.amount.all().first().loan_date,
-                'gci':f"${gci}",
+                'gci':f"$ {gci:,}",
                 'bps':loan.bps,
-                'ahf_commission':float(1 - split) * float(gci),
+                'ahf_commission':f"{float(1 - split) * float(gci):,}",
                 'branch_commission':float(split) * float(gci)
             }
+
             data.append(_data)
+        return Response(data)
+
+
+
+
+
+class LoanDetailView(APIView):
+    queryset        = Node.objects.all()
+    def get(self, request, *args, **kwargs):
+        loan_detail = request.GET.get('loan_detail',None)
+        username    = loan_detail
+        user        = User.objects.filter(username = username).first()
+        mlo         = MLO_AGENT.objects.filter(user = user).first()
+        loan        = Loan.objects.all()[2]
+        amounts     = loan.amount.all()
+
+        all_revenue_shares = AnnualRevenueShare.objects.all()
+        try:
+            loan_break_point = LoanBreakPoint.objects.all().first()
+        except LoanBreakPoint.DoesNotExist as e:
+            raise e
+            
+        try:
+            comp_plan  = CompPlan.objects.all().first()
+        except CompPlan.DoesNotExist as e:
+            raise e
+
+        try:
+            bps = Bps.objects.all().first()
+        except Bps.DoesNotExist as e:
+            raise e
+        
+
+        annual_revenue_shares     = []
+        test_branch_gross_income  =  aacd.get("test_branch_gross_income",None)
+        ahf_amount                =  aacd.get("ahf_amount",1)
+        AD9                       =  math.ceil(float(test_branch_gross_income)/float(ahf_amount) * 100)
+        split                     =  Branch.objects.filter().first().commission
+   
+
+        data = []
+        MIN_LOAN = 100000 
+        total_commission = 0
+        total_ahf_commission = 0
+        total_mlo = 0
+        annual_revenue_shares = []
+        test_branch_gross_income  =  aacd.get("test_branch_gross_income",None)
+        ahf_amount                =  aacd.get("ahf_amount",1)
+        AD9                       =  math.ceil(float(test_branch_gross_income)/float(ahf_amount) * 100)
+        split                     =  Branch.objects.filter().first().commission
+        gci                       =  (comp_plan.Percentage * 100) * loan_break_point.loan_break_point/10000  + comp_plan.Flat_Fee
+        index = 1
+        level_to_commission = {}
+        levels = [i for i in range(1,8)]
+     
+        starting_node = Node.objects.all().first()
+        for share in all_revenue_shares:
+            annual_revenue_shares.append(share.percentage/100)
+
+        for level,AD12 in zip(levels,annual_revenue_shares):
+            level_to_commission[0] =  calculate_commission_for_level_0(starting_node,AD9,split)
+            AE12 = AD9*AD12
+            print("AE12=",AE12)
+            AG12 = AE12/2
+            level_to_commission[level] = AG12
+
+
+     
+        for amount in amounts:
+
+            gci = float(comp_plan.Percentage * 100) * float(amount.loan_amount/10000)  + comp_plan.Flat_Fee 
+         
+            if gci > comp_plan.MAX_GCI:
+                gci = comp_plan.MAX_GCI
+        
+            total_commission += float(1-split) * float(gci) 
+            total_ahf_commission += float(split) * float(gci)
+          
+         
+            _data = {
+               
+                "split":f"{math.ceil(split * 100)}%",
+                'file_reference':amount.File_reference,
+                'loan_amount':f"${math.ceil(amount.loan_amount):,}",
+                'date_funded':amount.loan_date,
+                'gci':f"${math.ceil(gci):,}",
+                'bps':loan.bps,
+                'branch_commission':f"${math.ceil(float(1-split) * float(gci)):,}" , 
+                'ahf_commission':f"${math.ceil(float(split) * float(gci)):,}",
+                'recruiter_commission':math.ceil(level_to_commission.get(1,0) / 2),#f"${math.ceil((float(1-split) * float(gci))/2):,}",
+                'total_commission':f"${math.ceil(total_commission):,}",
+                'total_ahf_commission':f"${math.ceil(total_ahf_commission):,}",
+                'parents':[]
+            }
+            total_mlo += 1
+            index += 1
+            data.append(_data)
+            data.append({"mlo":mlo.user.username})
+        data.append({'total_mlo':total_mlo})
+
+        
         return Response(data)
 
 

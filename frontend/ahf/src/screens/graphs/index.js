@@ -51,7 +51,6 @@ const SimpleDirectedGraph = () => {
                 <ModalBox id={node_id} parent_id={parent_id} />
                 :
                 <div>
-
                   <GraphCanvas
                     layoutType='hierarchicalTd'
                     edgeArrowPosition='end'

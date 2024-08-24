@@ -34,14 +34,15 @@ class Bps(models.Model):
     
 class LoanBreakPoint(models.Model):
     user                 = models.ForeignKey(User,on_delete=models.CASCADE,blank=False,null=False)
-    loan_break_point = models.FloatField(default=1000000)
+    loan_break_point     = models.FloatField(default=1000000)
+
     def __str__(self):
         return f"{self.loan_break_point}"
     
     
 class AHF(models.Model):
-    commission = models.FloatField()
-    loan_per_year = models.IntegerField(default=1)
+    commission     = models.FloatField()
+    loan_per_year  = models.IntegerField(default=1)
     loan_per_month = models.IntegerField(blank=True,null=True)
 
     def __str__(self):
@@ -105,6 +106,7 @@ class  LoanAmount(models.Model):
     loan_amount = models.DecimalField(max_digits=10, decimal_places=2)
     loan_date = models.DateField()
     repayment_date = models.DateField()
+    File_reference = models.CharField(max_length=100,null=True)
     status = models.CharField(max_length=50)
 
     def __str__(self):
@@ -115,11 +117,10 @@ class  LoanAmount(models.Model):
 
 class Loan(models.Model):
     mlo_agent = models.ForeignKey(MLO_AGENT,blank= True,null=True,on_delete= models.CASCADE)
-    amount    = models.ManyToManyField(LoanAmount,default=1)
+    amount    = models.ManyToManyField(LoanAmount,default=1,related_name="loans")
     bps       = models.FloatField()
-    File_reference = models.CharField(max_length=100,blank=False)
-    # date_funded = models.DateField(auto_now_add=True,auto_now=False)
-    # BPS	GCI	Split	Branch commission	AHF	Branch commission	AHF		AHF commission cap	Branch override
+    File_reference = models.CharField(max_length=100,blank=False,unique=True)
+
     
     def __str__(self):
         return f"loan of {self.mlo_agent.user.username}"

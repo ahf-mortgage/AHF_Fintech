@@ -193,7 +193,7 @@ for (let num of loan_below_limits) {
   const ahf_amount = 1 - (Number.parseFloat("{{branch_amount}}") / 100)
 
   if (gci_result < MAX_GCI) {
-    D2.innerText = (gci_result).toLocaleString()
+    D2.innerText =(gci_result).toLocaleString()
     branch_share = (gci_result * branch_amount)
     ahf_share = (gci_result * ahf_amount)
   }

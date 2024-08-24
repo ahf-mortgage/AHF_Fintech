@@ -253,7 +253,12 @@ def change_ahf_loan(request):
 def bfs_traversal(request):
     user = request.user
     mlo_agent = MLO_AGENT.objects.filter(user = user).first()
-    start_node = Node.objects.get(mlo_agent=mlo_agent)
+    start_node = Node.objects.filter(mlo_agent=mlo_agent)
+    if start_node == None:
+         return redirect("/admin")
+    else:
+         start_node = start_node.first()
+         
     queue = deque([(start_node, None)])
     visited = set()
     parent_to_node = {}

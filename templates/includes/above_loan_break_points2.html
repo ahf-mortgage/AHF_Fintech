@@ -64,8 +64,6 @@
 
 
 
-
-
         <tr class="bg-gray-300 font-light" style="margin-bottom:0;">
 
             <th class="font-light" scope="col" class="px-6">BPS</th>
@@ -117,16 +115,13 @@
             <td class="text-center whitespace-nowrap px-6">
 
                 {% if num == 0.0 %} 
-
                 $0
 
             {% else %}
             {{bps_to_branch_commission_dict|dict_get:num|floatformat:"2"|intcomma}}
 
             {% endif %}
-                
-
-                
+       
 
             </td>
          

@@ -37,12 +37,14 @@ class MLOAdmin(admin.ModelAdmin):
 
 @admin.register(Loan)
 class MLOAdmin(admin.ModelAdmin):
-    search_fields = 'mlo_agent',
+    search_fields = 'mlo_agent__user__username',
+
+@admin.register(LoanAmount)
+class MLOAdmin(admin.ModelAdmin):
+    search_fields = 'File_reference',"loan_amount"
 
 
 
-# admin.site.register(Loan)
-admin.site.register(LoanAmount)
 admin.site.register(Bps)
 
 
