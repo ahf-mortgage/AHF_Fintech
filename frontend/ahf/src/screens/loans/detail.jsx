@@ -20,7 +20,7 @@ import { Button } from 'flowbite-react';
 const LoanDetail = () => {
   const [data, setData]                   = useState([])
   const [mlo, setMlo]                    = useState("") 
-  const [parents, setParentMlo]          = useState(["John","Fuff"]) 
+  const [parents, setParentMlo]          = useState([]) 
   const [total_mlo,setTotalMlo] = useState(0)
   const [_totalCommission,setTotalCommission] = useState(0)
   const [totalAhfCommission,setTotalAhfCommission] =  useState(0)
@@ -38,7 +38,8 @@ const LoanDetail = () => {
              setTotalAhfCommission(response.data[response.data.length-1].total_ahf_commission)
              setMlo(response.data[response.data.length-1].mlo)  
              setTotalMlo(response.data[response.data.length - 1].total_mlo)
-             console.log("total_mlo=",response.data[response.data.length - 1].total_mlo);
+             setParentMlo((prevParents) => [response.data[0].parent]);
+
           
           })
           .catch((error) => {
@@ -50,8 +51,6 @@ const LoanDetail = () => {
 
 
 
-console.log("totalAhfCommission=",totalAhfCommission);
-console.log("totalAhfCommission=",totalAhfCommission);
   const columns = useMemo(
     () => [
       {
@@ -223,7 +222,7 @@ console.log("totalAhfCommission=",totalAhfCommission);
 
   return (
 
-    <div className="flex flex-col justify-evenly">
+    <div className="w-full flex-col justify-evenly">
       <AHFNavbar />
       <HorizontalLine />
 
@@ -232,7 +231,7 @@ console.log("totalAhfCommission=",totalAhfCommission);
           <TableCell>
           <div className='flex flex-row'>
             
-          {parents.map((item, index) => (<a key={index} href='/detail/?id=30011'>{ "AHF" + "--> " + item }</a>))}
+          {parents.map((item, index) => (<a key={index} href='/detail/?id=30011'>{item +  "    -->    " + loan_detail }</a>))}
             </div>
           </TableCell>
        
@@ -241,13 +240,12 @@ console.log("totalAhfCommission=",totalAhfCommission);
         <TableRow>
           
           <TableCell>
-            Recruited MLO:{total_mlo}
-         
+            Recruited Mlo:{total_mlo}
           </TableCell>
        
         </TableRow>
 
-      <div className='lg:w-[1260px] sm:w-[646px] lg:mx-5'>
+      <div className='w-full bg-cyan-50'>
         <MaterialReactTable
           columns={columns}
           data={data}

@@ -10,6 +10,8 @@ import LoanDetail from "./screens/loans/detail";
 import LevelTable from "./screens/graphs/table";
 
 
+
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -48,6 +50,8 @@ const router = createBrowserRouter([
     path: "/level_table",
     element: <LevelTable />,
   },
+
+
 ]);
 
 const App = () => {

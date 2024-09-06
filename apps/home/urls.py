@@ -19,7 +19,8 @@ from apps.recruiter.api import (
                                     GetNodeInfo,
                                     GetLevelInfo,
                                     GetMloLevelInfo,
-                                    LoanDetailView
+                                    LoanDetailView,
+                                    GetAllNodes
 
 )
 
@@ -28,6 +29,7 @@ urlpatterns = [
     path('',home,name="home"),
     path('api/',HomeAPIView.as_view(),name = "api"),
     path('api/comp-plan/',CompPlanAPIView.as_view(),name = "comp-plan"),
+    path('api/get-all-nodes/',GetAllNodes.as_view(),name="get-all-mlos"),
     path('api/nodes_views/',NodeGraphView.as_view(),name = "nodes-views"),
     path('api/edges_views/',EdgeGraphView.as_view(),name = "edges-views"),
     path('api/get_node_info/',GetNodeInfo.as_view(),name = "get_node_info"),

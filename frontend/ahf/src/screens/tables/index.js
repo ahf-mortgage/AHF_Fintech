@@ -135,6 +135,7 @@ const AbovebreakpointTable = () => {
       <div className='lg:w-[1260px] sm:w-[646px] lg:mx-5'>
         <MaterialReactTable
           columns={columns}
+      
           data={data}
           state={{ isLoading: isLoading }}
           muiCircularProgressProps={{

@@ -45,6 +45,11 @@ class MLOAdmin(admin.ModelAdmin):
 
 
 
+
+@admin.register(Edge)
+class MLOAdmin(admin.ModelAdmin):
+    search_fields = 'source_node__user__username',"target_node__user__username"
+
 admin.site.register(Bps)
 
 
@@ -54,8 +59,8 @@ admin.site.register(CompPlan)
 admin.site.register(AHF)
 admin.site.register(Recruiter)
 admin.site.register(Branch)
-admin.site.register(Node)
-admin.site.register(Edge)
+# admin.site.register(Node)
+# admin.site.register(Edge)
 admin.site.register(MLO_AGENT)
 
 

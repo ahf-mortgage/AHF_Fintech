@@ -16,10 +16,10 @@ class Command(BaseCommand):
     help = 'Creates mlo from a text file'
     def handle(self, *args, **options):
         mlo_agents = MLO_AGENT.objects.all()
-        mlo_id = 30010
-
-
-        for i in range(1,100):
-           LoanAmount.objects.create(loan_amount = 100 + i,loan_date = today,repayment_date = today, status= "paid")#,date_closed = one_year_ago)
-           self.stdout.write(f'Created mlo: {mlo_agents}')
+        loan_amounts = LoanAmount.objects.all()
+        random_loan_amount = [num for num in range(100000,2000000)]
+        for amount in loan_amounts:
+           
+            amount.loan_amount = random.choice(random_loan_amount)
+            amount.save()
                 

@@ -5,9 +5,11 @@ import axios from "axios";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Dot from "../../components/activity";
-import { MaterialReactTable, useMaterialReactTable } from "material-react-table";
+import { MaterialReactTable, MRT_ActionMenuItem, useMaterialReactTable } from "material-react-table";
 import { AHFNavbar } from "../../components/Navbar";
 import { TableCell, TableRow } from "@mui/material";
+import LoginPage from "../accounts";
+import { AddMlo } from "./newMlo";
 
 export function MloDetail() {
   const [isLoading, setIsLoading] = useState(true)
@@ -183,11 +185,19 @@ export function MloDetail() {
           height: 28,
         }}
 
+        enableRowActions= {true}
+        renderRowActionMenuItems={({ row, table }) => [
+          <MRT_ActionMenuItem 
+            icon={<AddMlo source_node={row} />}
+            table={table}
+            
+          />,
+       
+        ]}
+  
+
       />
-
-
-      
-      </div>
+    </div>
           :
       <div className='h-screen w-screen flex flex-col justify-center text-center'>
             <Dot size={40} />

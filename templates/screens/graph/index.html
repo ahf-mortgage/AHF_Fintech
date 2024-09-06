@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizational Chart from API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        canvas {
+            border: 1px solid #ccc;
+            background-color: #fff;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+</head>
+<body>
+    <canvas id="orgChart" width="1000" height="1000"></canvas>
+
+    <script>
+        const canvas = document.getElementById('orgChart');
+        const ctx = canvas.getContext('2d');
+  
+        
+
+   
+
+        // Function to draw a rectangle (node)
+        function drawNode(x, y, name) {
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(x - 50, y - 20, 100, 40);
+            ctx.strokeRect(x - 50, y - 20, 100, 40);
+            ctx.fillStyle = '#000';
+            ctx.fillText(name, x - 40, y + 5);
+        }
+
+        // Function to draw lines with right angles
+        function drawLine(x1, y1, x2, y2) {
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x1, y2);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+        }
+
+        // Draw the organizational chart using fetched data
+        function drawChart() {
+     
+            axios.get("http://127.0.0.1:8000/api/nodes_views/")
+             .then((resp) => {
+                const nodes = resp.data['nodes']
+                const edges = resp.data['edges']
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+
+                ctx.strokeStyle = '#000';
+                // Draw nodes
+                nodes.forEach(node => {
+                    drawNode(node.x, node.y, node.name);
+                });
+
+                // Draw connections
+                edges.forEach(edge => {
+                    const fromNode = nodes.find(node => node.id === edge.from);
+                    const toNode = nodes.find(node => node.id === edge.to);
+                    if (fromNode && toNode) {
+                        drawLine(fromNode.x, fromNode.y + 20, toNode.x, toNode.y);
+                    }
+                });
+        
+            
+            })
+            .catch((error) => console.log(error))
+
+     
+         
+        }
+
+        drawChart();
+    
+    </script>
+</body>
+</html>

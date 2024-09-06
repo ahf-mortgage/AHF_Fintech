@@ -22,6 +22,7 @@ from .serialzers import NodeSerializer,EdgeSerializer
 import numpy as np
 import math
 from django.utils import timezone
+from rest_framework import status
 
 
 
@@ -311,9 +312,7 @@ class NodeGraphView(ListAPIView):
     
 
         edges =  Edge.objects.all() # john_edges.union(ashaton3_edges)
-
         node_list = Node.objects.all()
-        print("node list=",node_list)
         level = 1
    
         data_ = []
@@ -326,19 +325,29 @@ class NodeGraphView(ListAPIView):
         }
 
      
+        x,y = 50,50
+    
+        for node in node_list[:3]:
 
-        for node in node_list:
             nodes.append({
                 "id":f"{node.pk}",
-                "label":node.mlo_agent.user.username
+                "x":x,
+                "y":y,
+                "label":node.mlo_agent.user.username,
+                'name':node.mlo_agent.user.username,
+                "data":{"value":node.mlo_agent.user.username}
             })
+            x,y = x + 100,y + 100
 
         for edge in edges:
+            #  { id: 'edge-1', source: 'node-1', target: 'node-2', sourceHandle: 'a' },
             _edges.append({
                 "id": edge.pk,
                 "source": f"{edge.source_node.pk}",
                 "target": f"{edge.target_node.pk}",
-                "label": f'{edge.source_node.mlo_agent.user.username} sponsored {edge.target_node.mlo_agent.user.username}'
+                "label": f'{edge.source_node.mlo_agent.user.username} sponsored {edge.target_node.mlo_agent.user.username}',
+                "from":f"{edge.source_node.pk}",
+                "to":f"{edge.target_node.pk}",
                 })
         
 
@@ -468,11 +477,12 @@ class GetLevelInfo(APIView):
     queryset = Node.objects.all()
     def get(self, request, *args, **kwargs):
         node_id = request.GET.get('node_id',None)
+        
       
         if node_id == None:
             starting_node = Node.objects.all().first()
         starting_node = Node.objects.filter(node_id =node_id).first()
-      
+        loan_user  = starting_node.mlo_agent.user
         queue         = deque([(starting_node, 0)])
         node_levels   = {starting_node.mlo_agent.user.username: 0}
         data          = []
@@ -528,7 +538,7 @@ class GetLevelInfo(APIView):
             mlo_agent = MLO_AGENT.objects.filter(user__username = "tinsae").first()
             user      = User.objects.filter(username = mlo).first()
             mlo_agent = MLO_AGENT.objects.filter(user=user).first()
-            loan      = Loan.objects.all()[2]
+            loan      = Loan.objects.filter(mlo_agent__user__username = loan_user).first()
           
            
   
@@ -562,7 +572,8 @@ class LoanDetailView(APIView):
         username    = loan_detail
         user        = User.objects.filter(username = username).first()
         mlo         = MLO_AGENT.objects.filter(user = user).first()
-        loan        = Loan.objects.all()[2]
+        loan        = Loan.objects.filter(mlo_agent__user__username =username ).first()
+        print("username = ",username)
         amounts     = loan.amount.all()
 
         all_revenue_shares = AnnualRevenueShare.objects.all()
@@ -610,14 +621,18 @@ class LoanDetailView(APIView):
 
         for level,AD12 in zip(levels,annual_revenue_shares):
             level_to_commission[0] =  calculate_commission_for_level_0(starting_node,AD9,split)
-            AE12 = AD9*AD12
-            print("AE12=",AE12)
-            AG12 = AE12/2
+            AE12 = AD9 * AD12
+            AG12 = AE12
             level_to_commission[level] = AG12
 
 
+        parents = {}
+        for edge in Edge.objects.all():
+            parents[f"parent_of_{edge.target_node.mlo_agent.user.username}"] = edge.source_node.mlo_agent.user.username
+        
      
         for amount in amounts:
+            print("amount - ",amount)
 
             gci = float(comp_plan.Percentage * 100) * float(amount.loan_amount/10000)  + comp_plan.Flat_Fee 
          
@@ -638,18 +653,17 @@ class LoanDetailView(APIView):
                 'bps':loan.bps,
                 'branch_commission':f"${math.ceil(float(1-split) * float(gci)):,}" , 
                 'ahf_commission':f"${math.ceil(float(split) * float(gci)):,}",
-                'recruiter_commission':math.ceil(level_to_commission.get(1,0) / 2),#f"${math.ceil((float(1-split) * float(gci))/2):,}",
-                'total_commission':f"${math.ceil(total_commission):,}",
+                'recruiter_commission':math.ceil(level_to_commission.get(1,0)),#f"${math.ceil((float(1-split) * float(gci))/2):,}",
+                'total_commission':f"${math.floor(total_commission):,}",
                 'total_ahf_commission':f"${math.ceil(total_ahf_commission):,}",
-                'parents':[]
+                'parent':parents.get(f"parent_of_{username}")
+            
             }
             total_mlo += 1
             index += 1
             data.append(_data)
             data.append({"mlo":mlo.user.username})
         data.append({'total_mlo':total_mlo})
-
-        
         return Response(data)
 
 
@@ -677,3 +691,47 @@ class GetMloLevelInfo(APIView):
         return Response({
             'level':node_levels.get(mlo.user.username)
         })
+
+
+
+
+
+class GetAllNodes(APIView):
+    def get_queryset(self):
+        return Node.objects.all()
+    
+    def get(self, request, *args, **kwargs):
+
+        edge_id = request.GET.get("q")
+        if edge_id:
+            edge = Edge.objects.filter(edge_id = edge_id)
+            edge.delete()
+
+        nodes = self.get_queryset()
+        edges = Edge.objects.all()
+        all_target_nodes = []
+
+        for edge in edges:
+            all_target_nodes.append(edge.target_node)
+        eligible_nodes = [item for item in nodes if item not in all_target_nodes]
+    
+        serializer = NodeSerializer(eligible_nodes[1::], many=True)  # Serialize the nodes
+        return Response(serializer.data, status=status.HTTP_200_OK) 
+    
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        source_node_mlo = data.get('source_node',"")
+        target_node_mlo = data.get('target_node',"")
+        source_node = Node.objects.filter(mlo_agent__user__username = source_node_mlo).first()
+        target_node = Node.objects.filter(mlo_agent__user__username = target_node_mlo).first()
+        last_edge_id = Edge.objects.all().last().edge_id
+        new_edge = Edge.objects.create(edge_id = last_edge_id + 1,source_node = source_node,target_node = target_node)
+        print("new edge = ",new_edge)
+ 
+        return Response({"node_id":source_node.node_id}, status=status.HTTP_200_OK) 
+    
+
+
+
+     

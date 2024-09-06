@@ -110,7 +110,7 @@ class  LoanAmount(models.Model):
     status = models.CharField(max_length=50)
 
     def __str__(self):
-        return f"loan amount = {self.loan_amount}"
+        return f"loan amount {self.loan_amount}"
 
 
 
@@ -123,7 +123,7 @@ class Loan(models.Model):
 
     
     def __str__(self):
-        return f"loan of {self.mlo_agent.user.username}"
+        return f"loan of {self.mlo_agent}"
 
 	
  

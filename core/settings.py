@@ -85,6 +85,7 @@ TEMPLATES = [
             BASE_DIR / 'templates' / 'screens',
             BASE_DIR / 'templates' / 'components',
             BASE_DIR / 'templates' / 'includes',
+            "/home/tinsae/Desktop/AHF_Fintech/frontend/ahf/"
             
                  
                  ],
