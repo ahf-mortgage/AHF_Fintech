@@ -1,90 +1,107 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Organizational Chart from API</title>
-    <style>
+{% extends '_base.html'%}
+{% load humanize %}
+{% load safe_divide %}
+{% block style%}
+<style>
         body {
             font-family: Arial, sans-serif;
+        }
+        .tree {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            height: 100vh;
-            background-color: #f4f4f4;
-        }
-        canvas {
-            border: 1px solid #ccc;
-            background-color: #fff;
-        }
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-</head>
-<body>
-    <canvas id="orgChart" width="1000" height="1000"></canvas>
-
-    <script>
-        const canvas = document.getElementById('orgChart');
-        const ctx = canvas.getContext('2d');
-  
-        
-
-   
-
-        // Function to draw a rectangle (node)
-        function drawNode(x, y, name) {
-            ctx.fillStyle = '#fff';
-            ctx.fillRect(x - 50, y - 20, 100, 40);
-            ctx.strokeRect(x - 50, y - 20, 100, 40);
-            ctx.fillStyle = '#000';
-            ctx.fillText(name, x - 40, y + 5);
+            margin: 20px;
         }
 
-        // Function to draw lines with right angles
-        function drawLine(x1, y1, x2, y2) {
-            ctx.beginPath();
-            ctx.moveTo(x1, y1);
-            ctx.lineTo(x1, y2);
-            ctx.lineTo(x2, y2);
-            ctx.stroke();
+        .parent {
+            height: 53px;
+            width: 120px;
+            position: relative;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: rgb(160, 157, 157);
+            border-radius: 5px;
+            text-align: center;
+            margin-left: 30px;
+            margin-right: 30px;
+        }
+        .node {
+            position: relative;
+            height: 53px;
+            width: 120px;
+            align-content: center;
+            background-color: rgb(160, 157, 157);
+            border-radius: 5px;
+            text-align: center;
+            text-overflow: clip;
+            margin-left: 30px;
+            margin-right: 30px;
         }
 
-        // Draw the organizational chart using fetched data
-        function drawChart() {
-     
-            axios.get("http://127.0.0.1:8000/api/nodes_views/")
-             .then((resp) => {
-                const nodes = resp.data['nodes']
-                const edges = resp.data['edges']
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-
-                ctx.strokeStyle = '#000';
-                // Draw nodes
-                nodes.forEach(node => {
-                    drawNode(node.x, node.y, node.name);
-                });
-
-                // Draw connections
-                edges.forEach(edge => {
-                    const fromNode = nodes.find(node => node.id === edge.from);
-                    const toNode = nodes.find(node => node.id === edge.to);
-                    if (fromNode && toNode) {
-                        drawLine(fromNode.x, fromNode.y + 20, toNode.x, toNode.y);
-                    }
-                });
-        
-            
-            })
-            .catch((error) => console.log(error))
-
-     
-         
+        .line {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 2px;
+            background-color: rgb(20, 7, 7);
         }
+        .line-vertical {
+            height: 80px; /* Adjust to control vertical spacing */
+            top: 100%;
+            transform: translateX(-50%);
+        }
+        .line-horizontal {
+            width: 5px; /* Adjust to control horizontal spacing */
+            top: 50%;
+        }
+        .children {
+            display: flex;
+           
+        }
+</style>
 
-        drawChart();
-    
-    </script>
-</body>
-</html>
+{% endblock %}
+{%block content %}
+
+{% include 'components/modal/index.html' %}
+<div class="tree" >
+    {% for parent in data %}
+        <div class="parent" onclick="showModal('{{parent}}')">
+            {{parent|truncatechars:9}}
+            <div class="line line-vertical"></div>
+        </div>
+      
+        <div class="children" >
+            {% for child in data|dict_get:parent %}
+            <div style="display: flex; align-items: flex-start; justify-content: center;">
+             
+                <div style="width: 50px;height: 3px;background-color: black;"></div>
+                <div class="node" onclick="showModal('{{child}}')">
+                    {{child|truncatechars:9}}   
+                  
+                </div>
+
+
+            </div>
+           
+        {% endfor %}
+
+        </div>
+        </div>
+    {% endfor  %}
+</div>
+<script>
+    const my_modal_3 = document.getElementById("my_modal_3")
+    function showModal(_mloName) {
+        const mloName = document.getElementById("mlo-name")
+        const mlo_name = document.getElementById("mlo_name")
+        const mloDetail = document.getElementById("mlo-detail")
+        const viewDetail = document.getElementById("view_detail")
+        mloName.innerText = _mloName
+        mlo_name.setAttribute("value",_mloName)
+        mloDetail.innerText = `${_mloName}'s total comission 7 sponsored 4 mlo`
+        viewDetail.setAttribute("href",`/mlo_detail/${_mloName}/`)
+        my_modal_3.showModal()
+    }
+</script>
+{% endblock %}

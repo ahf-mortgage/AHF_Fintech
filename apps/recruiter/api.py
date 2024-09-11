@@ -325,27 +325,21 @@ class NodeGraphView(ListAPIView):
         }
 
      
-        x,y = 50,50
+        x,y = 400,50
     
-        for node in node_list[:3]:
-
+        for node in node_list:
             nodes.append({
-                "id":f"{node.pk}",
-                "x":x,
-                "y":y,
-                "label":node.mlo_agent.user.username,
-                'name':node.mlo_agent.user.username,
-                "data":{"value":node.mlo_agent.user.username}
-            })
-            x,y = x + 100,y + 100
+                    "id":f"{node.pk}",
+                    "x":x,
+                    "y":y,
+                    'name':node.mlo_agent.user.username,
+
+                })
+            x,y = x - 50,y + 100
 
         for edge in edges:
-            #  { id: 'edge-1', source: 'node-1', target: 'node-2', sourceHandle: 'a' },
             _edges.append({
                 "id": edge.pk,
-                "source": f"{edge.source_node.pk}",
-                "target": f"{edge.target_node.pk}",
-                "label": f'{edge.source_node.mlo_agent.user.username} sponsored {edge.target_node.mlo_agent.user.username}',
                 "from":f"{edge.source_node.pk}",
                 "to":f"{edge.target_node.pk}",
                 })

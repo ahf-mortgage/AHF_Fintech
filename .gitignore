@@ -137,7 +137,7 @@ venv.bak/
 
 # mkdocs documentation
 /site
-
+./node_modules
 # mypy
 .mypy_cache/
 .dmypy.json
@@ -145,7 +145,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-
+node_modules
 # pytype static type analyzer
 .pytype/
 

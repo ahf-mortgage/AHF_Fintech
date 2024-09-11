@@ -253,7 +253,9 @@ def change_ahf_loan(request):
 def bfs_traversal(request):
     user = request.user
     mlo_agent = MLO_AGENT.objects.filter(user = user).first()
+    print("MLO AGENT=",mlo_agent)
     start_node = Node.objects.filter(mlo_agent=mlo_agent)
+    print("start_node = ",start_node)
     if start_node == None:
          return redirect("/admin")
     else:

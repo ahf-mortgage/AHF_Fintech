@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     'djoser',
     'corsheaders',
     'compressor', 
-
     # installed apps,
     'apps.recruiter',
     'apps.home',
@@ -98,9 +97,6 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',        
                 # `allauth` needs this from django
                 'django.template.context_processors.request',
-            
-
-               
 
             ],
         },
@@ -110,31 +106,11 @@ TEMPLATES = [
 ]
 
 COMPRESS_ROOT = BASE_DIR / 'static'
-
 COMPRESS_ENABLED = True
-
 STATICFILES_FINDERS = ('compressor.finders.CompressorFinder',)
+
+
 WSGI_APPLICATION = 'core.wsgi.application'
-
-
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'rest_framework_simplejwt.authentication.JWTAuthentication',
-#     ),
-    
-#     'DEFAULT_PERMISSION_CLASSES': [
-#         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-#     ],
-#     'SIMPLE_JWT': {
-#         'ACCESS_TOKEN_LIFETIME': timedelta(days=3),
-#         'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-#     },
-#     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-#     'PAGE_SIZE': 50
-# }
-
-
-
 SIMPLE_JWT = {
    'AUTH_HEADER_TYPES': ('JWT',)
 }
