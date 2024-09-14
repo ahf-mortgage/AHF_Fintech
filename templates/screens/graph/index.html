@@ -65,9 +65,22 @@
 
 <div id="tree"></div>
 <script>
+    const user_id = "{{request.user.id}}"
+    const node_info_urls = `http://127.0.0.1:8000/api/get_level_info/?user_id=${user_id}`
+    
+
+    axios.get(node_info_urls)
+          .then((data) => {
+            const nodes = data
+            console.log("nodes = ",nodes);
+          })
+          .catch((error) => {
+            console.log("Error =",error);
+          })
+
 
     let chart = new OrgChart("#tree", {
-        // options
+
         nodeBinding: {
             field_0: "name"
         },

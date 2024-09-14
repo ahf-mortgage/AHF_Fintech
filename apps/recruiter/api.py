@@ -471,11 +471,13 @@ class GetLevelInfo(APIView):
     queryset = Node.objects.all()
     def get(self, request, *args, **kwargs):
         node_id = request.GET.get('node_id',None)
+        user_id = request.GET.get('user_id',None)
+        user = User.objects.filter(id = user_id).first()
         
       
-        if node_id == None:
+        if user_id == None:
             starting_node = Node.objects.all().first()
-        starting_node = Node.objects.filter(node_id =node_id).first()
+        starting_node = Node.objects.filter(mlo_agent__user =user).first()
         loan_user  = starting_node.mlo_agent.user
         queue         = deque([(starting_node, 0)])
         node_levels   = {starting_node.mlo_agent.user.username: 0}
