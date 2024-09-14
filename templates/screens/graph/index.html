@@ -63,45 +63,20 @@
 {% endblock %}
 {%block content %}
 
-{% include 'components/modal/index.html' %}
-<div class="tree" >
-    {% for parent in data %}
-        <div class="parent" onclick="showModal('{{parent}}')">
-            {{parent|truncatechars:9}}
-            <div class="line line-vertical"></div>
-        </div>
-      
-        <div class="children" >
-            {% for child in data|dict_get:parent %}
-            <div style="display: flex; align-items: flex-start; justify-content: center;">
-             
-                <div style="width: 50px;height: 3px;background-color: black;"></div>
-                <div class="node" onclick="showModal('{{child}}')">
-                    {{child|truncatechars:9}}   
-                  
-                </div>
-
-
-            </div>
-           
-        {% endfor %}
-
-        </div>
-        </div>
-    {% endfor  %}
-</div>
+<div id="tree"></div>
 <script>
-    const my_modal_3 = document.getElementById("my_modal_3")
-    function showModal(_mloName) {
-        const mloName = document.getElementById("mlo-name")
-        const mlo_name = document.getElementById("mlo_name")
-        const mloDetail = document.getElementById("mlo-detail")
-        const viewDetail = document.getElementById("view_detail")
-        mloName.innerText = _mloName
-        mlo_name.setAttribute("value",_mloName)
-        mloDetail.innerText = `${_mloName}'s total comission 7 sponsored 4 mlo`
-        viewDetail.setAttribute("href",`/mlo_detail/${_mloName}/`)
-        my_modal_3.showModal()
-    }
+
+    let chart = new OrgChart("#tree", {
+        // options
+        nodeBinding: {
+            field_0: "name"
+        },
+        nodes: [
+            { id: 1, name: "Amber McKenzie" },
+            { id: 2, pid: 1, name: "Ava Field" },
+            { id: 3, pid: 1, name: "Peter Stevens" }
+        ]  
+    });
 </script>
+
 {% endblock %}
