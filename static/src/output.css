@@ -4254,16 +4254,16 @@ details.collapse summary::-webkit-details-marker {
   height: 2.25rem;
 }
 
+.h-96 {
+  height: 24rem;
+}
+
 .h-auto {
   height: auto;
 }
 
 .h-full {
   height: 100%;
-}
-
-.h-96 {
-  height: 24rem;
 }
 
 .min-h-\[auto\] {

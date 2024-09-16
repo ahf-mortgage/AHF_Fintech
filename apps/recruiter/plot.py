@@ -1,5 +1,5 @@
 from django.shortcuts import render
-import networkx as nx
+# import networkx as nx
 import matplotlib.pyplot as plt
 import io
 import base64
@@ -8,7 +8,7 @@ from .models import MLO_AGENT,Node
 from django.contrib.auth.decorators import login_required
 import random
 from matplotlib.colors import to_hex
-import cv2
+# import cv2
 import numpy as np
 from .draw import draw
 

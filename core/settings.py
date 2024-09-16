@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY') 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False, cast=bool) #True
+DEBUG = True #config('DEBUG', default=False, cast=bool) #True
 
 ALLOWED_HOSTS = [
     'https://www.ahf.mortgage',
@@ -94,7 +94,8 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',        
+                'django.contrib.messages.context_processors.messages', 
+                'apps.home.context_processors.global_variables',
                 # `allauth` needs this from django
                 'django.template.context_processors.request',
 
