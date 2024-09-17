@@ -731,3 +731,8 @@ class GetAllNodes(APIView):
 
 
      
+class ChartView(APIView):    
+    def get(self, request, *args, **kwargs):
+        all_edges = Edge.objects.all()
+
+        return Response(serializer.data, status=status.HTTP_200_OK) 
