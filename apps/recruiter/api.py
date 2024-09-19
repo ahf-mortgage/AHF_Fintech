@@ -730,9 +730,110 @@ class GetAllNodes(APIView):
 
 
 
+def single_mlo_info(request,node_id):
+        node_id = request.GET.get('node_id',None)
+      
+        
+      
+        if node_id == None:
+            starting_node = Node.objects.filter(node_id=node_id).first()
+        starting_node = Node.objects.all().last()
+        loan_user  = starting_node.mlo_agent.user
+        queue         = deque([(starting_node, 0)])
+        node_levels   = {starting_node.mlo_agent.user.username: 0}
+        data          = []
+        level_to_commission = {}
+        levels = [i for i in range(1,8)]
+
+        all_revenue_shares = AnnualRevenueShare.objects.all()
+        try:
+            loan_break_point = LoanBreakPoint.objects.all().first()
+        except LoanBreakPoint.DoesNotExist as e:
+            raise e
+ 
+            
+        try:
+            comp_plan        = CompPlan.objects.all().first()
+        except CompPlan.DoesNotExist as e:
+            raise e
+
+        try:
+            bps        = Bps.objects.all().first()
+        except Bps.DoesNotExist as e:
+            raise e
+        
+
+        annual_revenue_shares = []
+        test_branch_gross_income  =  aacd.get("test_branch_gross_income",None)
+        ahf_amount                =  aacd.get("ahf_amount",1)
+        AD9                       =  math.ceil(float(test_branch_gross_income)/float(ahf_amount) * 100)
+        split                     = Branch.objects.filter().first().commission
+        gci                       =   (comp_plan.Percentage * 100) * loan_break_point.loan_break_point/10000  + comp_plan.Flat_Fee
+        index = 0
+
+        for share in all_revenue_shares:
+            annual_revenue_shares.append(share.percentage/100)
+
+        for level,AD12 in zip(levels,annual_revenue_shares):
+            level_to_commission[0] =  calculate_commission_for_level_0(starting_node,AD9,split)
+            AE12 = AD9*AD12
+          
+            AG12 = AE12/2
+            level_to_commission[level] = AG12
+
+        while queue:
+            node, level = queue.popleft()
+            for edge in node.outgoing_edges.all():
+                target_node = edge.target_node
+                if target_node not in node_levels:
+                    node_levels[target_node.mlo_agent.user.username] = level + 1
+                    queue.append((target_node, level + 1))
+
+
+        for mlo in node_levels:
+            mlo_agent = MLO_AGENT.objects.filter(user__username = "tinsae").first()
+            user      = User.objects.filter(username = mlo).first()
+            mlo_agent = MLO_AGENT.objects.filter(user=user).first()
+            loan      = Loan.objects.filter(mlo_agent__user__username = loan_user).first()
+          
+           
+  
+            _data = {
+                'mlo':mlo,
+                'level':node_levels.get(mlo,None),
+                'commission': f"{math.ceil(level_to_commission.get(node_levels.get(mlo,None),0)):,}",
+                'loan': len(loan.amount.all()) if loan  != None  else 0,
+                'total_amount':f"{math.ceil(sum([amount.loan_amount if loan != None else 0 for amount in loan.amount.all()])):,}",
+                "split":f"{split * 100}%",
+                'file_reference':loan.File_reference,
+                'loan_amount':loan.amount.all().first().loan_amount,
+                'date_funded':loan.amount.all().first().loan_date,
+                'gci':f"$ {gci:,}",
+                'bps':loan.bps,
+                'ahf_commission':f"{float(1 - split) * float(gci):,}",
+                'branch_commission':float(split) * float(gci)
+            }
+
+            data.append(_data)
+        return data
      
 class ChartView(APIView):    
     def get(self, request, *args, **kwargs):
         all_edges = Edge.objects.all()
+        ahf_edge = Edge.objects.filter(source_node__mlo_agent__user__username= "AHF").first()
+        # print("ahf_edge=",single_mlo_info(request,1345))
+        data = []
+        data.append({
+            "id":ahf_edge.source_node.mlo_agent.user.id,
+            "name":ahf_edge.source_node.mlo_agent.user.username
+        })
+        for edge in all_edges:
+            node = {
+                "id":edge.target_node.mlo_agent.user.id,
+                "name":edge.target_node.mlo_agent.user.username,
+                'pid':edge.source_node.mlo_agent.user.id
+            }
+            data.append(node)
+         
 
-        return Response(serializer.data, status=status.HTTP_200_OK) 
+        return Response(data,status=status.HTTP_200_OK) 

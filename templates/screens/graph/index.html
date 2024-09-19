@@ -68,30 +68,27 @@
     const user_id = "{{request.user.id}}"
     const BASE_URL = "{{BASE_URL}}"
  
-    const node_info_urls = `${BASE_URL}/api/get_level_info/?user_id=${user_id}`
+    const node_info_urls = `${BASE_URL}/api/chart-view/?user_id=${user_id}`
     
 
     axios.get(node_info_urls)
           .then((data) => {
-            const nodes = data
-            console.log("nodes = ",nodes);
+            const nodes = data.data
+            console.log("nodes = ",nodes)
+            let chart = new OrgChart("#tree", {
+
+                nodeBinding: {
+                    field_0: "name"
+                },
+                nodes: nodes
+                });
           })
           .catch((error) => {
             console.log("Error =",error);
           })
 
 
-    let chart = new OrgChart("#tree", {
 
-        nodeBinding: {
-            field_0: "name"
-        },
-        nodes: [
-            { id: 1, name: "Amber McKenzie" },
-            { id: 2, pid: 1, name: "Ava Field" },
-            { id: 3, pid: 1, name: "Peter Stevens" }
-        ]  
-    });
 </script>
 
 {% endblock %}

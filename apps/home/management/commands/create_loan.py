@@ -16,9 +16,9 @@ class Command(BaseCommand):
    
     help = 'Creates mlo from a text file'
     def handle(self, *args, **options):
-        mlo_agents = MLO_AGENT.objects.filter(user__username__startswith = "William")
+        mlo_agents = MLO_AGENT.objects.all()
         mlo_id = 30090
-        index = 80
+        index = 320
 
 
         for agent in mlo_agents:
