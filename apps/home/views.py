@@ -7,7 +7,7 @@ from colorlog import ColoredFormatter
 from  django.shortcuts import redirect
 from utils.q22 import automate_q22_value
 from django.conf import  settings
-from apps.recruiter.views import bfs_traversal
+# from apps.recruiter.views import bfs_traversal
 
 from utils.calc_res import (
                     calculate_annual_ahf_income,
@@ -166,7 +166,7 @@ def home(request):
         
     FLAT_AM0UNT = gci - (gci/1000) * ((loan_below_limits[len(loan_below_limits) - 1] or 0) * 0.1/10000) 
 
-    start_node,visited, node_list,total_mlo_sponsored =  bfs_traversal(request)
+    # start_node,visited, node_list,total_mlo_sponsored =  bfs_traversal(request)
     # print(f"{request.user} sponsor mlo with level =",node_list)
    
   

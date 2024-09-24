@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .models import MLO,Company,Loan,Node,Edge,MLO_AGENT
 from django.shortcuts import get_object_or_404,redirect
-from .models import Bps,LoanBreakPoint,CompPlan,AHF,Branch
+from .models import Bps,LoanBreakPoint,CompPlan,AHF,Branch,LoanSetting
 from apps.W2branchYearlyGross.models import Q22
 from utils.calc_res import get_gci_result
 from utils.bisect_balance import find_root,function
@@ -268,6 +268,8 @@ def bfs_traversal(request):
     level  = 1
     total_mlo_sponsored = 1
     loans = None
+    month = LoanSetting.objects.filter(user = request.user).first().month
+
     
     while queue:
         node, parent_node = queue.popleft()
@@ -294,8 +296,8 @@ def bfs_traversal(request):
                         date_closed = loan.date_closed
                         
                         difference_date = date_joined - date_closed
-
-                        if difference_date.days > 6 * 30:
+                        
+                        if difference_date.days > month * 30:
                             total_mlo_sponsored += len( node.outgoing_edges.all())
                             node_list[edge.source_node.mlo_agent.user] = [{"level":level,"node":node.target_node.mlo_agent.user } for node in node.outgoing_edges.all()]
                         else:

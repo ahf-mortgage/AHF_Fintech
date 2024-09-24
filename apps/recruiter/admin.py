@@ -60,7 +60,7 @@ admin.site.register(AHF)
 admin.site.register(Recruiter)
 admin.site.register(Branch)
 admin.site.register(Node)
-# admin.site.register(Edge)
+admin.site.register(LoanSetting)
 admin.site.register(MLO_AGENT)
 
 
