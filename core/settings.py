@@ -20,10 +20,10 @@ ALLOWED_HOSTS = [
      '127.0.0.1',
      'localhost'
      ]
-# CSRF_TRUSTED_ORIGINS = [
-#     'http://www.ahf.mortgage',
-#     'https://www.ahf.mortgage'
-#     ]
+CSRF_TRUSTED_ORIGINS = [
+    'http://www.ahf.mortgage',
+    'https://www.ahf.mortgage'
+    ]
 
 
 CORS_ALLOWED_ORIGINS = [
