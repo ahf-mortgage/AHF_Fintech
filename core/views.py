@@ -3,7 +3,7 @@ from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from apps.recruiter.models import Edge,MLO_AGENT
-# import networkx as nx
+
 import matplotlib.pyplot as plt
 import os
 
