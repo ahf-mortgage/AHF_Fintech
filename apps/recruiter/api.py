@@ -648,9 +648,9 @@ class LoanDetailView(APIView):
                 f"${math.ceil(float(1-split) * float(gci)):,}" , 
                 f"${math.ceil(float(split) * float(gci)):,}",
                 math.ceil(level_to_commission.get(1,0)),
-                f"${math.floor(total_commission):,}",
-                f"${math.ceil(total_ahf_commission):,}",
-                parents.get(f"parent_of_{username}")
+                # f"${math.floor(total_commission):,}",
+                # f"${math.ceil(total_ahf_commission):,}",
+                # parents.get(f"parent_of_{username}")
             
             ]
             total_mlo += 1
