@@ -2,7 +2,7 @@
 from django.contrib import admin
 from django.urls import path,include
 from django.shortcuts import render
-from .views import  visualize_graph,mlo_detail
+from .views import  visualize_graph,mlo_detail,loan_detail
 # from utils.views import AhfSignupView
 
 def react_view(request):
@@ -19,6 +19,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("front/",react_view,name = "react_view"),
     path("visualize/",visualize_graph,name = "visualize_graph"),
+    path("loan-detail/",loan_detail,name = "loan-detail"),
     path("mlo_detail/<name>/",mlo_detail,name = "mlo_detail")
 
     ]

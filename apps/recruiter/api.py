@@ -559,8 +559,6 @@ class GetLevelInfo(APIView):
 
 
 
-
-
 class LoanDetailView(APIView):
     queryset        = Node.objects.all()
     def get(self, request, *args, **kwargs):
@@ -639,28 +637,129 @@ class LoanDetailView(APIView):
             total_ahf_commission += float(split) * float(gci)
           
          
-            _data = {
+            _data = [
                
-                "split":f"{math.ceil(split * 100)}%",
-                'file_reference':amount.File_reference,
-                'loan_amount':f"${math.ceil(amount.loan_amount):,}",
-                'date_funded':amount.loan_date,
-                'gci':f"${math.ceil(gci):,}",
-                'bps':loan.bps,
-                'branch_commission':f"${math.ceil(float(1-split) * float(gci)):,}" , 
-                'ahf_commission':f"${math.ceil(float(split) * float(gci)):,}",
-                'recruiter_commission':math.ceil(level_to_commission.get(1,0)),#f"${math.ceil((float(1-split) * float(gci))/2):,}",
-                'total_commission':f"${math.floor(total_commission):,}",
-                'total_ahf_commission':f"${math.ceil(total_ahf_commission):,}",
-                'parent':parents.get(f"parent_of_{username}")
+                f"{math.ceil(split * 100)}%",
+                amount.File_reference,
+                f"${math.ceil(amount.loan_amount):,}",
+                amount.loan_date,
+                f"${math.ceil(gci):,}",
+                loan.bps,
+                f"${math.ceil(float(1-split) * float(gci)):,}" , 
+                f"${math.ceil(float(split) * float(gci)):,}",
+                math.ceil(level_to_commission.get(1,0)),
+                f"${math.floor(total_commission):,}",
+                f"${math.ceil(total_ahf_commission):,}",
+                parents.get(f"parent_of_{username}")
             
-            }
+            ]
             total_mlo += 1
             index += 1
             data.append(_data)
             data.append({"mlo":mlo.user.username})
         data.append({'total_mlo':total_mlo})
         return Response(data)
+
+# class LoanDetailView(APIView):
+#     queryset        = Node.objects.all()
+#     def get(self, request, *args, **kwargs):
+#         loan_detail = request.GET.get('loan_detail',None)
+#         username    = loan_detail
+#         user        = User.objects.filter(username = username).first()
+#         mlo         = MLO_AGENT.objects.filter(user = user).first()
+#         loan        = Loan.objects.filter(mlo_agent__user__username =username ).first()
+#         print("username = ",username)
+#         amounts     = loan.amount.all()
+
+#         all_revenue_shares = AnnualRevenueShare.objects.all()
+#         try:
+#             loan_break_point = LoanBreakPoint.objects.all().first()
+#         except LoanBreakPoint.DoesNotExist as e:
+#             raise e
+            
+#         try:
+#             comp_plan  = CompPlan.objects.all().first()
+#         except CompPlan.DoesNotExist as e:
+#             raise e
+
+#         try:
+#             bps = Bps.objects.all().first()
+#         except Bps.DoesNotExist as e:
+#             raise e
+        
+
+#         annual_revenue_shares     = []
+#         test_branch_gross_income  =  aacd.get("test_branch_gross_income",None)
+#         ahf_amount                =  aacd.get("ahf_amount",1)
+#         AD9                       =  math.ceil(float(test_branch_gross_income)/float(ahf_amount) * 100)
+#         split                     =  Branch.objects.filter().first().commission
+   
+
+#         data = []
+#         MIN_LOAN = 100000 
+#         total_commission = 0
+#         total_ahf_commission = 0
+#         total_mlo = 0
+#         annual_revenue_shares = []
+#         test_branch_gross_income  =  aacd.get("test_branch_gross_income",None)
+#         ahf_amount                =  aacd.get("ahf_amount",1)
+#         AD9                       =  math.ceil(float(test_branch_gross_income)/float(ahf_amount) * 100)
+#         split                     =  Branch.objects.filter().first().commission
+#         gci                       =  (comp_plan.Percentage * 100) * loan_break_point.loan_break_point/10000  + comp_plan.Flat_Fee
+#         index = 1
+#         level_to_commission = {}
+#         levels = [i for i in range(1,8)]
+     
+#         starting_node = Node.objects.all().first()
+#         for share in all_revenue_shares:
+#             annual_revenue_shares.append(share.percentage/100)
+
+#         for level,AD12 in zip(levels,annual_revenue_shares):
+#             level_to_commission[0] =  calculate_commission_for_level_0(starting_node,AD9,split)
+#             AE12 = AD9 * AD12
+#             AG12 = AE12
+#             level_to_commission[level] = AG12
+
+
+#         parents = {}
+#         for edge in Edge.objects.all():
+#             parents[f"parent_of_{edge.target_node.mlo_agent.user.username}"] = edge.source_node.mlo_agent.user.username
+        
+     
+#         for amount in amounts:
+#             print("amount - ",amount)
+
+#             gci = float(comp_plan.Percentage * 100) * float(amount.loan_amount/10000)  + comp_plan.Flat_Fee 
+         
+#             if gci > comp_plan.MAX_GCI:
+#                 gci = comp_plan.MAX_GCI
+        
+#             total_commission += float(1-split) * float(gci) 
+#             total_ahf_commission += float(split) * float(gci)
+          
+         
+#             _data = {
+               
+#                 "split":f"{math.ceil(split * 100)}%",
+#                 'file_reference':amount.File_reference,
+#                 'loan_amount':f"${math.ceil(amount.loan_amount):,}",
+#                 'date_funded':amount.loan_date,
+#                 'gci':f"${math.ceil(gci):,}",
+#                 'bps':loan.bps,
+#                 'branch_commission':f"${math.ceil(float(1-split) * float(gci)):,}" , 
+#                 'ahf_commission':f"${math.ceil(float(split) * float(gci)):,}",
+#                 'recruiter_commission':math.ceil(level_to_commission.get(1,0)),#f"${math.ceil((float(1-split) * float(gci))/2):,}",
+#                 'total_commission':f"${math.floor(total_commission):,}",
+#                 'total_ahf_commission':f"${math.ceil(total_ahf_commission):,}",
+#                 'parent':parents.get(f"parent_of_{username}")
+            
+#             }
+#             total_mlo += 1
+#             index += 1
+#             data.append(_data)
+#             data.append({"mlo":mlo.user.username})
+#         data.append({'total_mlo':total_mlo})
+#         return Response(data)
 
 
 class GetMloLevelInfo(APIView):

@@ -46,3 +46,10 @@ def visualize_graph(request):
     children = children
     return render(request, 'screens/graph/index.html', {"data":grouped})
 
+
+
+
+def loan_detail(request):
+    return render(request, 'screens/table/loan_detail.html')
+
+
