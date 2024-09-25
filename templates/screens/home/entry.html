@@ -1,12 +1,14 @@
+{% extends '_base.html' %}
+
 {% load humanize %}
 {% load static %}
+
+
+{% block content %}
 <!doctype html>
 <html>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://cdn.tailwindcss.com"></script>
+{%block style%}
   <style>
     /* Styles for the grid containers */
 
@@ -73,9 +75,8 @@
       }
     }
   </style>
-</head>
+{%endblock%}
 
-<body>
   <div style="width:100%;display: flex;justify-content:flex-end;margin:auto;">
     <h1 class="font-bold">V{{version}}</h1>
   </div>
@@ -201,6 +202,4 @@
 
 
   </script>
-</body>
-
-</html>
+{% endblock  %}
