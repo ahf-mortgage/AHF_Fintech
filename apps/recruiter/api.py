@@ -1,3 +1,4 @@
+import requests
 from django.contrib.auth.models import AnonymousUser
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -23,7 +24,8 @@ import numpy as np
 import math
 from django.utils import timezone
 from rest_framework import status
-
+from django.conf import settings
+from decouple import config
 
 
 
@@ -648,9 +650,7 @@ class LoanDetailView(APIView):
                 f"${math.ceil(float(1-split) * float(gci)):,}" , 
                 f"${math.ceil(float(split) * float(gci)):,}",
                 math.ceil(level_to_commission.get(1,0)),
-                # f"${math.floor(total_commission):,}",
-                # f"${math.ceil(total_ahf_commission):,}",
-                # parents.get(f"parent_of_{username}")
+            
             
             ]
             total_mlo += 1
@@ -660,106 +660,7 @@ class LoanDetailView(APIView):
         data.append({'total_mlo':total_mlo})
         return Response(data)
 
-# class LoanDetailView(APIView):
-#     queryset        = Node.objects.all()
-#     def get(self, request, *args, **kwargs):
-#         loan_detail = request.GET.get('loan_detail',None)
-#         username    = loan_detail
-#         user        = User.objects.filter(username = username).first()
-#         mlo         = MLO_AGENT.objects.filter(user = user).first()
-#         loan        = Loan.objects.filter(mlo_agent__user__username =username ).first()
-#         print("username = ",username)
-#         amounts     = loan.amount.all()
 
-#         all_revenue_shares = AnnualRevenueShare.objects.all()
-#         try:
-#             loan_break_point = LoanBreakPoint.objects.all().first()
-#         except LoanBreakPoint.DoesNotExist as e:
-#             raise e
-            
-#         try:
-#             comp_plan  = CompPlan.objects.all().first()
-#         except CompPlan.DoesNotExist as e:
-#             raise e
-
-#         try:
-#             bps = Bps.objects.all().first()
-#         except Bps.DoesNotExist as e:
-#             raise e
-        
-
-#         annual_revenue_shares     = []
-#         test_branch_gross_income  =  aacd.get("test_branch_gross_income",None)
-#         ahf_amount                =  aacd.get("ahf_amount",1)
-#         AD9                       =  math.ceil(float(test_branch_gross_income)/float(ahf_amount) * 100)
-#         split                     =  Branch.objects.filter().first().commission
-   
-
-#         data = []
-#         MIN_LOAN = 100000 
-#         total_commission = 0
-#         total_ahf_commission = 0
-#         total_mlo = 0
-#         annual_revenue_shares = []
-#         test_branch_gross_income  =  aacd.get("test_branch_gross_income",None)
-#         ahf_amount                =  aacd.get("ahf_amount",1)
-#         AD9                       =  math.ceil(float(test_branch_gross_income)/float(ahf_amount) * 100)
-#         split                     =  Branch.objects.filter().first().commission
-#         gci                       =  (comp_plan.Percentage * 100) * loan_break_point.loan_break_point/10000  + comp_plan.Flat_Fee
-#         index = 1
-#         level_to_commission = {}
-#         levels = [i for i in range(1,8)]
-     
-#         starting_node = Node.objects.all().first()
-#         for share in all_revenue_shares:
-#             annual_revenue_shares.append(share.percentage/100)
-
-#         for level,AD12 in zip(levels,annual_revenue_shares):
-#             level_to_commission[0] =  calculate_commission_for_level_0(starting_node,AD9,split)
-#             AE12 = AD9 * AD12
-#             AG12 = AE12
-#             level_to_commission[level] = AG12
-
-
-#         parents = {}
-#         for edge in Edge.objects.all():
-#             parents[f"parent_of_{edge.target_node.mlo_agent.user.username}"] = edge.source_node.mlo_agent.user.username
-        
-     
-#         for amount in amounts:
-#             print("amount - ",amount)
-
-#             gci = float(comp_plan.Percentage * 100) * float(amount.loan_amount/10000)  + comp_plan.Flat_Fee 
-         
-#             if gci > comp_plan.MAX_GCI:
-#                 gci = comp_plan.MAX_GCI
-        
-#             total_commission += float(1-split) * float(gci) 
-#             total_ahf_commission += float(split) * float(gci)
-          
-         
-#             _data = {
-               
-#                 "split":f"{math.ceil(split * 100)}%",
-#                 'file_reference':amount.File_reference,
-#                 'loan_amount':f"${math.ceil(amount.loan_amount):,}",
-#                 'date_funded':amount.loan_date,
-#                 'gci':f"${math.ceil(gci):,}",
-#                 'bps':loan.bps,
-#                 'branch_commission':f"${math.ceil(float(1-split) * float(gci)):,}" , 
-#                 'ahf_commission':f"${math.ceil(float(split) * float(gci)):,}",
-#                 'recruiter_commission':math.ceil(level_to_commission.get(1,0)),#f"${math.ceil((float(1-split) * float(gci))/2):,}",
-#                 'total_commission':f"${math.floor(total_commission):,}",
-#                 'total_ahf_commission':f"${math.ceil(total_ahf_commission):,}",
-#                 'parent':parents.get(f"parent_of_{username}")
-            
-#             }
-#             total_mlo += 1
-#             index += 1
-#             data.append(_data)
-#             data.append({"mlo":mlo.user.username})
-#         data.append({'total_mlo':total_mlo})
-#         return Response(data)
 
 
 class GetMloLevelInfo(APIView):
@@ -920,19 +821,69 @@ class ChartView(APIView):
     def get(self, request, *args, **kwargs):
         all_edges = Edge.objects.all()
         ahf_edge = Edge.objects.filter(source_node__mlo_agent__user__username= "AHF").first()
-        # print("ahf_edge=",single_mlo_info(request,1345))
+        BASE_URL = config("BASE_URL")
+    
+  
         data = []
         data.append({
             "id":ahf_edge.source_node.mlo_agent.user.id,
             "name":ahf_edge.source_node.mlo_agent.user.username
         })
         for edge in all_edges:
+            _data = requests.get(f"{BASE_URL}/api/get_node_detail/?username={edge.target_node.mlo_agent.user.username}").json()
+           
             node = {
                 "id":edge.target_node.mlo_agent.user.id,
                 "name":edge.target_node.mlo_agent.user.username,
-                'pid':edge.source_node.mlo_agent.user.id
+                'pid':edge.source_node.mlo_agent.user.id,
+                "Total number of loans":_data.get("total_number_of_loans",None),
+                "BPS":_data.get("bps",None),
+                "Total Loan Amounts":_data.get("total_loan_amounts",None),
+                "Split":_data.get("split",None),
+           
+            
+
             }
             data.append(node)
          
 
         return Response(data,status=status.HTTP_200_OK) 
+    
+
+
+class NodeLoanDetailView(APIView):    
+    def get(self, request, *args, **kwargs):
+        data = []
+        username = request.GET.get("username",None) 
+        loan = Loan.objects.filter(mlo_agent__user__username=username).first()
+        loan_amounts = loan.amount.all()
+        total_loan_amount = 0
+        for amount in loan_amounts:
+            total_loan_amount+= amount.loan_amount
+
+        print("authenticated user - ",request.user)
+        branch = 0
+        split = 0
+
+
+        try:
+            branch  = Branch.objects.all().first().commission
+        except Branch.DoesNotExist as e:
+            raise e
+     
+        print("spli=",split)
+       
+
+        raw_data = {
+            "total_number_of_loans":len(loan.amount.all()),
+            "total_loan_amounts":total_loan_amount,
+            "bps":loan.bps,
+            "split":branch * 100
+        
+        }
+
+        return Response(raw_data)
+
+
+        
+        

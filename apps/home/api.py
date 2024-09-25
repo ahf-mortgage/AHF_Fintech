@@ -94,3 +94,6 @@ class HomeAPIView(APIView):
             'result': data
         }
         return Response(processed_data, status=201)
+    
+
+    

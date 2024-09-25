@@ -21,7 +21,8 @@ from apps.recruiter.api import (
                                     GetMloLevelInfo,
                                     LoanDetailView,
                                     GetAllNodes,
-                                    ChartView
+                                    ChartView,
+                                    NodeLoanDetailView
 
 )
 
@@ -37,6 +38,7 @@ urlpatterns = [
     path('api/get_level_info/',GetLevelInfo.as_view(),name = "get_level_info"),
     path('api/chart-view/',ChartView.as_view(),name = "chart-view"),
     path('api/get_loan_detail/',LoanDetailView.as_view(),name= "loan_detail"),
+    path('api/get_node_detail/',NodeLoanDetailView.as_view(),name= "node_loan_detail"),
     path('api/get_mlo_level_info/',GetMloLevelInfo.as_view(),name = "get_level_info"),
     path('change_branch_amount/',change_branch_amount,name="change_branch_amount"),
     path('loan_break_point/',loan_break_point,name="loan_break_point"),
