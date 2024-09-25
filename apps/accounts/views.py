@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login,logout
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from .forms import UserRegistrationForm
@@ -18,6 +18,11 @@ def login_view(request):
     else:
         return render(request, 'login.html')
     
+
+def logout_view(request):
+    logout(request)
+    return redirect('login') 
+   
 
 
 def sign_up(request):

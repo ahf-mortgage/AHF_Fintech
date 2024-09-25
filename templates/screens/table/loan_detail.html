@@ -1,30 +1,30 @@
 {% extends '_base.html'%}
+{%load static %}
 {% load humanize %}
 {% load safe_divide %}
 
 {%block style %}
-<link href="https://unpkg.com/frappe-datatable@0.0.5/dist/frappe-datatable.min.css" rel="stylesheet">
+<link href="{%static 'css/frappe.css'%}" rel="stylesheet">
 {% endblock %}
 
 {%block content %}
 
 <div id="datatable"></div>
 
-<script src="https://unpkg.com/sortablejs@1.7.0/Sortable.min.js"></script>
-<script src="https://unpkg.com/clusterize.js@0.18.0/clusterize.min.js"></script>
+<script src="{% static 'sortable.js'%}"></script>
+<script src="{%static 'clusterize.js' %}"></script>
 
-<script src="https://unpkg.com/frappe-datatable@0.0.5/dist/frappe-datatable.min.js"></script>
+<script src="{%static 'frappe.js'%}"></script>
 
 
 <script>
 
-
-    const user = "{{request.user}}"
+window.onload = function() {
+  const user = "{{request.user}}"
     const BASE_URL = "{{BASE_URL}}"
  
     const loan_detail_url = `${BASE_URL}/api/get_loan_detail/?loan_detail=${user}`
-    let _columns =  [
-                    'Split', 'File Reference', 'Loan amount','Date Funded', 'GCI', 'BPS',"Branch Commission",'AHF Commission', 'Recruiter Commission']
+    let _columns =  ['Split', 'File Reference', 'Loan amount','Date Funded', 'GCI', 'BPS',"Branch Commission",'AHF Commission', 'Recruiter Commission']
 
    const columns =  _columns.map((item) => {
         return      {
@@ -60,6 +60,8 @@
 
     
 
+};
+  
  
 </script>
 

@@ -3,7 +3,9 @@ from django.contrib import admin
 from django.urls import path,include
 from django.shortcuts import render
 from .views import  visualize_graph,mlo_detail,loan_detail
-# from utils.views import AhfSignupView
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 def react_view(request):
     return render(request,"build/index.html")
@@ -23,3 +25,5 @@ urlpatterns = [
     path("mlo_detail/<name>/",mlo_detail,name = "mlo_detail")
 
     ]
+if True:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
