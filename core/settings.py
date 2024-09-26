@@ -45,13 +45,15 @@ INSTALLED_APPS = [
     #thrid party packages
     'theme',
     'django_browser_reload',
-    'crispy_forms',
-    "crispy_bootstrap5",
     'widget_tweaks',
     'rest_framework',
     'djoser',
     'corsheaders',
     'compressor', 
+    'crispy_forms',
+    "crispy_tailwind",
+
+
     # installed apps,
     'apps.recruiter',
     'apps.home',
@@ -176,6 +178,10 @@ STATICFILES_DIRS = [
     
 ]
 
+CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
+
+CRISPY_TEMPLATE_PACK = "tailwind"
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Replace BASE_DIR with your project's base directory
 
@@ -211,9 +217,9 @@ PASSWORD_RESET_CONFIRM_UR = "http://12.0.0.1:8000"
 LOGIN_URL = '/account/login'
 LOGIN_REDIRECT_URL = '/'
 
-# crispy form config
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-CRISPY_TEMPLATE_PACK = "bootstrap5"
+# # crispy form config
+# CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+# CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 
 

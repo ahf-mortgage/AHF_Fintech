@@ -76,6 +76,13 @@ class Company(models.Model):
         return self.name
 
  
+
+
+
+
+
+
+
 class Recruiter(models.Model):
     name  = models.CharField(max_length=100,null=True,blank=True)
     amount = models.IntegerField()
@@ -92,12 +99,16 @@ class MLO(models.Model):
     
     
 class MLO_AGENT(models.Model):
+
+    CHOICES = [(num, num) for num in range(50,250,25)]
     user = models.ForeignKey(User,on_delete=models.CASCADE,blank=False,null=False)
-    NMLS_ID = models.IntegerField(blank = False,null = False) # unique 7 digits number  3000000 auto increment min_value = 3000000,auto_increment = True
-    NMLS_sponsor_id = models.IntegerField(blank = True,null = True)
+    NMLS_sponsor_id = models.CharField(max_length=100,blank = False,null = False)
+    NMLS_ID = models.CharField(max_length=100,blank = False,null = False) # unique 7 digits number  3000000 auto increment min_value = 3000000,auto_increment = True
+   
     MLO_commission  = models.FloatField(blank = True,null = True)
     date_joined = models.DateTimeField(auto_now = True)
-    year_to_date = models.FloatField(blank = True,null = True)
+    flat_Fee = models.FloatField(blank = True,null = True)
+    max = models.CharField(max_length= 4,blank = True,null = True,choices=CHOICES)
     
     def __str__(self) -> str:
         return self.user.username	

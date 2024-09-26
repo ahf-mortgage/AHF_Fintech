@@ -9,6 +9,7 @@ from django.db import models
 from collections import deque
 from django.contrib.auth.decorators import login_required
 from collections import defaultdict
+from .forms import MloFrom
 
 
 def calculate_commission_above_million(loan_id,mlo_id):
@@ -383,3 +384,29 @@ def dfs_traversal(request):
     start_node = list(node_list.keys())[0]
 
     return start_node, visited, node_list, mlo_sponsored,agent_list
+
+
+
+
+def register_new_mlo(request):
+     form = MloFrom()
+
+     if request.method == "POST":
+          form = MloFrom(request.POST or None)
+          if form.is_valid():
+               form.save()
+               print("form data=",form.cleaned_data)
+               return redirect("/visualize/")
+          else:
+               print("form=",form.errors)
+               return render(request,"screens/recruiter/register.html",{
+                    "errors":form.errors,
+                    "form":form
+               })
+                   
+
+     context = {
+          "form":form
+          
+     }
+     return render(request,"screens/recruiter/register.html",context)

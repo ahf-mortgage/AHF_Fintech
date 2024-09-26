@@ -26,6 +26,7 @@ def logout_view(request):
 
 
 def sign_up(request):
+    user_form = UserRegistrationForm()
     if request.method == 'POST':
         user_form = UserRegistrationForm(request.POST or None)
         # print("before validation  = ",user_form)
@@ -39,4 +40,4 @@ def sign_up(request):
                 print("errors - ",error)
             return render(request, 'signup.html',{"errors":user_form.errors})
     else:
-        return render(request, 'signup.html')
+        return render(request, 'signup.html',{"form":user_form})
