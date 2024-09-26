@@ -871,7 +871,7 @@ class NodeLoanDetailView(APIView):
         except Branch.DoesNotExist as e:
             raise e
      
-        print("spli=",split)
+     
        
 
         raw_data = {
