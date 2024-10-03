@@ -10,6 +10,7 @@ from collections import deque
 from django.contrib.auth.decorators import login_required
 from collections import defaultdict
 from .forms import MloFrom
+from apps.accounts.forms import UserRegistrationForm
 
 
 def calculate_commission_above_million(loan_id,mlo_id):
@@ -390,6 +391,7 @@ def dfs_traversal(request):
 
 def register_new_mlo(request):
      form = MloFrom()
+     register_form = UserRegistrationForm()
 
      if request.method == "POST":
           form = MloFrom(request.POST or None)
@@ -406,7 +408,8 @@ def register_new_mlo(request):
                    
 
      context = {
-          "form":form
+          "form":form,
+          "user_form":register_form
           
      }
      return render(request,"screens/recruiter/register.html",context)

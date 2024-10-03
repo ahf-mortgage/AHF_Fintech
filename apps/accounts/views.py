@@ -2,6 +2,9 @@ from django.contrib.auth import authenticate, login,logout
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from .forms import UserRegistrationForm
+from django.template.context_processors import csrf
+from crispy_forms.utils import render_crispy_form
+from jsonview.decorators import json_view
 
 def login_view(request):
     if request.method == 'POST':
@@ -38,6 +41,24 @@ def sign_up(request):
             print("errors=",)
             for error in user_form.errors.get_json_data():
                 print("errors - ",error)
-            return render(request, 'signup.html',{"errors":user_form.errors})
+            return render(request, 'signup.html',{"errors":user_form.errors,"form":user_form})
     else:
         return render(request, 'signup.html',{"form":user_form})
+    
+
+
+
+@json_view
+def save_user_form(request):
+    form = UserRegistrationForm(request.POST or None)
+    if form.is_valid():
+        print("form data = ",form.cleaned_data)
+      
+        form.save()
+        return {'success': True}
+
+
+    ctx = {}
+    ctx.update(csrf(request))
+    form_html = render_crispy_form(form, context=ctx)
+    return {'success': False, 'form_html': form_html}
