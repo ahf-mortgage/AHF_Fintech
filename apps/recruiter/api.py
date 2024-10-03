@@ -567,11 +567,11 @@ class LoanDetailView(APIView):
     queryset        = Node.objects.all()
     def get(self, request, *args, **kwargs):
         loan_detail = request.GET.get('loan_detail',None)
-        username    = loan_detail
-        user        = User.objects.filter(username = username).first()
+        id    = loan_detail
+        user        = User.objects.filter(id = id).first()
         mlo         = MLO_AGENT.objects.filter(user = user).first()
-        loan        = Loan.objects.filter(mlo_agent__user__username =username ).first()
-        print("username = ",username)
+        loan        = Loan.objects.filter(mlo_agent__user = user).first()
+        print("source node id  = ",id)
         amounts     = loan.amount.all()
 
         all_revenue_shares = AnnualRevenueShare.objects.all()
@@ -868,6 +868,7 @@ class ChartView(APIView):
                 _data = requests.get(f"{BASE_URL}/api/get_node_detail/?username={edge.target_node.mlo_agent.user.username}").json()
             
                 node = {
+                
                     "id":edge.target_node.mlo_agent.user.id,
                     "name":edge.target_node.mlo_agent.user.username,
                     'pid':edge.source_node.mlo_agent.user.id,

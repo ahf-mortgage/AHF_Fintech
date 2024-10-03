@@ -20,7 +20,7 @@
 <script>
 
 window.onload = function() {
-  const user = "{{request.user}}"
+  const user = "{{id}}"
     const BASE_URL = "{{BASE_URL}}"
  
     const loan_detail_url = `${BASE_URL}/api/get_loan_detail/?loan_detail=${user}`
@@ -47,12 +47,17 @@ window.onload = function() {
     axios.get(loan_detail_url)
           .then((data) => {
             const _data = data.data
+            console.log("_data[0]   = ",_data[0]); 
+           if(_data[0].total_mlo !== 0) {
             const datatable = new DataTable('#datatable',{
                 columns:columns,
                 data:_data,
                 layout:"fluid"
                
             });
+          } else {
+            window.location.pathname = "/error/"
+          }
           })
           .catch((error) => {
             console.log("Error =",error);

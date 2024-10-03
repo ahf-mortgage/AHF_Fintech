@@ -49,8 +49,12 @@ def visualize_graph(request):
 
 
 
-def loan_detail(request):
-    return render(request, 'screens/table/loan_detail.html')
+def loan_detail(request,id):
+    print("id ========  ",id)
+    context = {
+        "id":id
+    }
+    return render(request, 'screens/table/loan_detail.html',context)
 
 
 def error_view(request):

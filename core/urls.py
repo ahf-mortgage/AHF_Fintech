@@ -22,7 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("front/",react_view,name = "react_view"),
     path("visualize/",visualize_graph,name = "visualize_graph"),
-    path("loan-detail/",loan_detail,name = "loan-detail"),
+    path("loan-detail/<id>/",loan_detail,name = "loan-detail"),
     path("mlo_detail/<name>/",mlo_detail,name = "mlo_detail")
 
     ]

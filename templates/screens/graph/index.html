@@ -73,7 +73,9 @@
     const node_info_urls = `${BASE_URL}/api/chart-view/?user_id=${user_id}`
       
     function NodeDetailHandler(node) {
-                window.location.pathname = "/loan-detail"
+         
+             
+                window.location.pathname = `/loan-detail/${node}/`
             
             }
 
@@ -101,8 +103,11 @@
                 nodeMenu: {
                 detail: {
                     text: "View Detail",
-                    onClick: NodeDetailHandler
-                },
+                    onClick: function(node) {
+                      
+                        NodeDetailHandler(node); // Pass the clicked node to the handler
+                    }
+                    },
 
 
                 add_agent: {
