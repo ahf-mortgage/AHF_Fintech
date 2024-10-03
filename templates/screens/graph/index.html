@@ -88,6 +88,9 @@
 
 
             const nodes = data.data
+            console.log("nodes = ",nodes);
+            
+            if(nodes.length !== 0){
             let chart = new OrgChart("#tree", {
             
                 nodeBinding: {
@@ -109,13 +112,13 @@
             },
                             
                 });
-
+            } else {
+                window.location.pathname = "/error/"
+            }
           
             
                 })
-
-
-         
+      
           .catch((error) => {
             console.log("Error =",error);
           })

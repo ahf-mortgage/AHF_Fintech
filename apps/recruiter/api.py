@@ -847,7 +847,7 @@ class ChartView(APIView):
         if current_mlo:
             starting_node = Edge.objects.filter(source_node__mlo_agent= current_mlo).first()
         else:
-            return redirect(resolve("home"))
+            return redirect(resolve("/error/"))
             print("Empty Screen")
         BASE_URL = config("BASE_URL")
     
@@ -884,7 +884,8 @@ class ChartView(APIView):
 
             return Response(data,status=status.HTTP_200_OK)
         else:
-            return redirect("/error/") 
+            print("redirect page =++++++++++++++++++++==")
+            return Response([],status=status.HTTP_200_OK)
         
 
 
