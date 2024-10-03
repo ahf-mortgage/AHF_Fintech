@@ -868,7 +868,7 @@ class ChartView(APIView):
                 _data = requests.get(f"{BASE_URL}/api/get_node_detail/?username={edge.target_node.mlo_agent.user.username}").json()
             
                 node = {
-                
+                    "NMLS_ID":edge.target_node.mlo_agent.NMLS_ID,
                     "id":edge.target_node.mlo_agent.user.id,
                     "name":edge.target_node.mlo_agent.user.username,
                     'pid':edge.source_node.mlo_agent.user.id,
