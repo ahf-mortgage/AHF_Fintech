@@ -2,7 +2,7 @@
 from django.contrib import admin
 from django.urls import path,include
 from django.shortcuts import render
-from .views import  visualize_graph,mlo_detail,loan_detail
+from .views import  visualize_graph,mlo_detail,loan_detail,error_view
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -12,6 +12,7 @@ def react_view(request):
 
 urlpatterns = [
     path('',include("apps.home.urls",namespace = "home")),
+    path('error/',error_view,name="error"),
     path("account/", include("apps.accounts.urls")),
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),

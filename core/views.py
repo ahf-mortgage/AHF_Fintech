@@ -53,3 +53,7 @@ def loan_detail(request):
     return render(request, 'screens/table/loan_detail.html')
 
 
+def error_view(request):
+    return render(request, 'screens/404.html')
+
+

@@ -1,5 +1,7 @@
 import requests
 from django.contrib.auth.models import AnonymousUser
+from django.shortcuts import redirect,resolve_url
+from django.urls import resolve,reverse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView
@@ -819,36 +821,71 @@ def single_mlo_info(request,node_id):
      
 class ChartView(APIView):    
     def get(self, request, *args, **kwargs):
+        user_id = request.GET.get("user_id",None)
+        current_mlo = None
+        current_node = None
+        data = []
         all_edges = Edge.objects.all()
-        ahf_edge = Edge.objects.filter(source_node__mlo_agent__user__username= "AHF").first()
+    
+     
+
+        try:
+            user = User.objects.filter(id = user_id).first()
+            current_mlo = user.user_mlo.all().first()
+            current_node = Node.objects.filter(mlo_agent = current_mlo).first()
+        except User.DoesNotExist as e:
+            print("e")
+
+
+        print("out going edges = ",current_node.outgoing_edges.all())
+        print("in going edges = ",current_node.incoming_edges.all())
+
+
+
+   
+
+        if current_mlo:
+            starting_node = Edge.objects.filter(source_node__mlo_agent= current_mlo).first()
+        else:
+            return redirect(resolve("home"))
+            print("Empty Screen")
         BASE_URL = config("BASE_URL")
     
   
-        data = []
-        data.append({
-            "id":ahf_edge.source_node.mlo_agent.user.id,
-            "name":ahf_edge.source_node.mlo_agent.user.username
-        })
-        for edge in all_edges:
-            _data = requests.get(f"{BASE_URL}/api/get_node_detail/?username={edge.target_node.mlo_agent.user.username}").json()
-           
-            node = {
-                "id":edge.target_node.mlo_agent.user.id,
-                "name":edge.target_node.mlo_agent.user.username,
-                'pid':edge.source_node.mlo_agent.user.id,
-                "Total number of loans":_data.get("total_number_of_loans",None),
-                "BPS":_data.get("bps",None),
-                "Total Loan Amounts":_data.get("total_loan_amounts",None),
-                "Split":_data.get("split",None),
-           
+        if current_mlo and starting_node:
+            data.append({
+                "id":starting_node.source_node.mlo_agent.user.id,
+                "name":starting_node.source_node.mlo_agent.user.username
+            })
+
+
+            outgoing_edges = current_node.outgoing_edges.all()
+            print("user = ",user.is_superuser)
+            if user and user.is_superuser:
+                outgoing_edges = Edge.objects.all()
+
+            for edge in outgoing_edges:
+                _data = requests.get(f"{BASE_URL}/api/get_node_detail/?username={edge.target_node.mlo_agent.user.username}").json()
+            
+                node = {
+                    "id":edge.target_node.mlo_agent.user.id,
+                    "name":edge.target_node.mlo_agent.user.username,
+                    'pid':edge.source_node.mlo_agent.user.id,
+                    "Total number of loans":_data.get("total_number_of_loans",None),
+                    "BPS":_data.get("bps",None),
+                    "Total Loan Amounts":_data.get("total_loan_amounts",None),
+                    "Split":_data.get("split",None),
+            
+                
+
+                }
+                data.append(node)
             
 
-            }
-            data.append(node)
-         
-
-        return Response(data,status=status.HTTP_200_OK) 
-    
+            return Response(data,status=status.HTTP_200_OK)
+        else:
+            return redirect("/error/") 
+        
 
 
 class NodeLoanDetailView(APIView):    
