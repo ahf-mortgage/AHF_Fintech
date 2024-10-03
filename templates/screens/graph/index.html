@@ -1,135 +1,122 @@
-{% extends '_base.html'%}
+{% extends '_base.html' %}
 {% load humanize %}
 {% load safe_divide %}
-{% block style%}
+{% block style %}
 <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        .tree {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 20px;
-        }
-
-        .parent {
-            height: 53px;
-            width: 120px;
-            position: relative;
-            margin: 20px 0;
-            padding: 10px;
-            background-color: rgb(160, 157, 157);
-            border-radius: 5px;
-            text-align: center;
-            margin-left: 30px;
-            margin-right: 30px;
-        }
-        .node {
-            position: relative;
-            height: 53px;
-            width: 120px;
-            align-content: center;
-            background-color: rgb(160, 157, 157);
-            border-radius: 5px;
-            text-align: center;
-            text-overflow: clip;
-            margin-left: 30px;
-            margin-right: 30px;
-        }
-
-        .line {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            width: 2px;
-            background-color: rgb(20, 7, 7);
-        }
-        .line-vertical {
-            height: 80px; /* Adjust to control vertical spacing */
-            top: 100%;
-            transform: translateX(-50%);
-        }
-        .line-horizontal {
-            width: 5px; /* Adjust to control horizontal spacing */
-            top: 50%;
-        }
-        .children {
-            display: flex;
-           
-        }
+    body {
+        font-family: Arial, sans-serif;
+    }
+    .tree {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 20px;
+    }
+    .parent, .node {
+        height: 53px;
+        width: 120px;
+        position: relative;
+        margin: 20px 30px;
+        padding: 10px;
+        background-color: rgb(160, 157, 157);
+        border-radius: 5px;
+        text-align: center;
+    }
+    .line {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 2px;
+        background-color: rgb(20, 7, 7);
+    }
+    .line-vertical {
+        height: 80px; /* Adjust to control vertical spacing */
+        top: 100%;
+        transform: translateX(-50%);
+    }
+    .line-horizontal {
+        width: 5px; /* Adjust to control horizontal spacing */
+        top: 50%;
+    }
+    .children {
+        display: flex;
+    }
 </style>
-
 {% endblock %}
-{%block content %}
+{% block content %}
 
-<div id="tree"></div>
+<div id="tree" style="background-color: #1E1E1E;"></div>
 
 {% include 'components/modal/new_mlo_modal.html' %}
 <script>
-    const user_id = "{{request.user.id}}"
-    const BASE_URL = "{{BASE_URL}}"
- 
-    const node_info_urls = `${BASE_URL}/api/chart-view/?user_id=${user_id}`
-      
+    // Define custom templates for the OrgChart
+    OrgChart.templates.myTemplate = Object.assign({}, OrgChart.templates.ula);
+    
+    OrgChart.templates.myTemplate.node = `
+      <g>
+        <defs>
+            <clipPath id="clipCircle">
+                <circle cx="40" cy="40" r="30" />
+            </clipPath>
+        </defs>
+
+        
+        <rect fill="#333" width="250" height="120" rx="10" ry="10"></rect>
+        <rect fill="#FFA500" width="60" height="60" x="10" y="10" rx="30" ry="30" />
+        <image href="https://cdn.balkan.app/shared/c/8.jpg" x="10" y="10" width="60" height="60" clip-path="url(#clipCircle)"/>
+   
+       
+    </g>
+    `;
+
+    const user_id = "{{ request.user.id }}";
+    const BASE_URL = "{{ BASE_URL }}";
+    const node_info_urls = `${BASE_URL}/api/chart-view/?user_id=${user_id}`;
+
     function NodeDetailHandler(node) {
-         
-             
-                window.location.pathname = `/loan-detail/${node}/`
-            
-            }
+        console.log("node view = ",node);
+        window.location.pathname = `/loan-detail/${node}/`; // Ensure you're passing the correct identifier
+    }
 
     function AddAgentHandler(node) {
-             window.location.pathname = "/revenue/register/"
-            
-            }
-
+        window.location.pathname = "/revenue/register/";
+    }
 
     axios.get(node_info_urls)
-          .then((data) => {
-
-
-            const nodes = data.data
-            console.log("nodes = ",nodes);
+        .then((response) => {
+            const nodes = response.data;
+            console.log("nodes = ", nodes);
             
-            if(nodes.length !== 0){
-            let chart = new OrgChart("#tree", {
-            
-                nodeBinding: {
-                    field_0: "name"
-                },
-                nodes: nodes,
-
-                nodeMenu: {
-                detail: {
-                    text: "View Detail",
-                    onClick: function(node) {
-                      
-                        NodeDetailHandler(node); // Pass the clicked node to the handler
-                    }
+            if (nodes.length !== 0) {
+                let chart = new OrgChart("#tree", {
+                    nodes: nodes,
+                    nodeBinding: {
+                        field_0: "name", // Name field
+                        field_1: "pid", // Title field
+                        image: "https://cdn.balkan.app/shared/c/8.jpg" // Ensure you have an image_url field in your node data
                     },
-
-
-                add_agent: {
-                    text: "New Agent",
-                    onClick: AddAgentHandler
-                },
-            },
-                            
+                    template: "myTemplate", // Use the custom template
+                    nodeMenu: {
+                        detail: {
+                            text: "View Detail",
+                            onClick: function(node) {
+                                NodeDetailHandler(node); // Pass the clicked node to the handler
+                            }
+                        },
+                        add_agent: {
+                            text: "New Agent",
+                            onClick: AddAgentHandler
+                        }
+                    },
                 });
             } else {
-                window.location.pathname = "/error/"
+                window.location.pathname = "/error/";
             }
-          
-            
-                })
-      
-          .catch((error) => {
-            console.log("Error =",error);
-          })
-
-
-
+        })
+        .catch((error) => {
+            console.error("Error =", error);
+            alert("An error occurred while fetching the data. Please try again later."); // User feedback
+        });
 </script>
 
 {% endblock %}
