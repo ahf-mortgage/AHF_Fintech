@@ -876,7 +876,7 @@ class ChartView(APIView):
                     "BPS":_data.get("bps",None),
                     "Total Loan Amounts":_data.get("total_loan_amounts",None),
                     "Split":_data.get("split",None),
-                    "img":"https://cdn.balkan.app/shared/c/8.jpg"
+                    "img":"https://cdn.balkan.app/shared/c/7.jpg"
                  
             
                 
