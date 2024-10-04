@@ -95,6 +95,7 @@ def generate_six_digit_otp():
 
 def sign_up(request):
     user_form = UserRegistrationForm()
+    gerrors = []
     if request.method == 'POST':
         user_form = UserRegistrationForm(request.POST or None)
         if user_form.is_valid():
@@ -108,10 +109,14 @@ def sign_up(request):
             return  redirect(f"/account/verfiy/{user.id}")
 
         else:
-            print("errors=",)
-            for error in user_form.errors.get_json_data():
-                print("errors - ",error)
-            return render(request, 'signup.html',{"errors":user_form.errors,"form":user_form})
+            for error in user_form.errors.as_data():
+                _error =  user_form.errors.as_data().get(error,None)
+                for e in _error:
+                    for f in e:
+                       print("errors = ",f)
+                       gerrors.append(f)
+
+            return render(request, 'signup.html',{"errors":gerrors,"form":user_form})
     else:
         return render(request, 'signup.html',{"form":user_form})
     

@@ -43,7 +43,6 @@ window.onload = function() {
     })
 
 
-
     axios.get(loan_detail_url)
           .then((data) => {
             const _data = data.data
@@ -55,6 +54,12 @@ window.onload = function() {
                 layout:"fluid"
                
             });
+           const rows =  datatable.getRows();
+           const cols = datatable.getColumns();
+
+        
+
+
           } else {
             window.location.pathname = "/error/"
           }
