@@ -136,7 +136,7 @@ class LoanSetting(models.Model):
 
 
 class Loan(models.Model):
-    mlo_agent = models.ForeignKey(MLO_AGENT,blank= True,null=True,on_delete= models.CASCADE)
+    mlo_agent = models.ForeignKey(MLO_AGENT,related_name="mlo_loans" ,blank= True,null=True,on_delete= models.CASCADE)
     amount    = models.ManyToManyField(LoanAmount,default=1,related_name="loans")
     bps       = models.FloatField()
     date_closed = models.DateTimeField(auto_created=False,auto_now_add=True)

@@ -11,6 +11,10 @@ from django.contrib.auth.decorators import login_required
 from collections import defaultdict
 from .forms import MloFrom
 from apps.accounts.forms import UserRegistrationForm
+from django.core.serializers import serialize
+from rest_framework import generics
+from .models import LoanAmount
+from .serialzers import LoanAmountSerializer
 
 
 def calculate_commission_above_million(loan_id,mlo_id):
@@ -413,3 +417,24 @@ def register_new_mlo(request):
           
      }
      return render(request,"screens/recruiter/register.html",context)
+
+
+
+def single_loan_detail(request):
+    user = request.user
+    try:
+         current_mlo = MLO_AGENT.objects.filter(user=user).last()
+         print("current mlo = ",current_mlo)
+    except MLO_AGENT.DoesNotExist as e:
+        raise e
+    
+    loan = current_mlo.mlo_loans.first()
+    loans = loan.amount.all()    
+          
+    context = {   
+         "loans":loans
+          
+     }
+    return render(request,"screens/recruiter/single_loan_detail.html",context)
+
+

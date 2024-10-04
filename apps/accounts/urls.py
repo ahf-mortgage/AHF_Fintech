@@ -7,6 +7,6 @@ urlpatterns = [
     path('sign-up/',sign_up,name = "sign-up"),
     path('verfiy/<int:user_id>/',verfiy_otp,name = "verfiy-otp"),
     path("validate-form/",save_user_form,name="validate-form"),
-    path('logout_view/',logout_view,name = "log-out")
+    path('logout_view/',logout_view,name = "logout")
 
 ]

@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Edge,Node
+from rest_framework import generics
+from .models import Edge,Node, LoanAmount
 
 class EdgeSerializer(serializers.ModelSerializer):
     from_ = serializers.SerializerMethodField()
@@ -16,6 +17,10 @@ class EdgeSerializer(serializers.ModelSerializer):
 
 
 
+class LoanAmountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LoanAmount
+        fields = '__all__'  # Include all fields in the serialization
 
 class NodeSerializer(serializers.ModelSerializer):
     label = serializers.SerializerMethodField()
