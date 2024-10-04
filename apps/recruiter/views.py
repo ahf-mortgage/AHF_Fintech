@@ -145,9 +145,9 @@ def comp_plan_change_view(request):
 
 
     if request.method == "POST":
-        loan_break_point = LoanBreakPoint.objects.all().first()
-        comp_plan_obj = CompPlan.objects.all().first()
-        branch = Branch.objects.all().first()
+        loan_break_point = LoanBreakPoint.objects.filter(user = request.user).first()
+        comp_plan_obj = CompPlan.objects.filter(user = request.user).first()
+        branch = Branch.objects.filter(user = request.user).first()
         
  
       
@@ -225,7 +225,7 @@ def comp_plan_change_view(request):
 def change_branch_loan(request):
     if request.method == "POST":
         
-        loan = Branch.objects.all().first()
+        loan = Branch.objects.filter(user = request.user).first()
         loan.loan_per_year = int(request.POST.get("M9"))
         loan.save()
         return  redirect("/")

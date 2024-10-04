@@ -97,17 +97,17 @@ def home(request):
     
     
     try:
-        bps              = Bps.objects.all().first()
+        bps              = Bps.objects.filter(user = request.user).first()
     except Bps.DoesNotExist as e:
         raise e
         
     try:
-        loan_break_point = LoanBreakPoint.objects.all().first()
+        loan_break_point = LoanBreakPoint.objects.filter(user = request.user).first()
     except LoanBreakPoint.DoesNotExist as e:
         raise e
     
     try:
-        comp_plan        = CompPlan.objects.all().first()
+        comp_plan        = CompPlan.objects.filter(user = request.user).first()
     except CompPlan.DoesNotExist as e:
         raise e
     
@@ -117,7 +117,7 @@ def home(request):
         raise e
     try:
         
-        branch           = Branch.objects.all().first() 
+        branch           = Branch.objects.filter(user = request.user).first() 
     except Branch.DoesNotExist as e:
         raise e
     

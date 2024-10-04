@@ -3,7 +3,7 @@ from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from apps.recruiter.models import Edge,MLO_AGENT
-
+from django.contrib.auth.models import User
 import matplotlib.pyplot as plt
 import os
 
@@ -48,11 +48,18 @@ def visualize_graph(request):
 
 
 
-
+@login_required
 def loan_detail(request,id):
     print("id ========  ",id)
+    try:
+        user = User.objects.filter(id = id).first()
+    except User.DoesNotExist as e:
+        raise e
+    request.mlo_user = user
+    
     context = {
-        "id":id
+        "id":id,
+        "user":user
     }
     return render(request, 'screens/table/loan_detail.html',context)
 

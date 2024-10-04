@@ -9,7 +9,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 class CompPlan(models.Model):
     user                 = models.ForeignKey(User,on_delete=models.CASCADE,blank=False,null=False)
     Flat_Fee             = models.FloatField(default=0)
-    Percentage           = models.FloatField()
+    Percentage           = models.FloatField(default=2.75)
     Minimum_Compensation = models.FloatField(default=2.75)
     Maximum_Compensation = models.FloatField(default=2750)
     MAX_GCI              = models.FloatField(default=27500)
@@ -28,7 +28,7 @@ class Bps(models.Model):
     user      = models.ForeignKey(User,on_delete=models.CASCADE,blank=False,null=False)
     bps       = models.FloatField(default=275)
     interval  = models.IntegerField(default=50)
-    max_value = models.FloatField()
+    max_value = models.FloatField(default=275)
     
     def __str__(self):
         return f"{self.bps}"
