@@ -2,15 +2,25 @@
 
 {%block content %}
 
+  
+{% include 'modal/create_loan_modal.html' %}
 
 <aside id="logo-sidebar"
-    class="fixed top-0 left-0 z-40 w-96 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
+    class="fixed top-0 left-0 z-40 w-96 h-screen pt-20 transition-transform -translate-x-full bg-[#E2E2E8] border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
     aria-label="Sidebar">
+
+    <div class="w-72 flex flex-row mb-4 items-center cursor-pointer" data-modal-target="authentication-modal" data-modal-toggle="authentication-modal">
+        <svg xmlns="http://www.w3.org/2000/svg" width="44" height="20" fill="none" viewBox="0 0 24 24">
+            <path fill="green" d="M12 5v14m7-7H5" stroke="green" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <p class="text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400 ml-2">Create new loan...</p>
+    </div>
     <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
         <ul class="space-y-2 font-medium">
             {% for loan in loans %}
+          
             <li class="bg-gray-100 p-6" onclick='showDetail("{{loan.id}}")'>
-                <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+                <div>
                     <h2 class="text-xl font-bold text-gray-800">Loan Details</h2>
                     <div class="flex justify-between items-center mt-4">
                         <div>
@@ -30,12 +40,12 @@
 
 <div class="p-4 sm:ml-64">
     <div class="bg-gray-100 p-6">
-        <div class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-md">
-            <h1 class="text-2xl font-bold mb-6 text-center">Check</h1>
+        <div class="max-w-3xl mx-auto p-8 rounded-lg shadow-md bg-[#374f84]">
+            <h1 class="text-2xl font-bold mb-6 text-center">Loan details</h1>
             <div class="flex justify-between mb-4">
                 <div class="w-1/2">
                     <p class="text-sm font-medium text-gray-700">Pay to the Order of:</p>
-                    <p class="border-b border-gray-300 pb-1">Casey Daniels</p>
+                    <p class="border-b border-gray-300 pb-1" id="order_of">Casey Daniels</p>
                 </div>
                 <div class="w-1/2 text-right">
                     <p class="text-sm font-medium text-gray-700">Date:</p>
@@ -50,7 +60,7 @@
                 </div>
                 <div class="w-1/3 ml-4">
                     <p class="text-sm font-medium text-gray-700">In Words:</p>
-                    <p class="border-b border-gray-300 pb-1">One hundred five dollars</p>
+                    <p class="border-b border-gray-300 pb-1" id="detail-num-word">One hundred five dollars</p>
                 </div>
             </div>
 
@@ -66,7 +76,7 @@
 
             <div class="mb-4">
                 <p class="text-sm font-medium text-gray-700">Memo:</p>
-                <p class="border-b border-gray-300 pb-1">Bookkeeping</p>
+                <p class="border-b border-gray-300 pb-1" id="memo">Bookkeeping</p>
             </div>
 
             <div class="mt-8">
@@ -95,6 +105,11 @@
             const detail_date = document.getElementById("detail-date")
             const detail_amount = document.getElementById("detail_amount")
             const detail_address = document.getElementById("detail_address")
+            const detail_word_num = document.getElementById("detail-num-word")
+            const order_of = document.getElementById("order_of")
+            const memo = document.getElementById("memo")
+      
+
             function showDetail(id) {
                 const apiUrl = `/api/loans/${id}/`;
           
@@ -105,6 +120,9 @@
                             detail_date.innerText = data.loan_date
                             detail_amount.innerText = data.loan_amount
                             detail_address.innerText = data.File_reference
+                            detail_word_num.innerText =numberToWords(data.loan_amount)
+                            order_of.innerText = data.order_of
+                            memo.innerText = data.memo
                         },
                         error: function(error) {
                             console.error('Error fetching loans:', error);
@@ -113,6 +131,41 @@
                
                
             }
+
+
+            function numberToWords(num) {
+    if (num === 0) return "zero";
+
+    const belowTwenty = [
+        "zero", "one", "two", "three", "four", "five",
+        "six", "seven", "eight", "nine", "ten", "eleven",
+        "twelve", "thirteen", "fourteen", "fifteen", "sixteen",
+        "seventeen", "eighteen", "nineteen"
+    ];
+
+    const tens = [
+        "", "", "twenty", "thirty", "forty", "fifty",
+        "sixty", "seventy", "eighty", "ninety"
+    ];
+
+    const thousands = ["", "thousand", "million"];
+
+    const words = (n) => {
+        if (n < 20) return belowTwenty[n];
+        if (n < 100) return tens[Math.floor(n / 10)] + (n % 10 ? " " + belowTwenty[n % 10] : "");
+        if (n < 1000) return belowTwenty[Math.floor(n / 100)] + " hundred" + (n % 100 ? " " + words(n % 100) : "");
+        
+        for (let i = 0; i < thousands.length; i++) {
+            const divisor = Math.pow(1000, i);
+            if (n < divisor * 1000) {
+                return words(Math.floor(n / divisor)) + " " + thousands[i] + (n % divisor ? " " + words(n % divisor) : "");
+            }
+        }
+    };
+
+    return words(num).trim();
+}
+
         </script>
 
 

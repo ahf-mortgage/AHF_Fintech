@@ -117,6 +117,8 @@ class MLO_AGENT(models.Model):
 class  LoanAmount(models.Model):
     id = models.AutoField(primary_key=True)
     loan_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    memo  = models.CharField(max_length=100,blank=True,null=True)
+    order_of   = models.CharField(max_length=100,blank=True,null=True)
     loan_date = models.DateField()
     repayment_date = models.DateField()
     File_reference = models.CharField(max_length=100,null=True)

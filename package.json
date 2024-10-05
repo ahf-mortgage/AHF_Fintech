@@ -6,6 +6,7 @@
   "dependencies": {
     "@tailwindcss/forms": "^0.5.8",
     "flowbite": "^2.5.1",
-    "frappe-datatable": "^1.17.16"
+    "frappe-datatable": "^1.17.16",
+    "number-to-words": "^1.2.4"
   }
 }

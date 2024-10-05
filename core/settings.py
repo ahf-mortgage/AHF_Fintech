@@ -178,8 +178,10 @@ STATICFILES_DIRS = [
     
 ]
 
-CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
+CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
 CRISPY_TEMPLATE_PACK = "tailwind"
 
 MEDIA_URL = '/media/'

@@ -2,7 +2,7 @@ import random
 import string
 from django import forms
 from django.forms import Select
-from .models import MLO_AGENT
+from .models import MLO_AGENT,LoanAmount
 
 
 def generate_random_alphanumeric_strings(count=5, length=6):
@@ -39,3 +39,11 @@ class MloFrom(forms.ModelForm):
         }
 
     
+
+
+
+class LoanAmountFrom(forms.ModelForm):
+
+    class Meta:
+        model = LoanAmount
+        fields = "__all__"

@@ -9,7 +9,7 @@ from django.db import models
 from collections import deque
 from django.contrib.auth.decorators import login_required
 from collections import defaultdict
-from .forms import MloFrom
+from .forms import MloFrom,LoanAmountFrom
 from apps.accounts.forms import UserRegistrationForm
 from django.core.serializers import serialize
 from rest_framework import generics
@@ -429,10 +429,27 @@ def single_loan_detail(request):
         raise e
     
     loan = current_mlo.mlo_loans.first()
-    loans = loan.amount.all()    
+    loans = loan.amount.all()   
+    loan_form = LoanAmountFrom()
+    if request.method == "POST":
+         form = LoanAmountFrom(request.POST or None)
+         if form.is_valid():
+            form.save()
+            amount = form.save()
+            loan.amount.add(amount)
+            loan.save()
+           
+            return redirect("/revenue/single-loan-detail/")
+         else:
+              print("hello")
+         
+         return redirect("/")
+    
+
           
     context = {   
-         "loans":loans
+         "loans":loans,
+         "loan_form":loan_form
           
      }
     return render(request,"screens/recruiter/single_loan_detail.html",context)

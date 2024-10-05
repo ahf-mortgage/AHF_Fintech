@@ -1,4 +1,5 @@
 from django import template
+from num2words import num2words
 import math
 register = template.Library()
 
@@ -65,3 +66,8 @@ def dict_get(dictionary, key):
 def split_words(value):
     return " ".join(value.split("_"))
 
+
+@register.filter("num_word")
+def num_word(value):
+    word = num2words(value)
+    return word
