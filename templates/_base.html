@@ -29,26 +29,23 @@
 <body class="h-screen w-screen bg-green-50">
 
 
+  {% if request.path != "/visualize/" %}
 
    {% include 'navbar.html' %}
 
+  {% endif %}
+
      {%if messages %}
-     {% for message in messages %}
-     <div class="w-screen text-center p-4 mb-4 text-lg text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300" role="alert">
-        <span class="font-medium"></span>{{message}}
-      </div>
-
+      {% for message in messages %}
+      <div class="w-screen text-center p-4 mb-4 text-lg text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300" role="alert">
+          <span class="font-medium"></span>{{message}}
+        </div>
       {% endfor %}
+
+      
      {% endif %}
-
-     
-
-
         {% block content %}
         {% endblock content %}
-    
-
-
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 </body>
