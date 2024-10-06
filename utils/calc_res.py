@@ -20,6 +20,7 @@ from utils.formatter import logger
 bps = Bps.objects.all().first().bps
 
 def calculate_above_loan_break_point_ahf_commission(loan_break_point,comp_plan,branch):
+    print("type of **************=",loan_break_point)
     gci = bps * loan_break_point.loan_break_point / 10000 + comp_plan.Flat_Fee
     # return  float(comp_plan.Percentage * 100) * float(loan_break_point.loan_break_point / 10000)   * float(branch.commission)
     return gci * float(branch.commission)
@@ -34,13 +35,13 @@ def calculate_annual_ahf_income(loan_break_amount,comp_plan,ahf_comission_amount
 
 
 
-def calculate_gross_ahf_income(loan_break_amount,comp_plan,commission,value = 275):
+def calculate_gross_ahf_income(request,loan_break_amount,comp_plan,commission,value = 275):
     """
         ahf gross income commission 
         K8=IF(K10<=H10,E8*K10,H8+$C8*(K10-H$10))
     """
     ahf     = AHF.objects.all().first()   # left side table
-    branch  = Branch.objects.all().first() # right side table
+    branch  = Branch.objects.filter(user = request.user).first() # right side table
     K10     = branch.loan_per_year
     H10     = ahf.loan_per_year
     E8      = calculate_above_loan_break_point_ahf_commission(loan_break_amount,comp_plan,branch)
@@ -53,7 +54,7 @@ def calculate_gross_ahf_income(loan_break_amount,comp_plan,commission,value = 27
     
 
 
-def calculate_ahf_annual_cap_ahf(loan_break_amount,comp_plan,commission,value = 275):
+def calculate_ahf_annual_cap_ahf(request,loan_break_amount,comp_plan,commission,value = 275):
     """
         ahf gross income commission 
         K8=IF(K10<=H10,E8*K10,H8+$C8*(K10-H$10))
@@ -61,7 +62,7 @@ def calculate_ahf_annual_cap_ahf(loan_break_amount,comp_plan,commission,value = 
     
   
     ahf     = AHF.objects.all().first()   # left side table
-    branch  = Branch.objects.all().first() # right side table
+    branch  = Branch.objects.filter(user = request.user).first() # right side table
     K10     = ahf.loan_per_year
     H10     = ahf.loan_per_year
     E8      = calculate_above_loan_break_point_ahf_commission(loan_break_amount,comp_plan,branch)
@@ -79,13 +80,13 @@ def calculate_ahf_annual_cap_ahf(loan_break_amount,comp_plan,commission,value = 
 
 
 
-def calculate_gross_branch_income(loan_break_amount,comp_plan,commission,value = 275):
+def calculate_gross_branch_income(request,loan_break_amount,comp_plan,commission,value = 275):
     """
         ahf gross income commission 
         IF(K10<=H10,K10*D8,G8)
     """
     ahf     = AHF.objects.all().first()   # left side table
-    branch  = Branch.objects.all().first() # right side table
+    branch  = Branch.objects.filter(user = request.user).first() # right side table
     # if branch.loan_per_year <= ahf.loan_per_year:
     #     # branch.loan_per_year 
     
@@ -96,14 +97,18 @@ def calculate_gross_branch_income(loan_break_amount,comp_plan,commission,value =
 
 
 # branch_amount =  275 * loan_amout_break / 10000 + comp.Flat_Fee * branch.commission*  21
-def calculate_branch_gross_ahf_income(loan_break_amount,comp_plan,commission,value = 275):
+def calculate_branch_gross_ahf_income(request,loan_break_amount,comp_plan,commission,value = 275):
     """
         ahf gross income commission 
         =IF(K10<=H10,K10*D8,G8)
     """
+
+    print("calculate_branch_gross_ahf_income ((((((()))))))",type(loan_break_amount))
+
+ 
     
     ahf     = AHF.objects.all().first()   # left side table
-    branch  = Branch.objects.all().first() # right side table
+    branch  = Branch.objects.filter(user = request.user).first() # right side table
     K10     = ahf.loan_per_year
     H10     = branch.loan_per_year
     E8      = calculate_above_loan_break_point_ahf_commission(loan_break_amount,comp_plan,branch)
@@ -453,14 +458,19 @@ def calculate_debit(branch_gross,total_expense,q22):
 
 
 
-   
-def calculate_gross__new_branch_income(loan_break_amount,comp_plan,gci,value = 275):
+    
+def calculate_gross__new_branch_income(request,loan_break_amount,comp_plan,gci):
     """
         ahf gross income commission 
         K8=IF(K10<=H10,E8*K10,H8+$C8*(K10-H$10))
     """
-    branch  = Branch.objects.all().first()
+    branch  = Branch.objects.filter(user = request.user).first()
     ahf     = AHF.objects.all().first()   # left side table
+    loan_break_amount = LoanBreakPoint.objects.filter(user = request.user).first()
+    comp_plan = CompPlan.objects.filter(user = request.user).first()
+
+    print("calculate_gross__new_branch_income =======",type(loan_break_amount))
+
     E8      = calculate_above_loan_break_point_ahf_commission(loan_break_amount,comp_plan,branch)
     H8      = E8 * ahf.loan_per_year
     C8      = gci

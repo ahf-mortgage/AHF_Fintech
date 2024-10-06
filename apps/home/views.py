@@ -64,33 +64,7 @@ def home(request):
         entry point of the system
     """
 
-    # Set up the logger
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.DEBUG)
-
-    # Create a custom log formatter with colors
-    formatter = ColoredFormatter(
-        "%(log_color)s%(levelname)-8s%(reset)s | %(log_color)s%(message)s%(reset)s",
-        datefmt=None,
-        reset=True,
-        log_colors={
-            'DEBUG': 'cyan',
-            'INFO': 'green',
-            'WARNING': 'yellow',
-            'ERROR': 'red',
-            'CRITICAL': 'red,bg_white',
-        },
-        secondary_log_colors={},
-        style='%'
-    )
-    
-    # Create a console handler and set the formatter
-    console_handler = logging.StreamHandler()
-    console_handler.setFormatter(formatter)
-
-    # Add the console handler to the logger
-    logger.addHandler(console_handler)
-
+   
    
 
     
@@ -170,14 +144,14 @@ def home(request):
     # print(f"{request.user} sponsor mlo with level =",node_list)
    
   
-    annual_ahf_cap                        = calculate_annual_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
-    gross_ahf_income                      = calculate_gross_ahf_income(loan_break_point,comp_plan,float(branch.commission))
-    gross_income                          = calculate_ahf_annual_cap_ahf(loan_break_point,comp_plan,1 - float(branch.commission)) 
-    branch_gross                          = calculate_gross_branch_income(loan_break_point,comp_plan,float(branch.commission))
-    _branch_gross_income                  = calculate_branch_gross_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission))
-    _branch_new_gross_income              = calculate_gross__new_branch_income(loan_break_point,comp_plan,gci,branch)
+    annual_ahf_cap                        = calculate_annual_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission)) # [x]
+    gross_ahf_income                      = calculate_gross_ahf_income(request,loan_break_point,comp_plan,float(branch.commission)) #[x]
+    gross_income                          = calculate_ahf_annual_cap_ahf(request,loan_break_point,comp_plan,1 - float(branch.commission)) #[x]
+    branch_gross                          = calculate_gross_branch_income(request,loan_break_point,comp_plan,float(branch.commission)) #[x]
+    _branch_gross_income                  = calculate_branch_gross_ahf_income(request,loan_break_point,comp_plan,1 - float(branch.commission)) #[x]
+    _branch_new_gross_income              = calculate_gross__new_branch_income(request,loan_break_point,comp_plan,gci) #[x]
     flat_fee_gci                          = int((comp_plan.Percentage * 100) * loan_break_point.loan_break_point / 10000) 
-    above_loan_break_point_ahf_commission = calculate_above_loan_break_point_ahf_commission(loan_break_point,comp_plan,branch)
+    above_loan_break_point_ahf_commission = calculate_above_loan_break_point_ahf_commission(loan_break_point,comp_plan,branch) #[x]
     E23                                   = (bps.bps * loan_break_point.loan_break_point )/ 10000 + comp_plan.Flat_Fee 
     nums_loans                            = [get_gci_result(comp_plan, num) * float((1-branch.commission)) for num in loan_below_limits]
       
@@ -194,7 +168,7 @@ def home(request):
     left             = Q22.objects.filter(value = 0).first()
     right            = Q22.objects.filter(value = 100).first()
     tolerance        = 1e-6
-    balance,root     = find_root(function,left,right,tolerance)
+    balance,root     = find_root(request,function,left,right,tolerance)
     q22.value        = root
     left.save()
     right.save()
@@ -243,7 +217,9 @@ def home(request):
     ewh = ewh.values().first()
     
  
-    ahf_annual_cap_data = aacd
+    ahf_annual_cap_data = aacd(request)
+
+    print("ahf annual cap data = ",ahf_annual_cap_data)
     
 
     # Employee withholding data
@@ -342,6 +318,7 @@ def home(request):
     credit = _branch_new_gross_income
     tolerance    = 1e-6
     balance = credit - debit
+    print("ahf_annual_ test ****************",ahf_annual_cap_data["test_branch_gross_income"])
   
     
         
@@ -415,6 +392,7 @@ def home(request):
         'branch_commission'                :branch_commission if branch_commission > 0 else None,
         'branch_commission_amount'         :branch.commission if branch.commission > 0 else None,
         'ahf_annual_cap_data'              :ahf_annual_cap_data,
+        'test_branch_gross_income'          :ahf_annual_cap_data.get("test_branch_gross_income",None),
         'revenues'                         :revenues,
         'version'                          :settings.VERSION
 
