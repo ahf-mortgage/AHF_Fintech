@@ -72,7 +72,7 @@ def ahf_annual_cap_data(request):
     gross_ahf_income          = calculate_gross_ahf_income(request,loan_break_point,comp_plan,float(branch.commission))
     gross_income              = calculate_ahf_annual_cap_ahf(request,loan_break_point,comp_plan,1 - float(branch.commission)) 
     _branch_gross_income      = calculate_branch_gross_ahf_income(request,loan_break_point,comp_plan,1 - float(branch.commission))
-    _branch_new_gross_income  = calculate_gross__new_branch_income(loan_break_point,comp_plan,gci,branch)
+    _branch_new_gross_income  = calculate_gross__new_branch_income(request,loan_break_point,comp_plan,gci)
     annual_ahf_to_gci_result  = [gross_income/ num if num != 0 else 1 for num in  nums_loans]
     return   {
             'annual_ahf_cap'          :annual_ahf_cap,

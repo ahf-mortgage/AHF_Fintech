@@ -477,6 +477,9 @@ def calculate_gross__new_branch_income(request,loan_break_amount,comp_plan,gci):
     K10     = branch.loan_per_year
     H10     = ahf.loan_per_year
 
+    print("type of C8 =",type(C8))
+    print("type of H8 ",type(H8))
+
     if K10 <= H10:
         return E8 * K10
     else:

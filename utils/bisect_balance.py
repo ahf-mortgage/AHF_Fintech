@@ -19,17 +19,17 @@ def init_data(request):
 
 
 
-
 def function(request,q22):
         loan_break_point = init_data(request)[0]
         comp_plan  = init_data(request)[1]   
-        gci = init_data(request)[2]
+        gci =  23432 #init_data(request)[2]
+        print("type of gci ",type(gci))
         branch = init_data(request)[3]
         branch_gross = init_data(request)[4]
         above_loan_break_point_ahf_commission = init_data(request)[5]
         total_expense  = init_data(request)[5]
         
-        branch_gross                          = calculate_gross__new_branch_income(loan_break_point,comp_plan,gci,branch)
+        branch_gross                          = calculate_gross__new_branch_income(request,loan_break_point,comp_plan,gci)
         above_loan_break_point_ahf_commission = calculate_above_loan_break_point_ahf_commission(loan_break_point,comp_plan,branch) #int(flat_fee_gci * (branch.commission))
         total_expense                         = calculate_total_expense(branch_gross,above_loan_break_point_ahf_commission)
         return calculate_balance(branch_gross,total_expense,q22)
@@ -49,7 +49,8 @@ def find_root(request,function, left, right, tolerance):
         branch_gross = init_data(request)[4]
         above_loan_break_point_ahf_commission = init_data(request)[5]
         total_expense  = init_data(request)[5]
-        credit = calculate_gross__new_branch_income(loan_break_point,comp_plan,gci,branch)
+                # calculate_gross__new_branch_income(request,loan_break_amount,comp_plan,gci)
+        credit = calculate_gross__new_branch_income(request,loan_break_point,comp_plan,gci)
 
 
         if function(request,left) * function(request,right) >= 0:
