@@ -42,7 +42,7 @@ def find_root(request,function, left, right, tolerance):
         debit     = None
         loan_break_point = init_data(request)[0]
 
-        print("data ******************8=         ",type(loan_break_point))
+    
         comp_plan  = init_data(request)[1]   
         gci = init_data(request)[2]
         branch = init_data(request)[3]
