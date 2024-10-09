@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import MLO,Company,Loan,Node,Edge,MLO_AGENT
 from django.shortcuts import get_object_or_404,redirect
+from django.contrib.auth.models import User
 from .models import Bps,LoanBreakPoint,CompPlan,AHF,Branch,LoanSetting
 from apps.W2branchYearlyGross.models import Q22
 from utils.calc_res import get_gci_result
@@ -9,7 +10,7 @@ from django.db import models
 from collections import deque
 from django.contrib.auth.decorators import login_required
 from collections import defaultdict
-from .forms import MloFrom,LoanAmountFrom
+from .forms import MloFrom,LoanAmountFrom,EdgeForm
 from apps.accounts.forms import UserRegistrationForm
 from django.core.serializers import serialize
 from rest_framework import generics
@@ -391,32 +392,58 @@ def dfs_traversal(request):
     return start_node, visited, node_list, mlo_sponsored,agent_list
 
 
+def delete_node(request,node_id):
+    user = User.objects.filter(id = node_id).first()
+    source_mlo = MLO_AGENT.objects.filter(user=user).first()
+    source_node = Node.objects.filter(mlo_agent=source_mlo).first()
+    edge = Edge.objects.filter(source_node=source_node).first()
+    if edge:
+        edge.delete()
+    else:
+        source_node.delete()
+    return redirect("/visualize/")
+
+def register_new_mlo(request,node_id):
+    user = User.objects.filter(id = node_id).first()
+    source_mlo = MLO_AGENT.objects.filter(user=user).first()
+    source_node = Node.objects.filter(mlo_agent=source_mlo).first()
+    last_edge = Edge.objects.last().edge_id
+
+    form = EdgeForm({
+        "source_node":source_node,
+        "edge_id":last_edge + 1
+    })
 
 
-def register_new_mlo(request):
-     form = MloFrom()
-     register_form = UserRegistrationForm()
+    if request.method == "POST":
+        target_node = request.POST.get("target_node",None)
 
-     if request.method == "POST":
-          form = MloFrom(request.POST or None)
-          if form.is_valid():
-               form.save()
-               print("form data=",form.cleaned_data)
-               return redirect("/visualize/")
-          else:
-               print("form=",form.errors)
-               return render(request,"screens/recruiter/register.html",{
-                    "errors":form.errors,
-                    "form":form
-               })
-                   
+        form = EdgeForm({
+        "target_node":target_node,
+        "source_node":source_node,
+        "edge_id":last_edge + 1
+        })
+       
+        if form.is_valid():
+          print("form is valid or not ",form.is_valid())
+          form.save()
+          return redirect("/visualize/")
+        else:
+             print("form=",form.errors)
+             form = EdgeForm({
+                      "source_node":source_node,
+                      "edge_id":last_edge + 1
+                  })
+             return render(request,"screens/recruiter/register.html",{
+                  "errors":form.errors,
+                  "form":form
+             })
+                 
 
-     context = {
-          "form":form,
-          "user_form":register_form
-          
+    context = {
+          "form":form          
      }
-     return render(request,"screens/recruiter/register.html",context)
+    return render(request,"screens/recruiter/register.html",context)
 
 
 

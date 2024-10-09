@@ -2,7 +2,7 @@ import random
 import string
 from django import forms
 from django.forms import Select
-from .models import MLO_AGENT,LoanAmount
+from .models import MLO_AGENT,LoanAmount,Edge,Node
 
 
 def generate_random_alphanumeric_strings(count=5, length=6):
@@ -12,13 +12,40 @@ def generate_random_alphanumeric_strings(count=5, length=6):
 
 
 
-class CustomSelect(Select):
-    def __init__(self, attrs=None):
-        default_attrs = {'class': 'custom-select-class'}
-        if attrs:
-            default_attrs.update(attrs)
-        super().__init__(attrs=default_attrs)
 
+class EdgeForm(forms.ModelForm):
+
+  
+    def available_nodes(self):
+        # Get all node IDs that are used in edges
+        used_node_ids = Edge.objects.values_list('source_node', flat=True).union(
+            Edge.objects.values_list('target_node', flat=True)
+        )
+        print("used in node id ",used_node_ids)
+        available_nodes = Node.objects.exclude(node_id__in=used_node_ids)
+
+        return available_nodes
+
+        
+
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['source_node'].initial = self.available_nodes()
+        
+
+
+    class Meta:
+    
+        model = Edge
+        fields = "__all__"
+        widgets = {
+            'edge_id':forms.NumberInput(attrs={'maxlength':100,"disabled":"disable"}),
+            'source_node': forms.Select(attrs={'maxlength':100,"disabled":"disable"}),
+            'target_node': forms.Select(attrs={'maxlength':100}),
+        
+        }
+   
 
 
 class MloFrom(forms.ModelForm):
@@ -30,11 +57,12 @@ class MloFrom(forms.ModelForm):
         ('3', 'Choice 3'),
     ]
         model = MLO_AGENT
-        exclude = "user",
+        fields = "__all__"
+        # exclude = "user",
         widgets = {
             'NMLS_sponsor_id': forms.TextInput(attrs={'maxlength':100,'readonly':True,"value":generate_random_alphanumeric_strings()}),
             'NMLS_ID': forms.TextInput(attrs={'maxlength':100,'readonly':True,"value":generate_random_alphanumeric_strings()}),
-            "max"    : CustomSelect()
+          
 
         }
 

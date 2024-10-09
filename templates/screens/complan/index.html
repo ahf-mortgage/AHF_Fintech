@@ -1,0 +1,97 @@
+<div className="comp_plan">
+    <div className="hero-content">
+      <div className="comp_plan_title_container">
+        <p className="comp_plan_title">Wholesale comp plan</p>
+      </div>
+
+      <div>
+        <VideoComponent />
+      </div>
+
+      <div className="comp_plan_nav">
+        <nav>
+          <ul>
+            <li><a href="#">Conventional</a></li>
+            <li><a href="#">FHA</a></li>
+            <li><a href="#">VA</a></li>
+            <li><a href="#">USDA</a></li>
+            <li><a href="#">Jumbo</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+ 
+    <div className="section">
+      <div className="section-left">
+        <p>Flat Fee</p>
+        <input
+          name=""
+          value={flatFee}
+        
+        />
+      </div>
+      <div className="section-right">
+        <p className='text-start px-10'>Percentage(0.000% -2.75%)</p>
+        <input
+          name=""
+          value={ff1000}
+          
+        />
+      </div>
+    </div>
+
+    <div className="section">
+      <div className="section-left">
+        <p className='text-start'>Minimum Compensation ($0 -$2,750)</p>
+        <input
+          name=""
+          value={percentage}
+         
+        />
+      </div>
+      <div className="section-right">
+        <p className='text-start  px-2'>Maximum Compensation (Min. Comp -$40,000)</p>
+        <input
+          name=""
+          value={max}
+        />
+      </div>
+    </div>
+
+    <div className="section">
+      <div className="section-left">
+        <p>Max</p>
+        <input
+          name=""
+          value={loanBreakPoint}
+         
+        />
+      </div>
+      <div className="section-right">
+        <p> Comp Percentage</p>
+        <input
+          name=""
+          value={split}
+        />
+      </div>
+    </div>
+
+    <div className="section">
+      <div className="section-left">
+        <p>Loan break point</p>
+        <input
+          name=""
+          value={loanBreakPoint}
+          
+        />
+      </div>
+      <div className="section-right">
+        <p>Split</p>
+        <input
+          name=""
+          value={split}
+         
+        />
+      </div>
+    </div>
+  </div>

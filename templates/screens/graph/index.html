@@ -79,7 +79,12 @@
     }
 
     function AddAgentHandler(node) {
-        window.location.pathname = "/revenue/register/";
+        window.location.pathname =  `/revenue/register/${node}/`;
+    }
+
+
+    function DeleteEdge(node) {
+        window.location.pathname =  `/revenue/delete/${node}/`;
     }
 
     axios.get(node_info_urls)
@@ -106,6 +111,11 @@
                         add_agent: {
                             text: "New Agent",
                             onClick: AddAgentHandler
+                        },
+                        delete_edge:{
+                            text: "Delete",
+                            onClick: DeleteEdge
+
                         }
                     },
                 });

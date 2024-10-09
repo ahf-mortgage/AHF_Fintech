@@ -100,7 +100,7 @@ class MLO(models.Model):
     
 class MLO_AGENT(models.Model):
 
-    CHOICES = [(num, num) for num in range(50,250,25)]
+    CHOICES = [(str(num), num) for num in range(50,250,25)]
     user = models.ForeignKey(User,on_delete=models.CASCADE,related_name="user_mlo",blank=False,null=False)
     NMLS_sponsor_id = models.CharField(max_length=100,blank = False,null = False)
     NMLS_ID = models.CharField(max_length=100,blank = False,null = False) # unique 7 digits number  3000000 auto increment min_value = 3000000,auto_increment = True

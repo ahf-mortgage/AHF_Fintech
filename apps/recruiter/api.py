@@ -594,8 +594,8 @@ class LoanDetailView(APIView):
         
 
         annual_revenue_shares     = []
-        test_branch_gross_income  =  aacd.get("test_branch_gross_income",None)
-        ahf_amount                =  aacd.get("ahf_amount",1)
+        test_branch_gross_income  =  aacd(request).get("test_branch_gross_income",None)
+        ahf_amount                =  aacd(request).get("ahf_amount",1)
         AD9                       =  math.ceil(float(test_branch_gross_income)/float(ahf_amount) * 100)
         split                     =  Branch.objects.filter().first().commission
    
@@ -606,8 +606,8 @@ class LoanDetailView(APIView):
         total_ahf_commission = 0
         total_mlo = 0
         annual_revenue_shares = []
-        test_branch_gross_income  =  aacd.get("test_branch_gross_income",None)
-        ahf_amount                =  aacd.get("ahf_amount",1)
+        test_branch_gross_income  =  aacd(request).get("test_branch_gross_income",None)
+        ahf_amount                =  aacd(request).get("ahf_amount",1)
         AD9                       =  math.ceil(float(test_branch_gross_income)/float(ahf_amount) * 100)
         split                     =  Branch.objects.filter().first().commission
         gci                       =  (comp_plan.Percentage * 100) * loan_break_point.loan_break_point/10000  + comp_plan.Flat_Fee
@@ -867,22 +867,18 @@ class ChartView(APIView):
                 outgoing_edges = Edge.objects.all()
 
             for edge in outgoing_edges:
-                _data = requests.get(f"{BASE_URL}/api/get_node_detail/?username={edge.target_node.mlo_agent.user.username}").json()
+                # _data = requests.get(f"{BASE_URL}/api/get_node_detail/?username={edge.target_node.mlo_agent.user.username}").json()
             
                 node = {
                     "NMLS_ID":edge.target_node.mlo_agent.NMLS_ID,
                     "id":edge.target_node.mlo_agent.user.id,
                     "name":edge.target_node.mlo_agent.user.username,
                     'pid':edge.source_node.mlo_agent.user.id,
-                    "Total number of loans":_data.get("total_number_of_loans",None),
-                    "BPS":_data.get("bps",None),
-                    "Total Loan Amounts":_data.get("total_loan_amounts",None),
-                    "Split":_data.get("split",None),
+                    # "Total number of loans":_data.get("total_number_of_loans",None),
+                    # "BPS":_data.get("bps",None),
+                    # "Total Loan Amounts":_data.get("total_loan_amounts",None),
+                    # "Split":_data.get("split",None),
                     "img":"https://www.ahf.mortgage/media/agent_placeholder.jpg"
-                 
-            
-                
-
                 }
                 data.append(node)
             
@@ -904,7 +900,7 @@ class NodeLoanDetailView(APIView):
         for amount in loan_amounts:
             total_loan_amount+= amount.loan_amount
 
-        print("authenticated user - ",request.user)
+
         branch = 0
         split = 0
 
