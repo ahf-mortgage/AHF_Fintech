@@ -2,11 +2,11 @@
 {% load tailwind_filters %}
 
 {% block content %}
-<div class="h-screen" style="width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;margin-top: 70px;">
-  <form class="max-w-sm h-screen mx-auto my-auto" method="post" action=".">
+<div class="">
+  <form class="max-w-sm h-screen mx-auto my-auto" method="post">
     {% csrf_token %}
     {{form|crispy}}
-    <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">+ADD LINK</button>
+    <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Register and Sponsor New MLO</button>
   </form>
 </div>
 {% endblock %}

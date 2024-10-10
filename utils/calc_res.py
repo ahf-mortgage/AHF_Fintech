@@ -193,8 +193,7 @@ def calculate_total_expense(_branch_commission,_gross_ahf_income):
     
     total_expense = 0
     categories = Category.objects.all()
-    # print("_branch_commission=",_branch_commission)
-    # print("_gross_ahf_income=",_gross_ahf_income)
+ 
     
     if _branch_commission > 2 * _gross_ahf_income:
         for cat in categories:
