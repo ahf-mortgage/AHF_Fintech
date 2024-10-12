@@ -62,14 +62,7 @@ context = {}
 def home(request):
     """
         entry point of the system
-    """
-
-   
-   
-
-    
-    
-    
+    """    
     try:
         bps              = Bps.objects.filter(user = request.user).first()
     except Bps.DoesNotExist as e:
@@ -140,9 +133,7 @@ def home(request):
         
     FLAT_AM0UNT = gci - (gci/1000) * ((loan_below_limits[len(loan_below_limits) - 1] or 0) * 0.1/10000) 
 
-    # start_node,visited, node_list,total_mlo_sponsored =  bfs_traversal(request)
-    # print(f"{request.user} sponsor mlo with level =",node_list)
-   
+ 
   
     annual_ahf_cap                        = calculate_annual_ahf_income(loan_break_point,comp_plan,1 - float(branch.commission)) # [x]
     gross_ahf_income                      = calculate_gross_ahf_income(request,loan_break_point,comp_plan,float(branch.commission)) #[x]
@@ -160,9 +151,7 @@ def home(request):
 
     revenue_share               = round((branch.loan_per_year / ahf.loan_per_year) * 100,2) if (branch.loan_per_year / ahf.loan_per_year) < 1 else 100
     
-    
-    
-        
+ 
 
     q22              = Q22.objects.filter(id=1).first()
     left             = Q22.objects.filter(value = 0).first()
@@ -219,29 +208,25 @@ def home(request):
  
     ahf_annual_cap_data = aacd(request)
 
-    print("ahf annual cap data = ",ahf_annual_cap_data)
-    
-
-    # Employee withholding data
-    _calculate_social_security              = calculate_social_security(_branch_new_gross_income,total_expense,q22) 
+    _calculate_social_security              = calculate_social_security(request,_branch_new_gross_income,total_expense,q22) 
     CA_Unemployment                         = calculate_CA_Unemployment(branch_gross,total_expense,q22)
     medicare                                = calculate_medicare(_branch_new_gross_income,total_expense,q22)
-    bplr_total                              = calculate_social_medicare_disability(_branch_new_gross_income,total_expense,q22)
+    bplr_total                              = calculate_social_medicare_disability(request,_branch_new_gross_income,total_expense,q22)
     
 
     
     employee_with_holdings_q_columns_total  = sum(ewl_dict.values())
-    total_employee_with_holding_expense     = calculate_total_employee_with_holding_expense(branch_gross,total_expense,q22)
+    total_employee_with_holding_expense     = calculate_total_employee_with_holding_expense(request,branch_gross,total_expense,q22)
   
     CA_Unemployment_payroll_liabilities = calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22)
     medicare_payroll_liabilities                                = calculate_medicare_payroll_liabilities(branch_gross,total_expense,q22)
     _calculate_CA_Disability            = calculate_CA_Disability(_branch_new_gross_income,total_expense,q22) 
     calcuate_Fed_Unemploy               = calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22)
-    _calculate_ett                      = calculate_ett(branch_gross,total_expense,q22)
-    branch_payroll_liabilities_total    = calculate_branch_payroll_liabilities_total(_branch_new_gross_income,total_expense,q22)
+    _calculate_ett                      = calculate_ett(request,branch_gross,total_expense,q22)
+    branch_payroll_liabilities_total    = calculate_branch_payroll_liabilities_total(request,_branch_new_gross_income,total_expense,q22)
     
     
-    debit                               = calculate_debit(_branch_new_gross_income,total_expense,q22) 
+    debit                               = calculate_debit(request,_branch_new_gross_income,total_expense,q22) 
     
     
     
@@ -257,15 +242,12 @@ def home(request):
         'column_and_bplqs_dict'         :column_and_bplqs_dict,
         'bplqr_dict'                    :bplqr_dict, 
         'bplq_dict'                     :bplq_dict,
-        'net_income_before_payroll'     :_branch_new_gross_income - total_expense,
-        'w2_Taxable_gross_payroll'      :(_branch_new_gross_income - total_expense) * q22.value/100,
+        'net_income_before_payroll'     :_branch_new_gross_income - total_expense if branch.loan_per_year > ahf.loan_per_year else _branch_new_gross_income,
+        'w2_Taxable_gross_payroll'      :(_branch_new_gross_income - total_expense if branch.loan_per_year > ahf.loan_per_year else _branch_new_gross_income) * q22.value/100,
         'q22'                           :q22.value,
       
     }
-    
-
-    
-      
+ 
     w2_branch_payroll_liabilities_data = {
         'calculate_fed_un_employ_payroll_liabilities '       :calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22),
         'CA_Unemployment_payroll_liabilities'                :CA_Unemployment_payroll_liabilities,
@@ -318,12 +300,7 @@ def home(request):
     credit = _branch_new_gross_income
     tolerance    = 1e-6
     balance = credit - debit
-    print("ahf_annual_ test ****************",ahf_annual_cap_data["test_branch_gross_income"])
-  
-    
-        
-    
-        
+
          
     context = {
         'bps_from_50_to_250':bps_from_50_to_250,
@@ -348,8 +325,8 @@ def home(request):
         
         'employee_with_holdings_q_columns_total':employee_with_holdings_q_columns_total,
         'net_paycheck_for_employee_with_holdings_total':net_paycheck_for_employee_with_holdings(
+            request,
             _branch_new_gross_income,
-            # branch_gross,
             total_expense,
             q22,
             bplr_total
@@ -361,13 +338,11 @@ def home(request):
         
         'ewh'                               :dict(ewh),
         'ewh_columns'                       :ewh_columns,
-        
         'bpl'                               :dict(bpl),
         'bpl_columns'                       :bpl_columns,
         'w2_branch_yearly_gross_income_data':w2_branch_yearly_gross_income_data,
         'w2_branch_payroll_liabilities_data':w2_branch_payroll_liabilities_data,
-        
-        
+
         'E23'                              :E23,
         'revenue_share'                    :revenue_share,
         'W2_branch_column_names'           :W2_branch_column_names,

@@ -22,17 +22,18 @@ def init_data(request):
 def function(request,q22):
         loan_break_point = init_data(request)[0]
         comp_plan  = init_data(request)[1]   
-        gci =  23432 #init_data(request)[2]
-        print("type of gci ",type(gci))
+        gci =  init_data(request)[2]
+      
         branch = init_data(request)[3]
         branch_gross = init_data(request)[4]
         above_loan_break_point_ahf_commission = init_data(request)[5]
         total_expense  = init_data(request)[5]
+        print("total expenses = ",total_expense)
         
         branch_gross                          = calculate_gross__new_branch_income(request,loan_break_point,comp_plan,gci)
         above_loan_break_point_ahf_commission = calculate_above_loan_break_point_ahf_commission(loan_break_point,comp_plan,branch) #int(flat_fee_gci * (branch.commission))
         total_expense                         = calculate_total_expense(branch_gross,above_loan_break_point_ahf_commission)
-        return calculate_balance(branch_gross,total_expense,q22)
+        return calculate_balance(request,branch_gross,total_expense,q22)
 
 
 credit = None
@@ -49,7 +50,6 @@ def find_root(request,function, left, right, tolerance):
         branch_gross = init_data(request)[4]
         above_loan_break_point_ahf_commission = init_data(request)[5]
         total_expense  = init_data(request)[5]
-                # calculate_gross__new_branch_income(request,loan_break_amount,comp_plan,gci)
         credit = calculate_gross__new_branch_income(request,loan_break_point,comp_plan,gci)
 
 
@@ -67,7 +67,7 @@ def find_root(request,function, left, right, tolerance):
             midpoint  = Q22(value = _midpoint)
             right     = Q22(value = _right)
             left      = Q22(value = _left)
-            debit = calculate_debit(branch_gross,total_expense,Q22(value = _left + _right /2))
+            debit = calculate_debit(request,branch_gross,total_expense,Q22(value = _left + _right /2))
 
             
             if function(request,midpoint) == 0 :

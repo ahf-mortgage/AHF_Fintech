@@ -20,9 +20,8 @@ from utils.formatter import logger
 bps = Bps.objects.all().first().bps
 
 def calculate_above_loan_break_point_ahf_commission(loan_break_point,comp_plan,branch):
-    print("type of **************=",loan_break_point)
+   
     gci = bps * loan_break_point.loan_break_point / 10000 + comp_plan.Flat_Fee
-    # return  float(comp_plan.Percentage * 100) * float(loan_break_point.loan_break_point / 10000)   * float(branch.commission)
     return gci * float(branch.commission)
 
 
@@ -103,10 +102,6 @@ def calculate_branch_gross_ahf_income(request,loan_break_amount,comp_plan,commis
         =IF(K10<=H10,K10*D8,G8)
     """
 
-    print("calculate_branch_gross_ahf_income ((((((()))))))",type(loan_break_amount))
-
- 
-    
     ahf     = AHF.objects.all().first()   # left side table
     branch  = Branch.objects.filter(user = request.user).first() # right side table
     K10     = ahf.loan_per_year
@@ -176,12 +171,8 @@ increment = 0.5
 
      
 
-def calculate_balance(branch_gross,total_expense,q22):
-    # balance = calculate_balance(branch_gross,total_expense,q22)
-    # debit   = branch_gross - calculate_debit(branch_gross,total_expense,q22)
-    # diff =  balance - debit
-    
-    return  branch_gross - calculate_debit(branch_gross,total_expense,q22)
+def calculate_balance(request,branch_gross,total_expense,q22): 
+    return  branch_gross - calculate_debit(request,branch_gross,total_expense,q22)
 
 
 
@@ -189,19 +180,16 @@ def calculate_total_expense(_branch_commission,_gross_ahf_income):
     """
     O17=IF(N2>=E8*2, SUM(N9:N17),0)
     """
-    
-    
     total_expense = 0
     categories = Category.objects.all()
- 
-    
-    if _branch_commission > 2 * _gross_ahf_income:
-        for cat in categories:
-            for expense in cat.expense.all():
-                total_expense += expense.expense
-        return total_expense
-    else:
-        return total_expense
+    # if _branch_commission == _gross_ahf_income:
+    #     # _branch_commission >= 2 * _gross_ahf_income:
+    for cat in categories:
+        for expense in cat.expense.all():
+            total_expense += expense.expense
+    return total_expense
+    # else:
+    #     return total_expense
 
 
 
@@ -210,7 +198,7 @@ calculation for table Employee withholding
 """
 
 # def calculate_social_security(loan_break_amount,comp_plan,commission,above_loan_break_point_ahf_commission,percentage,small_percentage):
-def calculate_social_security(branch_gross,total_expense,q22):
+def calculate_social_security(request,branch_gross,total_expense,q22):
     """
         Social Security = =IF($N$22<=R24,$N$22*Q24,T24)
         N22 = N20*Q22#({w2_branch_yearly_gross_income_data.w2_Taxable_gross_payroll)
@@ -218,10 +206,12 @@ def calculate_social_security(branch_gross,total_expense,q22):
         Q24 = 6.2% (need to be input) (Q24.social_security)
         T24 = Q24*R24  (R24.social_security) (Q24.social_security)
     """
-    #15675
-    
+
+    branch = Branch.objects.filter(user = request.user).first()
+    ahf = AHF.objects.all().first()
+  
     N2 = branch_gross
-    N20 = N2 -total_expense
+    N20 = N2 - total_expense if branch.loan_per_year > ahf.loan_per_year else N2
     N22 = None
     if q22 != None:
         N22 = N20 * q22.value/100
@@ -230,6 +220,11 @@ def calculate_social_security(branch_gross,total_expense,q22):
 
     R24 = BranchPayrollLiabilitieR.objects.all().first().Social_Security
     Q24 = BranchPayrollLiabilitieQ.objects.all().first().Social_Security/100
+    # print("R24=",R24)
+    # print("Q24=",Q24)
+    # print("N22=",N22)
+    # print("N20=",N20)
+    # print("T24=",R24 * Q24)
 
 
     if N22 <= R24:
@@ -249,14 +244,21 @@ def calculate_medicare(branch_gross,total_expense,q22):
     N2 = branch_gross
     N20 = N2 -total_expense
     N22 = None
+
+    # print("R25=",R25)
+    # print("Q25=",Q25)
+    # print("U25=",U25)
+    # print("T25=",T25)
+    # print("N2 =",N2 )
+    # print("N20=",N20)
+    # print("N22=",N22)
+
+
     if q22 != None:
         N22 = N20 * q22.value/100  
     else:
           N22 = N20 * 0/100  
 
-   
-
-    # N25=IF($N$22<=R25,$N$22*Q25,T25+$U$25*($N$22-$R$25))
     if N22 <=  R25:
         return N22 * Q25
     else :
@@ -297,19 +299,21 @@ def calculate_CA_Disability(branch_gross,total_expense,q22):
    
     Q26 = EmployeeWithholdingQ.objects.all().first().CA_disability
     N22 = math.ceil(int(branch_gross - total_expense)* q22.value/100),
+    # print("****************88***********************Q26=",Q26)
+    # print("****************88***********************N22=",N22)
     return (Q26/100) * N22[0]
 
 
-def calculate_social_medicare_disability(branch_gross,total_expense,q22):
+def calculate_social_medicare_disability(request,branch_gross,total_expense,q22):
     return (
         calculate_CA_Disability(branch_gross,total_expense,q22)+
         calculate_medicare(branch_gross,total_expense,q22) +
-        calculate_social_security(branch_gross,total_expense,q22)
+        calculate_social_security(request,branch_gross,total_expense,q22)
 )
 
 
 
-def net_paycheck_for_employee_with_holdings(branch_gross,total_expense,q22,total):
+def net_paycheck_for_employee_with_holdings(request,branch_gross,total_expense,q22,total):
     """
     N28=N22-N27
     """
@@ -317,27 +321,39 @@ def net_paycheck_for_employee_with_holdings(branch_gross,total_expense,q22,total
     N2 = branch_gross
     N20 = N2 -total_expense
     N22 = N20 * q22.value/100  
-    N27 = calculate_social_medicare_disability(branch_gross,total_expense,q22)
+    N27 = calculate_social_medicare_disability(request,branch_gross,total_expense,q22)
     return N22 - N27
 
 
 # def calculate_social_security(loan_break_amount,comp_plan,commission,above_loan_break_point_ahf_commission,percentage,small_percentage):
-def calculate_social_security_payroll_liabilities(branch_gross,total_expense,q22):
+def calculate_social_security_payroll_liabilities(request,branch_gross,total_expense,q22):
     """
         Social Security = =IF($N$22<=R24,$N$22*Q24,T24)
         N22 = N20*Q22#({w2_branch_yearly_gross_income_data.w2_Taxable_gross_payroll)
         R24 = 168600 (need to be input) (R24.social_security)
         Q24 = 6.2% (need to be input) (Q24.social_security)
         T24 = Q24*R24  (R24.social_security) (Q24.social_security)
+
     """
-    N22 = math.ceil(int(branch_gross - total_expense)* q22.value/100), #w2_branch_yearly_gross_income_data.w2_Taxable_gross_payroll
+    branch = Branch.objects.filter(user = request.user).first()
+    ahf   = AHF.objects.all().first()
+
+    # (_branch_new_gross_income - total_expense if branch.loan_per_year > ahf.loan_per_year else _branch_new_gross_income
+    N22 = math.ceil(int(branch_gross - total_expense if branch.loan_per_year > ahf.loan_per_year else branch_gross)* q22.value/100), #w2_branch_yearly_gross_income_data.w2_Taxable_gross_payroll
     R24 = EmployeeWithholdingR.objects.all().first().Social_Security
     Q24 = EmployeeWithholdingQ.objects.all().first().Social_Security
     T24 = (Q24 * R24)
-    
-    
     R25 = BranchPayrollLiabilitieR.objects.all().first().Medicare
     Q25 = BranchPayrollLiabilitieQ.objects.all().first().Medicare
+
+    print("N22=",N22)
+    print("R24=",R24)
+    print("Q24=",Q24)
+    print("T24=",T24)
+    print("R25=",R25)
+    print("Q25=",Q25)
+
+    
    
  
     Social_Security = 0
@@ -363,29 +379,39 @@ def calculate_medicare_payroll_liabilities(branch_gross,total_expense,q22):
     else :
         return (T25 + U25) * (N22[0] - R25)
     
-def calculate_ett(branch_gross,total_expense,q22):
+def calculate_ett(request,branch_gross,total_expense,q22):
     """
     N35 = if N22 <= R35,N22*Q35,T35 
+    IF($N$22<=R35,$N$22*Q35,T35)
     """
+    branch = Branch.objects.filter(user = request.user).first()
+    ahf = AHF.objects.all().first()
+
     R35 = BranchPayrollLiabilitieR.objects.all().first().Employment_Training_Tax
     Q35 = BranchPayrollLiabilitieQ.objects.all().first().Employment_Training_Tax/100
     T35 = R35 * Q35
     N22 = None
-    if q22 != None:
-        N22 = (int(branch_gross - total_expense)* q22.value/100)
-    else:
-        N22 = (int(branch_gross - total_expense)* 0/100)
 
+
+
+
+ 
+   
+    if q22 != None:
+        N22 = (int(branch_gross - total_expense if branch.loan_per_year > ahf.loan_per_year else branch_gross)* q22.value/100)
+    else:
+        N22 = (int(branch_gross - total_expense if branch.loan_per_year > ahf.loan_per_year else branch_gross)* 0/100)
+    
+    # print("R35=",R35)
+    # print("Q35=",Q35)
+    # print("T35=",T35)
+    # print("N22=",N22)
     if N22 <= R35:
         return N22 * Q35
     else:
         return T35
-    
 
-    
-    
-    
-    
+
     
 def calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22 ):
     """
@@ -428,22 +454,28 @@ def calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22
     else:
         return T34
     
-def calculate_branch_payroll_liabilities_total(branch_gross,total_expense,q22):
+def calculate_branch_payroll_liabilities_total(request,branch_gross,total_expense,q22):
     
-    return   calculate_ett(branch_gross,total_expense,q22)+calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22) + calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22)+calculate_medicare(branch_gross,total_expense,q22) +calculate_social_security(branch_gross,total_expense,q22)  
+    return   calculate_ett(request,branch_gross,total_expense,q22)+calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22) + calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22)+calculate_medicare(branch_gross,total_expense,q22) +calculate_social_security(request,branch_gross,total_expense,q22)  
 
     
-def calculate_total_employee_with_holding_expense(branch_gross,total_expense,q22):
+def calculate_total_employee_with_holding_expense(request,branch_gross,total_expense,q22):
+    # print("branch gross = ",branch_gross)
+    branch = Branch.objects.filter(user = request.user).first()
+    ahf = AHF.objects.all().first()
     if q22 != None:
-        return (branch_gross - total_expense)* (q22.value)/100
+        return (branch_gross  - total_expense if branch.loan_per_year > ahf.loan_per_year else branch_gross)* (q22.value)/100
     else:
-        return (branch_gross - total_expense)* (0)/100
+        return (branch_gross   - total_expense if branch.loan_per_year > ahf.loan_per_year else branch_gross)* (0)/100
 
 
 
-def calculate_debit(branch_gross,total_expense,q22):
-    total_employee_with_holding_expense = calculate_total_employee_with_holding_expense(branch_gross,total_expense,q22) 
-    branch_payroll_liabilities_total    = calculate_branch_payroll_liabilities_total(branch_gross,total_expense,q22)
+def calculate_debit(request,branch_gross,total_expense,q22):
+    total_employee_with_holding_expense = calculate_total_employee_with_holding_expense(request,branch_gross,total_expense,q22) 
+    branch_payroll_liabilities_total    = calculate_branch_payroll_liabilities_total(request,branch_gross,total_expense,q22)
+    # print("total *************************8= ",total_employee_with_holding_expense)
+    # print("branch_payroll_liabilities_total *************************8= ",branch_payroll_liabilities_total)
+  
     debit = (
             total_employee_with_holding_expense
              + branch_payroll_liabilities_total
@@ -455,9 +487,6 @@ def calculate_debit(branch_gross,total_expense,q22):
 
 
 
-
-
-    
 def calculate_gross__new_branch_income(request,loan_break_amount,comp_plan,gci):
     """
         ahf gross income commission 
@@ -467,17 +496,11 @@ def calculate_gross__new_branch_income(request,loan_break_amount,comp_plan,gci):
     ahf     = AHF.objects.all().first()   # left side table
     loan_break_amount = LoanBreakPoint.objects.filter(user = request.user).first()
     comp_plan = CompPlan.objects.filter(user = request.user).first()
-
-    print("calculate_gross__new_branch_income =======",type(loan_break_amount))
-
     E8      = calculate_above_loan_break_point_ahf_commission(loan_break_amount,comp_plan,branch)
     H8      = E8 * ahf.loan_per_year
     C8      = gci
     K10     = branch.loan_per_year
     H10     = ahf.loan_per_year
-
-    print("type of C8 =",type(C8))
-    print("type of H8 ",type(H8))
 
     if K10 <= H10:
         return E8 * K10
