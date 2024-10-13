@@ -7,7 +7,8 @@ class Command(BaseCommand):
     help = 'update users from a text file'
 
     def handle(self, *args, **options):
-        all_users = User.objects.all()
-        for user in all_users:
-            bps = CompPlan.objects.create(user = user)
-            print("bps = ",bps)
+        cps = CompPlan.objects.all()
+        for c in cps:
+            c.Maximum_Compensation = 2750
+            c.save()
+            

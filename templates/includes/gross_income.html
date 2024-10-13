@@ -1,7 +1,7 @@
 {% load humanize %}
 {% load safe_divide %}
 <div>
-  <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+  <div class="overflow-x-auto sm:-mx-6 lg:-mx-8" id="gross-container">
     <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
       <div class="overflow-hidden">
         <table class="min-w-full text-left text-sm font-light text-surface dark:text-white">
@@ -38,7 +38,8 @@
               <td class="whitespace-nowrap px-6">Loans per year</td>
               <td class="whitespace-nowrap px-6">
 
-                <form action="{% url 'home:change_branch_loan' %}" method="post" class="flex flex-col">
+                <!-- <form action="{% url 'home:change_branch_loan' %}" method="post" class="flex flex-col" id="form"> -->
+                  <form id="loanForm" method="post">
                   {% csrf_token %}
 
                   <div class="relative mb-3" data-twe-input-wrapper-init>
@@ -46,7 +47,7 @@
                       class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
                        value="{{loan_per_year}}"
                        min="1"
-                       id="M9"
+                       id="loanAmount"
                        name="M9"
                        onfocus="this.select()"
                   />
@@ -84,3 +85,36 @@
     </div>
   </div>
 </div>
+
+<!-- Include jQuery if it's not already included -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$(document).ready(function() {
+  const BASE_URL = "{{BASE_URL}}"
+  console.log("BASE URL = ",BASE_URL)
+    $("#loanForm").on("submit", function(event) {
+        event.preventDefault(); // Prevent the default form submissiobin
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'home:change_branch_loan' %}",  // Adjust the URL to your view
+            data: {
+                M9: $("#loanAmount").val(),  // Assuming you have an input with id 'loanAmount'
+                csrfmiddlewaretoken: '{{ csrf_token }}'  // Include CSRF token for security
+            },
+            success: function(response) {
+                if (response.success) {
+                  $("#gross-container"). load(BASE_URL)
+                    alert(response.message);  // Show success message
+                } else {
+                    alert(response.message);  // Show error message
+                }
+            },
+            error: function() {
+                alert("An error occurred. Please try again.");
+            }
+        });
+    });
+});
+</script>

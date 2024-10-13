@@ -151,7 +151,7 @@ def home(request):
 
     revenue_share               = round((branch.loan_per_year / ahf.loan_per_year) * 100,2) if (branch.loan_per_year / ahf.loan_per_year) < 1 else 100
     
- 
+    print("_branch_new_gross_income=",_branch_new_gross_income)
 
     q22              = Q22.objects.filter(id=1).first()
     left             = Q22.objects.filter(value = 0).first()
@@ -162,6 +162,8 @@ def home(request):
     left.save()
     right.save()
     q22.save()
+
+    # q22 = Q22.objects.filter(id = 5).first()
     
 
     
@@ -217,11 +219,11 @@ def home(request):
     
     employee_with_holdings_q_columns_total  = sum(ewl_dict.values())
     total_employee_with_holding_expense     = calculate_total_employee_with_holding_expense(request,branch_gross,total_expense,q22)
-  
+    print("checking correct branch = ",branch_gross)
     CA_Unemployment_payroll_liabilities = calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22)
     medicare_payroll_liabilities                                = calculate_medicare_payroll_liabilities(branch_gross,total_expense,q22)
     _calculate_CA_Disability            = calculate_CA_Disability(_branch_new_gross_income,total_expense,q22) 
-    calcuate_Fed_Unemploy               = calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22)
+    calcuate_Fed_Unemploy               = calculate_fed_un_employ_payroll_liabilities(request,branch_gross,total_expense,q22)
     _calculate_ett                      = calculate_ett(request,branch_gross,total_expense,q22)
     branch_payroll_liabilities_total    = calculate_branch_payroll_liabilities_total(request,_branch_new_gross_income,total_expense,q22)
     
@@ -237,7 +239,7 @@ def home(request):
         'calculate_fed_un_employ'       :calculate_fed_un_employ(branch_gross),
         'calculate_CA_Disability'       :_calculate_CA_Disability,
         'calculate_CA_Unemployment'     :CA_Unemployment,
-        'calculate_fed_un_employ_payroll_liabilities'       :calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22),
+        'calculate_fed_un_employ_payroll_liabilities'       :calculate_fed_un_employ_payroll_liabilities(request,_branch_new_gross_income,total_expense,q22),
         'calculate_Medicare'            :medicare,
         'column_and_bplqs_dict'         :column_and_bplqs_dict,
         'bplqr_dict'                    :bplqr_dict, 
@@ -249,7 +251,7 @@ def home(request):
     }
  
     w2_branch_payroll_liabilities_data = {
-        'calculate_fed_un_employ_payroll_liabilities '       :calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22),
+        'calculate_fed_un_employ_payroll_liabilities '       :calculate_fed_un_employ_payroll_liabilities(request,branch_gross,total_expense,q22),
         'CA_Unemployment_payroll_liabilities'                :CA_Unemployment_payroll_liabilities,
         'calculate_Medicare_payroll_liabilities '            :medicare_payroll_liabilities,
        
@@ -372,7 +374,7 @@ def home(request):
         'version'                          :settings.VERSION
 
     }
-    return render(request,"home/entry.html",context)
+    return render(request,"spreadsheet/entry.html",context)
 
 
 

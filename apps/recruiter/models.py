@@ -16,7 +16,7 @@ class CompPlan(models.Model):
     FF_MIN_LOAN          = models.IntegerField(default=27500)
     
     def __str__(self) -> str:
-        return f"{self.Percentage}"
+        return f"{self.user.username} - {self.Percentage}"
     
  
     

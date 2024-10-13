@@ -1,87 +1,85 @@
-{% extends '_base.html' %}
+{% extends 'spread_sheet_base.html'%}
 
-{% load humanize %}
-{% load static %}
-
-
-{% block content %}
 
 
 {%block style%}
-  <style>
-    /* Styles for the grid containers */
 
-    body {
-      background-image: linear-gradient(to right, #dddddd 1px, transparent 1px),
-        linear-gradient(to bottom, #dddddd 1px, transparent 1px);
-      background-size: 20px 20px;
-    }
+<style>
+
+  body {
+    background-image: linear-gradient(to right, #dddddd 1px, transparent 1px),
+      linear-gradient(to bottom, #dddddd 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
 
 
+
+
+  .middle-grid-container {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-auto-flow: column;
+    grid-gap: 10px;
+    background-color: red;
+  }
+
+  .grid-container {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    padding: 5px;
+  }
+
+  .w2-branch-grid-container {
+    display: grid;
+    grid-template-columns: 0.5fr auto;
+  }
+
+  /* Styles for the grid items */
+  .comission-grid-item,
+  .small-grid-item,
+  .grid-item {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    font-size: 30px;
+    text-align: center;
+  }
+
+  /* Responsive styles for small screens */
+  @media (max-width: 480px) {
+
+    /* Adjust the middle-grid-container for small screens */
     .middle-grid-container {
-      display: grid;
-      grid-template-columns: auto auto;
-      grid-auto-flow: column;
-      grid-gap: 10px;
-      background-color: red;
+      grid-template-columns: auto;
+      grid-auto-flow: row;
     }
 
+    /* Adjust the grid-container for small screens */
     .grid-container {
-      display: grid;
       grid-template-columns: auto auto auto;
-      padding: 5px;
     }
 
+    /* Adjust the w2-branch-grid-container for small screens */
     .w2-branch-grid-container {
-      display: grid;
-      grid-template-columns: 0.5fr auto;
+      grid-template-columns: auto;
     }
 
-    /* Styles for the grid items */
+    /* Adjust the grid items for small screens */
     .comission-grid-item,
     .small-grid-item,
     .grid-item {
-      background-color: rgba(255, 255, 255, 0.8);
-      padding: 20px;
-      font-size: 30px;
-      text-align: center;
+      font-size: 20px;
     }
-
-    /* Responsive styles for small screens */
-    @media (max-width: 480px) {
-
-      /* Adjust the middle-grid-container for small screens */
-      .middle-grid-container {
-        grid-template-columns: auto;
-        grid-auto-flow: row;
-      }
-
-      /* Adjust the grid-container for small screens */
-      .grid-container {
-        grid-template-columns: auto auto auto;
-      }
-
-      /* Adjust the w2-branch-grid-container for small screens */
-      .w2-branch-grid-container {
-        grid-template-columns: auto;
-      }
-
-      /* Adjust the grid items for small screens */
-      .comission-grid-item,
-      .small-grid-item,
-      .grid-item {
-        font-size: 20px;
-      }
-    }
-  </style>
+  }
+</style>
 {%endblock%}
+{%block  content %}
 
   <div style="width:100%;display: flex;justify-content:flex-end;margin:auto;">
     <h1 class="font-bold">V{{version}}</h1>
   </div>
 
   <div class="grid-container">
-    <div class="grid-item" >
+    <div class="grid-item">
       {% include 'includes/comp_plan_table.html'%}
     </div>
   </div>
@@ -107,7 +105,7 @@
       <div class="grid-item">
         {% include 'includes/lower_loan_break_points.html' %}
       </div>
-  
+
       <div class="grid-item">
         {% include 'includes/annual_branch_ahf_cap.html' %}
       </div>
@@ -116,7 +114,7 @@
 
     <div class="grid-container">
 
-  
+
 
       <div class="grid-item">
         {% include 'includes/W2_Branch_Yearly_Gross_Income.html' %}
@@ -145,6 +143,11 @@
 
 
   </div>
+
+
+ 
+    console.log("jquery version = ",$)
+  </script>
 
   <script>
 
@@ -201,4 +204,4 @@
 
 
   </script>
-{% endblock  %}
+{%endblock%}

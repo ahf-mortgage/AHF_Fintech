@@ -15,6 +15,13 @@ def init_data(request):
     above_loan_break_point_ahf_commission = calculate_above_loan_break_point_ahf_commission(loan_break_point,comp_plan,branch) #int(flat_fee_gci * (branch.commission))
     total_expense                         = calculate_total_expense(branch_gross,above_loan_break_point_ahf_commission)
 
+    # print("comp plance percentage",comp_plan.Percentage)
+    # print("Minimum_Compensation=",comp_plan.Minimum_Compensation)
+    # print("Maximum_Compensation=",comp_plan.Maximum_Compensation)
+    # print("MAX_GCI=",comp_plan.MAX_GCI)
+    # print("FF_MIN_LOAN=",comp_plan.FF_MIN_LOAN)
+    # print("Flat fee=",comp_plan.Flat_Fee)
+
     return loan_break_point,comp_plan,gci,branch,branch_gross,above_loan_break_point_ahf_commission,total_expense
 
 
@@ -23,16 +30,22 @@ def function(request,q22):
         loan_break_point = init_data(request)[0]
         comp_plan  = init_data(request)[1]   
         gci =  init_data(request)[2]
-      
         branch = init_data(request)[3]
         branch_gross = init_data(request)[4]
         above_loan_break_point_ahf_commission = init_data(request)[5]
         total_expense  = init_data(request)[5]
-        print("total expenses = ",total_expense)
-        
         branch_gross                          = calculate_gross__new_branch_income(request,loan_break_point,comp_plan,gci)
         above_loan_break_point_ahf_commission = calculate_above_loan_break_point_ahf_commission(loan_break_point,comp_plan,branch) #int(flat_fee_gci * (branch.commission))
         total_expense                         = calculate_total_expense(branch_gross,above_loan_break_point_ahf_commission)
+        
+        print("loan_break_point=,",loan_break_point)
+        print("comp_plan=,",comp_plan)
+        print("gci=,",gci)
+        print("branch=",branch)
+      
+        print("above_loan_break_point_ahf_commission=,",above_loan_break_point_ahf_commission)
+        print("total_expense=,",total_expense)
+      
         return calculate_balance(request,branch_gross,total_expense,q22)
 
 

@@ -16,6 +16,8 @@ from django.core.serializers import serialize
 from rest_framework import generics
 from .models import LoanAmount
 from .serialzers import LoanAmountSerializer
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 
 
 def calculate_commission_above_million(loan_id,mlo_id):
@@ -225,19 +227,38 @@ def comp_plan_change_view(request):
 
 
 
-
-
+@csrf_exempt  
 def change_branch_loan(request):
     if request.method == "POST":
+        loan = Branch.objects.filter(user=request.user).first()
+
+        if loan:
+            loan_amount_str = request.POST.get("M9",None)
+            print("loan_amount_str=",loan_amount_str)
+            try:
+                loan.loan_per_year = int(loan_amount_str)
+                loan.save()
+                return JsonResponse({"success": True, "message": "Loan updated successfully."})
+            except (ValueError, TypeError):
+                return JsonResponse({"success": False, "message": "Invalid loan amount. Please enter a number."})
+        else:
+            return JsonResponse({"success": False, "message": "No loan found for the current user."})
+
+    return JsonResponse({"success": False, "message": "Invalid request method."})
+
+
+
+# def change_branch_loan(request):
+#     if request.method == "POST":
         
-        loan = Branch.objects.filter(user = request.user).first()
-        loan.loan_per_year = int(request.POST.get("M9"))
-        loan.save()
-        return  redirect("/")
-    context = {
+#         loan = Branch.objects.filter(user = request.user).first()
+#         loan.loan_per_year = int(request.POST.get("M9"))
+#         loan.save()
+#         return  redirect("/")
+#     context = {
         
-    }
-    return render(request,"home/entry.html",context)
+#     }
+#     return render(request,"home/entry.html",context)
 
 
 def change_ahf_loan(request):

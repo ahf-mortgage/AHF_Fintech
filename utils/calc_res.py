@@ -91,6 +91,7 @@ def calculate_gross_branch_income(request,loan_break_amount,comp_plan,commission
     
     loans_per_year = ahf.loan_per_year
     total = ((value * loan_break_amount.loan_break_point )/ 10000 + comp_plan.Flat_Fee)* commission * loans_per_year
+  
     return  total
 
 
@@ -285,7 +286,12 @@ def calculate_CA_Unemployment(branch_gross,total_expense,q22):
     T34 = Q34 * R34
     N22 = (branch_gross - total_expense) * q22.value/100,
     Q26 = BranchPayrollLiabilitieQ.objects.all().first().CA_Unemployment
-
+    print("branch_gross=",branch_gross)
+    # print("R34=",R34)
+    # print("Q34=",Q34)
+    # print("T34=",T34)
+    # print("N22=",N22)
+    # print("Q26=",Q26)
     if R34 >= N22[0]:
         return N22[0] * Q34
     else:
@@ -346,12 +352,12 @@ def calculate_social_security_payroll_liabilities(request,branch_gross,total_exp
     R25 = BranchPayrollLiabilitieR.objects.all().first().Medicare
     Q25 = BranchPayrollLiabilitieQ.objects.all().first().Medicare
 
-    print("N22=",N22)
-    print("R24=",R24)
-    print("Q24=",Q24)
-    print("T24=",T24)
-    print("R25=",R25)
-    print("Q25=",Q25)
+    # print("N22=",N22)
+    # print("R24=",R24)
+    # print("Q24=",Q24)
+    # print("T24=",T24)
+    # print("R25=",R25)
+    # print("Q25=",Q25)
 
     
    
@@ -402,10 +408,8 @@ def calculate_ett(request,branch_gross,total_expense,q22):
     else:
         N22 = (int(branch_gross - total_expense if branch.loan_per_year > ahf.loan_per_year else branch_gross)* 0/100)
     
-    # print("R35=",R35)
-    # print("Q35=",Q35)
-    # print("T35=",T35)
-    # print("N22=",N22)
+
+    return T35
     if N22 <= R35:
         return N22 * Q35
     else:
@@ -413,12 +417,19 @@ def calculate_ett(request,branch_gross,total_expense,q22):
 
 
     
-def calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22 ):
+def calculate_fed_un_employ_payroll_liabilities(request,branch_gross,total_expense,q22 ):
     """
     N33=IF($N$22<=R33,$N$22*Q33,T33)
     """
+    k8 = branch_gross
+    branch = Branch.objects.filter(user = request.user).first()
+    ahf = AHF.objects.all().first()
+
+    N20 = 0
     N22 = None
+
     if q22 != None:
+        # branch_new_gross_income - 
         N22 = math.ceil(int(branch_gross - total_expense)* q22.value/100)
     else:
         N22 = math.ceil(int(branch_gross - total_expense)* 0/100)
@@ -426,9 +437,13 @@ def calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22 )
     N33 = 0
     R33 = BranchPayrollLiabilitieR.objects.all().first().Fed_Unemploy
     Q33 = BranchPayrollLiabilitieQ.objects.all().first().Fed_Unemploy
-    
+    # print("K8=",k8)
+    # print("N33=",N33)
+    # print("R33=",R33)
+    # print("Q33=",Q33)
+    # print("N22=",N22)
 
-    if R33 >= N22:
+    if  N22 <= R33:
         N33 =  N22 * (Q33/100)
     else:
         N33 = R33 * Q33/100
@@ -438,25 +453,25 @@ def calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22 )
 def calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22):
     """
     N34=IF($N$22<=R34,$N$22*Q34,T34)
+
     """
     N22 = None
     if q22 != None:
         N22 = math.ceil(int(branch_gross - total_expense)* q22.value/100)
     else:
-        N22 = math.ceil(int(branch_gross - total_expense)* 0/100)
+        N22 = math.ceil(int(branch_gross - total_expense)* 0)
     
     R34 = BranchPayrollLiabilitieR.objects.all().first().CA_Unemployment
     Q34 = BranchPayrollLiabilitieQ.objects.all().first().CA_Unemployment / 100
     T34 = R34 * Q34
-   
-    if N22 <= R34:
-        return N22 * Q34
-    else:
-        return T34
+
+    return T34
+
+
     
 def calculate_branch_payroll_liabilities_total(request,branch_gross,total_expense,q22):
     
-    return   calculate_ett(request,branch_gross,total_expense,q22)+calculate_fed_un_employ_payroll_liabilities(branch_gross,total_expense,q22) + calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22)+calculate_medicare(branch_gross,total_expense,q22) +calculate_social_security(request,branch_gross,total_expense,q22)  
+    return   calculate_ett(request,branch_gross,total_expense,q22)+calculate_fed_un_employ_payroll_liabilities(request,branch_gross,total_expense,q22) + calculate_CA_Unemployment_payroll_liabilities(branch_gross,total_expense,q22)+calculate_medicare(branch_gross,total_expense,q22) +calculate_social_security(request,branch_gross,total_expense,q22)  
 
     
 def calculate_total_employee_with_holding_expense(request,branch_gross,total_expense,q22):
