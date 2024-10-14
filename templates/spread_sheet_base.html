@@ -1,6 +1,6 @@
 {% load compress %}
 {% load static %}
-
+{% load notifications_tags %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,14 +27,25 @@
 </head>
 
 <body class="h-screen w-screen bg-green-50">
-
-
-  {% if request.path != "/visualize/" %}
-
-   {% include 'navbar.html' %}
-
-  {% endif %}
-
+  <nav class="bg-gray-200 border-b border-gray-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+            <div class="flex items-center space-x-6">
+                <span class="text-lg font-semibold">MyApp</span>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-700 hover:text-blue-600">File</a>
+                    <a href="#" class="text-gray-700 hover:text-blue-600">Edit</a>
+                    <a href="#" class="text-gray-700 hover:text-blue-600">View</a>
+                    <a href="#" class="text-gray-700 hover:text-blue-600">Insert</a>
+                    <a href="#" class="text-gray-700 hover:text-blue-600">Format</a>
+                    <a href="#" class="text-gray-700 hover:text-blue-600">Help</a>
+                </div>
+            </div>
+            <button class="bg-blue-500 text-white px-4 py-2 rounded-md">Sign In</button>
+        </div>
+    </div>
+</nav>
+ 
      {%if messages %}
       {% for message in messages %}
       <div class="w-screen text-center p-4 mb-4 text-lg text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300" role="alert">
@@ -44,8 +55,13 @@
 
       
      {% endif %}
-        {% block content %}
-        {% endblock content %}
+
+  
+    
+    {% block content %}
+    {% endblock content %}
+
+
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 </body>

@@ -12,6 +12,7 @@ def react_view(request):
 
 urlpatterns = [
     path('',include("apps.home.urls",namespace = "home")),
+    path('inbox/notifications/', include('notifications.urls', namespace='notifications')),
     path('error/',error_view,name="error"),
     path("account/", include("apps.accounts.urls")),
     path('auth/', include('djoser.urls')),

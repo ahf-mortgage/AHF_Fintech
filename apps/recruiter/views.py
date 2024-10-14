@@ -18,6 +18,11 @@ from .models import LoanAmount
 from .serialzers import LoanAmountSerializer
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+from notifications.signals import notify
+
 
 
 def calculate_commission_above_million(loan_id,mlo_id):
@@ -141,82 +146,148 @@ def loan_break_point(request):
     }
     return render(request,"home/index2.html",context)
 
-# from home.views import loan_below_limits
+
+
+
+@method_decorator(csrf_exempt, name='dispatch')
 def comp_plan_change_view(request):
     """
-        This function handle comp plane changes
-        
-        Flat_Fee=max_gci*loan_below_limits[len(loan_below_limits) -1]/10000
-
+    This function handles compensation plan changes via AJAX.
     """
-
-
     if request.method == "POST":
-        loan_break_point = LoanBreakPoint.objects.filter(user = request.user).first()
-        comp_plan_obj = CompPlan.objects.filter(user = request.user).first()
-        branch = Branch.objects.filter(user = request.user).first()
+        loan_break_point = LoanBreakPoint.objects.filter(user=request.user).first()
+        comp_plan_obj = CompPlan.objects.filter(user=request.user).first()
+        branch = Branch.objects.filter(user=request.user).first()
+
+        # Parse POST data with validation
+        Maximum_Compensation = request.POST.get("Maximum_Compensation", None)
+        max_gci = request.POST.get('max_gci', None)
+        FF_MIN_LOAN = request.POST.get('FF_MIN_LOAN', None)
+        comp_plan = request.POST.get("comp_plan")
+        loan_break = request.POST.get("loan_break_point", 0)
+        branch_amount = request.POST.get("branch_amount")
+
+        # Normalize branch amount
+        if branch_amount is not None:
+            branch_amount = min(float(branch_amount), 99)  # Limit to a maximum of 99
+
+        MIN_LOAN = 100000
+        bps = Bps.objects.first()
+        loan_below_limits = [num for num in range(int(loan_break_point.loan_break_point), MIN_LOAN - MIN_LOAN, -MIN_LOAN)]
+        
+        # Calculate GCI results and Flat Fee
+        gci_result = [(comp_plan_obj.Percentage * 100) * num / 10000 for num in loan_below_limits]
+        peak_loan_below_limits = loan_below_limits[-1]
+        Flat_Fee = comp_plan_obj.FF_MIN_LOAN - ((float(comp_plan) * peak_loan_below_limits) / 100)
+
+        # Adjust max_gci based on Maximum_Compensation
+        if max_gci and float(max_gci) > float(Maximum_Compensation):
+            max_gci = Maximum_Compensation
+
+        # Update compensation plan if applicable
+        if FF_MIN_LOAN is not None:
+            comp_plan_obj.FF_MIN_LOAN = float(FF_MIN_LOAN)
+        
+        # Update models only if branch_amount is provided
+        if branch_amount is not None:
+            comp_plan_obj.MAX_GCI = max_gci
+            comp_plan_obj.Maximum_Compensation = float(Maximum_Compensation)
+            comp_plan_obj.Flat_Fee = Flat_Fee
+            comp_plan_obj.Percentage = float(comp_plan)
+            loan_break_point.loan_break_point = loan_break
+
+            # Save changes to the database
+            branch.commission = int(branch_amount) / 100
+            bps.bps = float(comp_plan) * 100
+            
+            try:
+                bps.save()
+                loan_break_point.save()
+                comp_plan_obj.save()
+                branch.save()
+                return JsonResponse({'status': 'success', 'message': 'Compensation plan updated successfully!'})
+            except Exception as e:
+                return JsonResponse({'status': 'error', 'message': str(e)})
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
+# from home.views import loan_below_limits
+# def comp_plan_change_view(request):
+#     """
+#         This function handle comp plane changes
+        
+#         Flat_Fee=max_gci*loan_below_limits[len(loan_below_limits) -1]/10000
+
+#     """
+
+
+#     if request.method == "POST":
+#         loan_break_point = LoanBreakPoint.objects.filter(user = request.user).first()
+#         comp_plan_obj = CompPlan.objects.filter(user = request.user).first()
+#         branch = Branch.objects.filter(user = request.user).first()
         
  
       
-        Maximum_Compensation = request.POST.get("Maximum_Compensation",None)
-        max_gci     = request.POST.get('max_gci',None)
-        FF_MIN_LOAN = request.POST.get('FF_MIN_LOAN',None)
-        comp_plan = request.POST.get("comp_plan")
-        loan_break= request.POST.get("loan_break_point",0)
-        branch_amount = request.POST.get("branch_amount")
+#         Maximum_Compensation = request.POST.get("Maximum_Compensation",None)
+#         max_gci     = request.POST.get('max_gci',None)
+#         FF_MIN_LOAN = request.POST.get('FF_MIN_LOAN',None)
+#         comp_plan = request.POST.get("comp_plan")
+#         loan_break= request.POST.get("loan_break_point",0)
+#         branch_amount = request.POST.get("branch_amount")
         
-        if branch_amount != None:
-            branch_amount = float(branch_amount)
-            if branch_amount > 99:
-                branch_amount = 99
+#         if branch_amount != None:
+#             branch_amount = float(branch_amount)
+#             if branch_amount > 99:
+#                 branch_amount = 99
      
-        MIN_LOAN               =  100000 
-        bps                    =  Bps.objects.all().first()
-        rows                   = [50] +  [num for num in range(100,275,25)]
-        row_counter            = [i-7 for i in range(7,7+ len(rows))]
+#         MIN_LOAN               =  100000 
+#         bps                    =  Bps.objects.all().first()
+#         rows                   = [50] +  [num for num in range(100,275,25)]
+#         row_counter            = [i-7 for i in range(7,7+ len(rows))]
         
         
-        loan_below_limits      = [num for num in range(int(loan_break_point.loan_break_point),MIN_LOAN - MIN_LOAN,-MIN_LOAN)]  
-        gci_result             = [(comp_plan_obj.Percentage * 100) * num / 10000 for num in range(int(loan_break_point.loan_break_point),MIN_LOAN - MIN_LOAN,-MIN_LOAN)]
-        peak_loan_below_limits = loan_below_limits[len(loan_below_limits) - 1]
-        peak_gci_results       = gci_result[len(gci_result)-1]     
+#         loan_below_limits      = [num for num in range(int(loan_break_point.loan_break_point),MIN_LOAN - MIN_LOAN,-MIN_LOAN)]  
+#         gci_result             = [(comp_plan_obj.Percentage * 100) * num / 10000 for num in range(int(loan_break_point.loan_break_point),MIN_LOAN - MIN_LOAN,-MIN_LOAN)]
+#         peak_loan_below_limits = loan_below_limits[len(loan_below_limits) - 1]
+#         peak_gci_results       = gci_result[len(gci_result)-1]     
         
-        Flat_Fee               = comp_plan_obj.FF_MIN_LOAN - ((float(comp_plan) * peak_loan_below_limits)/100)
+#         Flat_Fee               = comp_plan_obj.FF_MIN_LOAN - ((float(comp_plan) * peak_loan_below_limits)/100)
         
      
    
-        if float(max_gci) > float(Maximum_Compensation):
-            max_gci = Maximum_Compensation
+#         if float(max_gci) > float(Maximum_Compensation):
+#             max_gci = Maximum_Compensation
                      
-        if FF_MIN_LOAN != None:
-            comp_plan_obj.FF_MIN_LOAN = float(FF_MIN_LOAN)
-            comp_plan_obj.save()
+#         if FF_MIN_LOAN != None:
+#             comp_plan_obj.FF_MIN_LOAN = float(FF_MIN_LOAN)
+#             comp_plan_obj.save()
             
         
-        if branch_amount:
-            comp_plan_obj.FF_MIN_LOAN         = float(FF_MIN_LOAN)
-            comp_plan_obj.MAX_GCI             = max_gci
-            comp_plan_obj.Maximum_Compensation= float(Maximum_Compensation)
-            comp_plan_obj.Flat_Fee            = Flat_Fee
-            comp_plan_obj.Percentage          = float(comp_plan)
-            loan_break_point.loan_break_point = loan_break
-            branch_amount                     = int(branch_amount) / 100
-            branch.commission                 = branch_amount
-            bps.bps                           = float(comp_plan) * 100
+#         if branch_amount:
+#             comp_plan_obj.FF_MIN_LOAN         = float(FF_MIN_LOAN)
+#             comp_plan_obj.MAX_GCI             = max_gci
+#             comp_plan_obj.Maximum_Compensation= float(Maximum_Compensation)
+#             comp_plan_obj.Flat_Fee            = Flat_Fee
+#             comp_plan_obj.Percentage          = float(comp_plan)
+#             loan_break_point.loan_break_point = loan_break
+#             branch_amount                     = int(branch_amount) / 100
+#             branch.commission                 = branch_amount
+#             bps.bps                           = float(comp_plan) * 100
             
        
-            bps.save()
-            loan_break_point.save()
-            comp_plan_obj.save()
-            branch.save()
-            return redirect("/")   
-        else:
-            return redirect("/")
+#             bps.save()
+#             loan_break_point.save()
+#             comp_plan_obj.save()
+#             branch.save()
+#             return redirect("/")   
+#         else:
+#             return redirect("/")
   
-    context = {
+#     context = {
         
-    }
-    return render(request,"home/entry.html",context)
+#     }
+#     return render(request,"home/entry.html",context)
+
+
 
 
 
@@ -238,6 +309,7 @@ def change_branch_loan(request):
             try:
                 loan.loan_per_year = int(loan_amount_str)
                 loan.save()
+                notify.send(user, recipient=user, verb='you reached level 10')
                 return JsonResponse({"success": True, "message": "Loan updated successfully."})
             except (ValueError, TypeError):
                 return JsonResponse({"success": False, "message": "Invalid loan amount. Please enter a number."})

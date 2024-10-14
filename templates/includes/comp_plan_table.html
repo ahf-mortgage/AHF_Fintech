@@ -3,273 +3,138 @@
 {% load safe_divide %}
 
 <style>
-  
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-      }
-      
-      th, td {
-        padding: 8px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
-      }
-      
-      th {
-        background-color: #f2f2f2;
-      }
-      
-      .resize-handle {
+    * {
+        font-family: 'Arial', sans-serif; /* Use a common spreadsheet font */
+        font-size: 14px; /* Adjust size as needed */
+        line-height: 1.5; /* Better readability */
+    }
+    .resize-handle {
         position: absolute;
-        height: 100%;
-        width: 5px;
+        height: 50%;
+        width: 2px;
         background-color: #ccc;
         cursor: col-resize;
-      }
+    }
 
-      .disabled {
+    .disabled {
         opacity: 0.5;
         cursor: not-allowed;
     }
 
+    table tr {
+        /* background-color: red; */
+        max-height: 13px;
+    }
 
+    input[type="number"] {
+    width: 80%; /* Make the input take up 80% of the cell width */
+    padding: 8px; /* Add padding inside the input */
+    border: 1px solid #007BFF; /* Blue border */
+    border-radius: 4px; /* Rounded corners */
+    font-size: 16px; /* Increase font size */
+    transition: border-color 0.3s; /* Smooth transition for border color */
+}
+
+input[type="text"] {
+    width: 80%; /* Make the input take up 80% of the cell width */
+    padding: 8px; /* Add padding inside the input */
+    border: 1px solid #007BFF; /* Blue border */
+    border-radius: 4px; /* Rounded corners */
+    font-size: 16px; /* Increase font size */
+    transition: border-color 0.3s; /* Smooth transition for border color */
+}
 </style>
-<div>
-    <div class="flex flex-col">
-        <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div class="inline-block min-w-full sm:px-6 lg:px-8">
-                <div>
-                    <table class="text-left text-sm font-light text-surface dark:text-white" id="comp_plan_table2">
-                        <thead
-                            class="border-b border-neutral-200 bg-white font-medium dark:border-white/10 dark:bg-body-dark">
-                            <tr>
-                                <th scope="col" class="px-6">Wholesale comp plan</th>
-                                <th scope="col" class="px-6"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
-                                <td class="whitespace-nowrap px-6 font-medium">Flat Fee </td>
-                                <td class="whitespace-nowrap px-6">{{comp_plan_for_lower_limit.Flat_Fee}}</td>
-                            </tr>
-                        <form action="{% url 'home:comp_plan_change_view' %}" method="POST"
-                            style="display: flex;justify-content:center;" class="pl-6">
-                            
-                            {% csrf_token %}
-                            <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
-                                <td class="whitespace-nowrap px-6 font-medium">FF-{{MIN_LOAN}}</td>
-                                
-                                <td class="whitespace-nowrap px-6">
-                                    <input 
-                                     type="number" 
-                                     name="FF_MIN_LOAN"
-                                     id="FF_MIN_LOAN"
-                                     value="{{comp_plan_for_lower_limit.FF_MIN_LOAN}}"
-                                     onfocus="this.select()"
-                                />
 
-                                </td>
-                            </tr>
-
-
-
-                            <tr class="border-b border-neutral-200 bg-gray/[0.02] dark:border-white/10">
-                                <td class="whitespace-nowrap px-6 font-medium">Percentage (0.000% -2.75%)</td>
-                                <td class="whitespace-nowrap px-6">
-                                {{comp_plan_for_lower_limit.Percentage}}%
-                                </td>
-                            </tr>
-                            <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10 bg-gray-200">
-                                <td class="whitespace-nowrap px-6 font-medium">Minimum Compensation ($0 -$2,750)</td>
-                                <td class="whitespace-nowrap px-6">
-
-                                </td>
-                            </tr>
-
-
-                            <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
-                                <td class="whitespace-nowrap px-6 font-medium">
-                                    Maximum Compensation (Min. Comp -$40,000)
-
-                                </td>
-
-                            
-
-                                    <td class="px-6">
-                                        <input 
-                                        onfocus="this.select()"
-                                        type="number"
-                                        name="Maximum_Compensation"
-                                        id="Maximum_Compensation"
-                                        value="{{comp_plan_for_lower_limit.Maximum_Compensation}}" 
-                                        onfocus="this.select()"
-                                        />
-
-                                    </td>
-
-                            </tr>
-
-
-
-
-                            <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
-                                <td class="whitespace-nowrap font-medium pl-6">Max</td>
-
-                                <td class="whitespace-nowrap">
-
-                                    <div class="ml-8 relative mb-3" data-twe-input-wrapper-init>
-                                        <input 
-                                        onfocus="this.select()"
-                                            type="text"
-                                            id="max_gci"
-                                            name="max_gci"
-                                            class="peer block min-h-[auto]  rounded border-0 bg-transparent leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
-                                            style="width:100%;" value="{{comp_plan_for_lower_limit_MAX_GCI}}" />
-                                        <label for="exampleFormControlInputText"
-                                            class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[0.9rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-400 dark:peer-focus:text-primary">
-
-                                        </label>
-
-                                    </div>
-
-
-
-                                </td>
-
-                            </tr>
-
-                            <!-- Table row for Comp Percentage -->
-                            <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
-                                <td class="whitespace-nowrap px-6 font-medium"> Comp Percentage</td>
-
-                                <td class="whitespace-nowrap px-6">
-                                    <!-- for comp plan -->
-
-
-                                    <div class="relative mb-3" data-twe-input-wrapper-init>
-                                        <input
-                                        onfocus="this.select()" 
-                                        type="text"
-                                               name="comp_plan"
-                                               id="comp_plan"
-                                                value="{{comp_plan_for_lower_limit.Percentage}}"
-                                                class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3  leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
-                                                placeholder=""
-                                                required
-                                                />
-                                        <label for="exampleFormControlInputText"
-                                            class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[0.9rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-400 dark:peer-focus:text-primary">
-
-                                        </label>
-                                    </div>
-
-
-                                </td>
-                            </tr>
-
-                            <!-- End row for Comp Percentage -->
-
-
-                            <!--Table  for loan break point -->
-                            <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
-                                <td class="whitespace-nowrap px-6  font-medium">Loan break point</td>
-                                <td class="whitespace-nowrap px-6">
-
-                                    <div class="relative mb-3" data-twe-input-wrapper-init>
-                                        
-                                        <input 
-                                            onfocus="this.select()"
-                                            type="text" 
-                                            name="loan_break_point"
-                                            id="loan_break_point"
-                                            class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
-                                            id="exampleFormControlInputText"
-                                            class="inputs_fields"
-                                            placeholder=""
-                                            value="{{loan_break_point}}"
-                                        />
-                                        <label for="exampleFormControlInputText"
-                                            class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[0.9rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-400 dark:peer-focus:text-primary">
-
-                                        </label>
-                                    </div>
-
-                                </td>
-
-                            </tr>
-                            <!-- end  for loan break point -->
-
-
-                            <!--Table row  for split -->
-                            <tr class="border-b border-neutral-200 bg-black/[0.02] dark:border-white/10">
-                                <td class="whitespace-nowrap px-6 font-medium">Split</td>
-                                <td class="whitespace-nowrap px-6">
-
-
-                                    <div style="display: flex;">
-                                        <div class="relative mb-3" data-twe-input-wrapper-init>
-                                            <input 
-                                            onfocus="this.select()"
-                                                type="number"
-                                                name="branch_amount"
-                                                id="branch_amount"
-                                                class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
-                                                class="inputs_fields"
-                                                placeholder="" 
-                                                value="{{branch_amount}}" 
-                                                />
-                                            <label for="exampleFormControlInputText"
-                                                class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[0.9rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-400 dark:peer-focus:text-primary">
-
-
-
-
-                                        </div>
-                                        <input id="btn-save" type="submit" value="Save"
-                                            class="bg-gray-500 text-white font-bold px-2 rounded disabled">
-
-                                    </div>
-
-                                    </form>
-                                </td>
-
-                            </tr>
-
-                            <!--Table row  for split -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+<div class="flex flex-col">
+    <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div class="inline-block min-w-full sm:px-6 lg:px-8">
+            <form action="{% url 'home:comp_plan_change_view' %}" method="POST" class="w-full">
+                {% csrf_token %}
+                <table class="min-w-full border border-gray-300 divide-y divide-gray-300" id="comp_plan_table2">
+                    <thead class="bg-gray-200 text-gray-600">
+                        <tr>
+                            <th scope="col" class="px-6 -3 text-left font-medium">Wholesale Comp Plan</th>
+                            <th scope="col" class="px-6 -3 text-left font-medium"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white">
+                        <tr class="border-b border-gray-300 bg-gray-50">
+                            <td class="whitespace-nowrap px-6 -4 font-medium">Flat Fee</td>
+                            <td class="whitespace-nowrap px-6 -4">{{ comp_plan_for_lower_limit.Flat_Fee }}</td>
+                        </tr>
+                        <tr class="border-b border-gray-300">
+                            <td class="whitespace-nowrap px-6 -4 font-medium">FF-{{ MIN_LOAN }}</td>
+                            <td class="whitespace-nowrap px-6 -4">
+                                <input type="number" name="FF_MIN_LOAN" id="FF_MIN_LOAN" value="{{ comp_plan_for_lower_limit.FF_MIN_LOAN }}" onfocus="this.select()" class="border rounded px-2 -1 w-full" />
+                            </td>
+                        </tr>
+                        <tr class="border-b border-gray-300 bg-gray-50">
+                            <td class="whitespace-nowrap px-6 -4 font-medium">Percentage (0.000% - 2.75%)</td>
+                            <td class="whitespace-nowrap px-6 -4">{{ comp_plan_for_lower_limit.Percentage }}%</td>
+                        </tr>
+                        <tr class="border-b border-gray-300">
+                            <td class="whitespace-nowrap px-6 -4 font-medium">Minimum Compensation ($0 - $2,750)</td>
+                            <td class="whitespace-nowrap px-6 -4"></td>
+                        </tr>
+                        <tr class="border-b border-gray-300 bg-gray-50">
+                            <td class="whitespace-nowrap px-6 -4 font-medium">Maximum Compensation (Min. Comp - $40,000)</td>
+                            <td class="px-6 -4">
+                                <input type="number" name="Maximum_Compensation" id="Maximum_Compensation" value="{{ comp_plan_for_lower_limit.Maximum_Compensation }}" onfocus="this.select()" class="border rounded px-2 -1 w-full" />
+                            </td>
+                        </tr>
+                        <tr class="border-b border-gray-300">
+                            <td class="whitespace-nowrap px-6 -4 font-medium">Max</td>
+                            <td class="whitespace-nowrap px-6 -4">
+                                <input type="text" id="max_gci" name="max_gci" class="border rounded px-2 -1 w-full" value="{{ comp_plan_for_lower_limit_MAX_GCI }}" onfocus="this.select()" />
+                            </td>
+                        </tr>
+                        <tr class="border-b border-gray-300 bg-gray-50">
+                            <td class="whitespace-nowrap px-6 -4 font-medium">Comp Percentage</td>
+                            <td class="whitespace-nowrap px-6 -4">
+                                <input type="text" name="comp_plan" id="comp_plan" value="{{ comp_plan_for_lower_limit.Percentage }}" class="border rounded px-2 -1 w-full" required />
+                            </td>
+                        </tr>
+                        <tr class="border-b border-gray-300">
+                            <td class="whitespace-nowrap px-6 -4 font-medium">Loan Break Point</td>
+                            <td class="whitespace-nowrap px-6 -4">
+                                <input type="text" name="loan_break_point" id="loan_break_point" class="border rounded px-2 -1 w-full" value="{{ loan_break_point }}" />
+                            </td>
+                        </tr>
+                        <tr class="border-b border-gray-300 bg-gray-50">
+                            <td class="whitespace-nowrap px-6 -4 font-medium">Split</td>
+                            <td class="whitespace-nowrap px-6 -4">
+                                <div class="flex items-center">
+                                    <input type="number" name="branch_amount" id="branch_amount" class="border rounded px-2 -1 w-full" value="{{ branch_amount }}" />
+                                    <input id="btn-save" type="submit" value="Save" class="bg-gray-500 text-white font-bold px-4 -2 rounded ml-2 disabled" />
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
         </div>
-    </div>
-
-
-
-    <div>
-
     </div>
 </div>
 
 <script>
-        const table = document.getElementById('comp_plan_table');
-        const tableHeaders = table.getElementsByTagName('th');
+    // Resizing columns
+    const table = document.getElementById('comp_plan_table2');
+    const tableHeaders = table.getElementsByTagName('th');
 
-        for (let i = 0; i < tableHeaders.length; i++) {
+    for (let i = 0; i < tableHeaders.length; i++) {
         const header = tableHeaders[i];
         const resizeHandle = document.createElement('div');
         resizeHandle.classList.add('resize-handle');
-
         header.appendChild(resizeHandle);
         resizeHandle.addEventListener('mousedown', startResize);
-        }
+    }
 
-        let currentHeader;
-        let currentIndex;
-        let startX;
-        let startWidth;
+    let currentHeader;
+    let currentIndex;
+    let startX;
+    let startWidth;
 
-        function startResize(e) {
+    function startResize(e) {
         currentHeader = e.target.parentElement;
         currentIndex = Array.from(currentHeader.parentElement.children).indexOf(currentHeader);
         startX = e.clientX;
@@ -277,19 +142,49 @@
 
         document.addEventListener('mousemove', resizeColumn);
         document.addEventListener('mouseup', stopResize);
-        }
+    }
 
-        function resizeColumn(e) {
+    function resizeColumn(e) {
         const deltaX = e.clientX - startX;
         const newWidth = Math.max(startWidth + deltaX, 50); // Minimum column width is 50px
         currentHeader.style.width = `${newWidth}px`;
-        }
+    }
 
-        function stopResize() {
+    function stopResize() {
         document.removeEventListener('mousemove', resizeColumn);
         document.removeEventListener('mouseup', stopResize);
-        }
+    }
+
+    // AJAX form submission
+    $(document).ready(function() {
+        $('#compPlanForm').on('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Gather form data
+            var formData = {
+                'Maximum_Compensation': $('#Maximum_Compensation').val(),
+                'max_gci': $('#max_gci').val(),
+                'FF_MIN_LOAN': $('#FF_MIN_LOAN').val(),
+                'comp_plan': $('#comp_plan').val(),
+                'loan_break_point': $('#loan_break_point').val(),
+                'branch_amount': $('#branch_amount').val()
+            };
+
+            // Send AJAX request
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'home:comp_plan_change_view' %}",
+                data: formData,
+                success: function(response) {
+                    window.location.href = "/"; // Redirect on success
+                },
+                error: function(xhr, status, error) {
+                    alert('Error: ' + error);
+                }
+            });
+        });
+    });
 </script>
 
-<script src="{% static 'comp_plan_table.js'%}"></script>
-<script src="{% static 'comp_plan_table_drag_drop.js'%}"></script>
+<script src="{% static 'comp_plan_table.js' %}"></script>
+<script src="{% static 'comp_plan_table_drag_drop.js' %}"></script>

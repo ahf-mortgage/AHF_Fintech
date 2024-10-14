@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     #thrid party packages
     'theme',
     'django_browser_reload',
+    'notifications',
     'widget_tweaks',
     'rest_framework',
     'djoser',
