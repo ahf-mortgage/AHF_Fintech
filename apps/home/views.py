@@ -153,17 +153,17 @@ def home(request):
     
     print("_branch_new_gross_income=",_branch_new_gross_income)
 
-    # q22              = Q22.objects.filter(id=1).first()
-    # left             = Q22.objects.filter(value = 0).first()
-    # right            = Q22.objects.filter(value = 100).first()
-    # tolerance        = 1e-6
-    # balance,root     = find_root(request,function,left,right,tolerance)
-    # q22.value        = root
-    # left.save()
-    # right.save()
-    # q22.save()
+    q22              = Q22.objects.filter(id=1).first()
+    left             = Q22.objects.filter(value = 0).first()
+    right            = Q22.objects.filter(value = 100).first()
+    tolerance        = 1e-6
+    balance,root     = find_root(request,function,left,right,tolerance)
+    q22.value        = root
+    left.save()
+    right.save()
+    q22.save()
 
-    q22 = Q22.objects.filter(id = 5).first()
+    # q22 = Q22.objects.filter(id = 5).first()
     
 
     

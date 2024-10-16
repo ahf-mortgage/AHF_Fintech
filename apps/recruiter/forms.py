@@ -21,12 +21,9 @@ class EdgeForm(forms.ModelForm):
         used_node_ids = Edge.objects.values_list('source_node', flat=True).union(
             Edge.objects.values_list('target_node', flat=True)
         )
-        print("used in node id ",used_node_ids)
         available_nodes = Node.objects.exclude(node_id__in=used_node_ids)
-
+        print("used in available_nodes id ",available_nodes)
         return available_nodes
-
-        
 
 
     def __init__(self, *args, **kwargs):

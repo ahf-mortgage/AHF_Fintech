@@ -2,7 +2,10 @@
 {% load tailwind_filters %}
 
 {% block content %}
-<div class="">
+<br>
+<br>
+<br>
+<div class="" >
   <form class="max-w-sm h-screen mx-auto my-auto" method="post">
     {% csrf_token %}
     {{form|crispy}}

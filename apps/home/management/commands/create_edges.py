@@ -8,12 +8,14 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         nodes        = Node.objects.all()
         edges        = Edge.objects.all()
-        counter      = 120090
+        counter      = 63
         start_mlo    = MLO_AGENT.objects.all()[1]
-        start_node   = Node.objects.filter(mlo_agent__user__username="JohnDoe42_252667").first()
+        start_node   = Node.objects.filter(mlo_agent__user__username="JohnDoe42_535801").first()
 
-        for node in nodes[80:129]:
-            Edge.objects.create(source_node=start_node,target_node=node,edge_id=counter)
+        for node in nodes[67:73]:
+            print("mlo created = ",node)
+            edge = Edge.objects.create(source_node=start_node,target_node=node,edge_id = counter)
+            # edge.delete()
             counter += 1
         self.stdout.write(f'Created edge')
      

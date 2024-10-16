@@ -64,6 +64,19 @@ def loan_detail(request,id):
     return render(request, 'screens/table/loan_detail.html',context)
 
 
+
+@login_required
+def add_loan(request):
+   
+   
+    
+    context = {
+    
+    }
+    return render(request, 'screens/table/loan_add.html',context)
+
+
+
 def error_view(request):
     return render(request, 'screens/404.html')
 

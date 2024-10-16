@@ -7,12 +7,13 @@ class Command(BaseCommand):
     help = 'Creates Node from a text file'
     def handle(self, *args, **options):
         mlo_agents = MLO_AGENT.objects.all()
-        node_id = 3049
+        node_id = 303123412
 
 
         for agent in mlo_agents:
             node = Node.objects.filter(mlo_agent=  agent).first()
             if node == None:
+
                 Node.objects.create(mlo_agent=agent,node_id = node_id)
             else:
                 continue

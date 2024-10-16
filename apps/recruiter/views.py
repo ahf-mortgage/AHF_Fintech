@@ -516,9 +516,12 @@ def register_new_mlo(request,node_id):
         "source_node":source_node,
         "edge_id":last_edge + 1
         })
+
+
+        print("form errors = ",form.errors)
        
         if form.is_valid():
-          print("form is valid or not ",form.is_valid())
+        
           form.save()
           return redirect("/visualize/")
         else:
