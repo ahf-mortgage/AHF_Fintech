@@ -2,7 +2,7 @@
 from django.contrib import admin
 from django.urls import path,include
 from django.shortcuts import render
-from .views import  visualize_graph,mlo_detail,loan_detail,error_view,add_loan
+from .views import  visualize_graph,mlo_detail,loan_detail,error_view,get_sponsor
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -25,7 +25,7 @@ urlpatterns = [
     path("visualize/",visualize_graph,name = "visualize_graph"),
     path("loan-detail/<id>/",loan_detail,name = "loan-detail"),
     path("mlo_detail/<name>/",mlo_detail,name = "mlo_detail"),
-    path("add_loan/",add_loan,name = "add-loan"),
+    path("get-sponsor/",get_sponsor,name = "get-sponsor"),
 
     ]
 

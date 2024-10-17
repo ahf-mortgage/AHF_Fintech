@@ -3,6 +3,7 @@ from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from apps.recruiter.models import Edge,MLO_AGENT
+from apps.recruiter.forms import EdgeForm
 from django.contrib.auth.models import User
 import matplotlib.pyplot as plt
 import os
@@ -66,14 +67,14 @@ def loan_detail(request,id):
 
 
 @login_required
-def add_loan(request):
-   
-   
-    
+def get_sponsor(request):    
+
     context = {
+
+        "form":EdgeForm()
     
     }
-    return render(request, 'screens/table/loan_add.html',context)
+    return render(request, 'screens/table/get_sponsor.html',context)
 
 
 

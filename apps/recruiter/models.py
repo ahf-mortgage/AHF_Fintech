@@ -158,7 +158,7 @@ class Node(models.Model):
         return f"{self.mlo_agent}"
 
 class Edge(models.Model):
-    edge_id = models.IntegerField(primary_key=True)
+    # edge_id = models.IntegerField(primary_key=True)
     source_node = models.ForeignKey(Node, on_delete=models.CASCADE, related_name='outgoing_edges')#,unique=True)
     target_node = models.ForeignKey(Node, on_delete=models.CASCADE, related_name='incoming_edges')#,unique=True)
 
