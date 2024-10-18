@@ -24,7 +24,7 @@ def login_view(request):
         print("user name ",user)
         if user is not None:
             login(request, user)
-            return redirect('/')  # Replace 'home' with the name of your home URL
+            return redirect('/get-sponsor/')  # Replace 'home' with the name of your home URL
         else:
             error_message = 'Invalid username or password'
             return render(request, 'login.html', {'error_message': error_message})

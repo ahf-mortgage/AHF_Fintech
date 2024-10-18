@@ -25,6 +25,16 @@ class Command(BaseCommand):
             while k < 7:
                 Edge.objects.create(source_node = all_nodes[i+1],target_node = all_nodes[i + k])
 
+
+                Edge.objects.create(source_node = all_nodes[i+k],target_node = all_nodes[i + k+27])
+                Edge.objects.create(source_node = all_nodes[i+k],target_node = all_nodes[i + k+28])
+                Edge.objects.create(source_node = all_nodes[i+k],target_node = all_nodes[i + k+29])
+                Edge.objects.create(source_node = all_nodes[i+k],target_node = all_nodes[i + k+30])
+                Edge.objects.create(source_node = all_nodes[i+k],target_node = all_nodes[i + k+31])
+
+
+
+
                 Edge.objects.create(source_node = all_nodes[i+k+2],target_node = all_nodes[i + k+6])
                 Edge.objects.create(source_node = all_nodes[i+k+2],target_node = all_nodes[i + k+7])
                 Edge.objects.create(source_node = all_nodes[i+k+2],target_node = all_nodes[i + k+8])
@@ -48,15 +58,8 @@ class Command(BaseCommand):
                 Edge.objects.create(source_node = all_nodes[i+1],target_node = all_nodes[i + k+2])
 
 
-                Edge.objects.create(source_node = all_nodes[i+k+2],target_node = all_nodes[i + k+26])
-                Edge.objects.create(source_node = all_nodes[i+k+2],target_node = all_nodes[i + k+27])
-                Edge.objects.create(source_node = all_nodes[i+k+2],target_node = all_nodes[i + k+28])
-                Edge.objects.create(source_node = all_nodes[i+k+2],target_node = all_nodes[i + k+29])
-                Edge.objects.create(source_node = all_nodes[i+k+2],target_node = all_nodes[i + k+30])
-            
 
                 Edge.objects.create(source_node = all_nodes[i+1],target_node = all_nodes[i + k+4])
-
                 Edge.objects.create(source_node = all_nodes[i+k+4],target_node = all_nodes[i + k+16])
                 Edge.objects.create(source_node = all_nodes[i+k+4],target_node = all_nodes[i + k+17])
                 Edge.objects.create(source_node = all_nodes[i+k+4],target_node = all_nodes[i + k+18])

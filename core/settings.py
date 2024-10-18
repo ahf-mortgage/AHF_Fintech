@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'apps.W2branchYearlyGross',
     'apps.RevenueShare',
     'apps.accounts',
+    'apps.mlo',
 
 ]
 
@@ -217,14 +218,8 @@ PASSWORD_RESET_CONFIRM_UR = "http://12.0.0.1:8000"
 
 # django auth config
 
-LOGIN_URL = '/account/login'
+LOGIN_URL = '/account/login/'
 LOGIN_REDIRECT_URL = '/'
-
-# # crispy form config
-# CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-# CRISPY_TEMPLATE_PACK = "bootstrap5"
-
-
 
 #Hello 
 # Configure your default site. See

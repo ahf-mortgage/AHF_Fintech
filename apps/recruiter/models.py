@@ -99,7 +99,7 @@ class MLO(models.Model):
     
     
 class MLO_AGENT(models.Model):
-
+    loan = models.ForeignKey("Loan",related_name="mlo_loans" ,blank= True,null=True,on_delete= models.CASCADE)
     CHOICES = [(str(num), num) for num in range(50,250,25)]
     user = models.ForeignKey(User,on_delete=models.CASCADE,related_name="user_mlo",blank=False,null=False)
     NMLS_sponsor_id = models.CharField(max_length=100,blank = False,null = False)
@@ -107,7 +107,7 @@ class MLO_AGENT(models.Model):
    
     MLO_commission  = models.FloatField(blank = True,null = True)
     date_joined = models.DateTimeField(auto_now = True)
-    flat_Fee = models.FloatField(blank = True,null = True)
+    # flat_Fee = models.FloatField(blank = True,null = True)
     max = models.CharField(max_length= 4,blank = True,null = True,choices=CHOICES)
     
     def __str__(self) -> str:
@@ -138,15 +138,14 @@ class LoanSetting(models.Model):
 
 
 class Loan(models.Model):
-    mlo_agent = models.ForeignKey(MLO_AGENT,related_name="mlo_loans" ,blank= True,null=True,on_delete= models.CASCADE)
     amount    = models.ManyToManyField(LoanAmount,default=1,related_name="loans")
     bps       = models.FloatField()
     date_closed = models.DateTimeField(auto_created=False,auto_now_add=True)
-    File_reference = models.CharField(max_length=100,blank=False,unique=True)
+    File_reference = models.CharField(max_length=100,blank=True)
 
     
     def __str__(self):
-        return f"loan of {self.mlo_agent}"
+        return f"loan of {self.bps}"
 
 	
  

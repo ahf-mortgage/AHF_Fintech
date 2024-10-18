@@ -9,6 +9,10 @@
 
 {%block content %}
 
+
+
+<br>
+<br>
 <div id="datatable"></div>
 
 <script src="{% static 'js/sortable.js'%}"></script>
@@ -22,8 +26,9 @@
 window.onload = function() {
   const user = "{{id}}"
     const BASE_URL = "{{BASE_URL}}"
+    const level = "{{level}}"
  
-    const loan_detail_url = `${BASE_URL}/api/get_loan_detail/?loan_detail=${user}`
+    const loan_detail_url = `${BASE_URL}/api/get_loan_detail/?loan_detail=${user}&level=${level}`
     let _columns =  ['Split', 'File Reference', 'Loan amount','Date Funded', 'GCI', 'BPS',"Branch Commission",'AHF Commission', 'Recruiter Commission']
 
    const columns =  _columns.map((item) => {
@@ -49,7 +54,7 @@ window.onload = function() {
             console.log("_data[0]   = ",_data[0]); 
            if(_data[0].total_mlo !== 0) {
             const datatable = new DataTable('#datatable',{
-                columns:columns,
+                columns:_columns,
                 data:_data,
                 layout:"fluid"
                

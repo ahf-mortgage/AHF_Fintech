@@ -73,9 +73,9 @@
     const BASE_URL = "{{ BASE_URL }}";
     const node_info_urls = `${BASE_URL}/api/chart-view/?user_id=${user_id}`;
 
-    function NodeDetailHandler(node) {
-        console.log("node view = ",node);
-        window.location.pathname = `/loan-detail/${node}/`; // Ensure you're passing the correct identifier
+    function NodeDetailHandler(node,level) {
+     
+        window.location.pathname = `/loan-detail/${node}/${level}/`; // Ensure you're passing the correct identifier
     }
 
     function AddAgentHandler(node) {
@@ -104,8 +104,11 @@
                     nodeMenu: {
                         detail: {
                             text: "View Detail",
-                            onClick: function(node) {
-                                NodeDetailHandler(node); // Pass the clicked node to the handler
+                            onClick: function(nodeid) {
+                                var node = chart.getNode(nodeid);
+                          
+                                const level = node.level
+                                NodeDetailHandler(nodeid,level); // Pass the clicked node to the handler
                             }
                         },
                         add_agent: {

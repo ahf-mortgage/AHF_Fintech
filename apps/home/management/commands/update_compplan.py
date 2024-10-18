@@ -9,6 +9,10 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         cps = CompPlan.objects.all()
         for c in cps:
-            c.Maximum_Compensation = 2750
+            print("complan = ",c)
+            c.Maximum_Compensation = 27500
+            c.Flat_Fee = 0
+            
+
             c.save()
             

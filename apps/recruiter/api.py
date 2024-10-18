@@ -30,6 +30,7 @@ from rest_framework import generics
 from django.conf import settings
 from decouple import config
 from .serialzers import LoanAmountSerializer
+from .utils import calculate_commissions
 
 
 
@@ -427,18 +428,12 @@ class EdgeGraphView(APIView):
         return Response(data_)
 
 
+
+
 def calculate_commission_for_level_0(node,total_commission,split):
     mlo_agent   = node.mlo_agent
     date_joined = mlo_agent.date_joined
     now = timezone.now()
-    # days_since_joined = (now - date_joined).days
-    # anniversary_year_days = 365
-
-    # if days_since_joined > anniversary_year_days:
-    #     return ahf_amount
-    # else:
-    #     return 0.8 * ahf_amount
-
     return split* total_commission
 
 
@@ -517,8 +512,9 @@ class GetLevelInfo(APIView):
         gci                       =   (comp_plan.Percentage * 100) * loan_break_point.loan_break_point/10000  + comp_plan.Flat_Fee
         index = 0
 
-        for share in all_revenue_shares:
-            annual_revenue_shares.append(share.percentage/100)
+
+        calculate_commissions(levels, all_revenue_shares, starting_node, AD9, split)
+
 
         for level,AD12 in zip(levels,annual_revenue_shares):
             level_to_commission[0] =  calculate_commission_for_level_0(starting_node,AD9,split)
@@ -537,10 +533,13 @@ class GetLevelInfo(APIView):
 
 
         for mlo in node_levels:
-            mlo_agent = MLO_AGENT.objects.filter(user__username = "tinsae").first()
-            user      = User.objects.filter(username = mlo).first()
-            mlo_agent = MLO_AGENT.objects.filter(user=user).first()
-            loan      = Loan.objects.filter(mlo_agent__user__username = loan_user).first()
+            agent = MLO_AGENT.objects.filter(user__username = mlo).first()
+            node = Node.objects.filter(mlo_agent = agent).first()
+            edge = Edge.objects.filter(source_node= node)
+            loan      = agent.loan 
+
+
+            print("out going edge number = ",len(edge.target_node.all()))
           
            
   
@@ -569,61 +568,90 @@ class LoanDetailView(APIView):
     queryset        = Node.objects.all()
     def get(self, request, *args, **kwargs):
         loan_detail = request.GET.get('loan_detail',None)
-        id    = loan_detail
+        id          = loan_detail
+        node_level  =  request.GET.get("level",None)
         user        = User.objects.filter(id = id).first()
+        print("user = ",user)
         mlo         = MLO_AGENT.objects.filter(user = user).first()
-        loan        = Loan.objects.filter(mlo_agent__user = user).first()
-        print("source node id  = ",id)
+        node        = Node.objects.filter(mlo_agent = mlo).first()
+        edge        = Edge.objects.filter(source_node =node ).first()
+        loan        = mlo.loan 
+    
+
         amounts     = loan.amount.all()
 
-        all_revenue_shares = AnnualRevenueShare.objects.all()
+        all_revenue_shares = AnnualRevenueShare.objects.all().reverse()
         try:
-            loan_break_point = LoanBreakPoint.objects.all().first()
+            loan_break_point = LoanBreakPoint.objects.filter(user = request.user).first()
         except LoanBreakPoint.DoesNotExist as e:
             raise e
             
         try:
-            comp_plan  = CompPlan.objects.all().first()
+            comp_plan  = CompPlan.objects.filter(user = request.user).first()
         except CompPlan.DoesNotExist as e:
             raise e
 
         try:
-            bps = Bps.objects.all().first()
+            bps = Bps.objects.filter(user = request.user).first()
         except Bps.DoesNotExist as e:
             raise e
         
 
-        annual_revenue_shares     = []
+    
         test_branch_gross_income  =  aacd(request).get("test_branch_gross_income",None)
         ahf_amount                =  aacd(request).get("ahf_amount",1)
         AD9                       =  math.ceil(float(test_branch_gross_income)/float(ahf_amount) * 100)
-        split                     =  Branch.objects.filter().first().commission
+        split                     =  Branch.objects.filter(user = request.user).first().commission
    
 
         data = []
+        innner_outgoing_edges = None
         MIN_LOAN = 100000 
         total_commission = 0
         total_ahf_commission = 0
         total_mlo = 0
-        annual_revenue_shares = []
+
         test_branch_gross_income  =  aacd(request).get("test_branch_gross_income",None)
         ahf_amount                =  aacd(request).get("ahf_amount",1)
         AD9                       =  math.ceil(float(test_branch_gross_income)/float(ahf_amount) * 100)
-        split                     =  Branch.objects.filter().first().commission
+        split                     =  Branch.objects.filter(user = request.user).first().commission
         gci                       =  (comp_plan.Percentage * 100) * loan_break_point.loan_break_point/10000  + comp_plan.Flat_Fee
         index = 1
         level_to_commission = {}
         levels = [i for i in range(1,8)]
      
-        starting_node = Node.objects.all().first()
-        for share in all_revenue_shares:
-            annual_revenue_shares.append(share.percentage/100)
+        starting_node =node
+    
+        # n= {0: Decimal('41800.00'), 1: 457.1875, 2: 522.5}
+        # evel_to_commission= {0: Decimal('22000.00'), 1: 240.625, 2: 275.0}
 
-        for level,AD12 in zip(levels,annual_revenue_shares):
+        # level to recruiter comission
+        for level,AD in zip(levels,all_revenue_shares):
+
             level_to_commission[0] =  calculate_commission_for_level_0(starting_node,AD9,split)
-            AE12 = AD9 * AD12
-            AG12 = AE12
-            level_to_commission[level] = AG12
+            AE = AD9 * AD.percentage / 100
+            AG = AE
+         
+            level_to_commission[level] = AG/2
+
+
+        outgoing_edges = node.outgoing_edges.all()
+        total_number_of_agent_level_2 = 0
+        recruiter_commission = 0
+        for oe in outgoing_edges:
+            innner_outgoing_edges = oe.source_node.outgoing_edges.all()
+            total_number_of_agent_level_2 += len(innner_outgoing_edges) 
+
+        total_number_of_sponsored_agents = len(outgoing_edges)
+        
+
+        for level in range(1,len(node_level) + 1):
+            if level == 1:
+                recruiter_commission += math.ceil(level_to_commission.get(level,0))  * total_number_of_sponsored_agents 
+            elif level == 2:
+                recruiter_commission += math.ceil(level_to_commission.get(level,0))  * total_number_of_agent_level_2 
+            else:
+                recruiter_commission = 0
 
 
         parents = {}
@@ -632,17 +660,9 @@ class LoanDetailView(APIView):
         
      
         for amount in amounts:
-            print("amount - ",amount)
-
-            gci = float(comp_plan.Percentage * 100) * float(amount.loan_amount/10000)  + comp_plan.Flat_Fee 
-         
-            if gci > comp_plan.MAX_GCI:
-                gci = comp_plan.MAX_GCI
-        
+            gci = float(comp_plan.Percentage * 100) * float(amount.loan_amount/10000)  + comp_plan.Flat_Fee
             total_commission += float(1-split) * float(gci) 
             total_ahf_commission += float(split) * float(gci)
-          
-         
             _data = [
                
                 f"{math.ceil(split * 100)}%",
@@ -653,9 +673,8 @@ class LoanDetailView(APIView):
                 loan.bps,
                 f"${math.ceil(float(1-split) * float(gci)):,}" , 
                 f"${math.ceil(float(split) * float(gci)):,}",
-                math.ceil(level_to_commission.get(1,0)),
-            
-            
+                recruiter_commission
+                  
             ]
             total_mlo += 1
             index += 1
@@ -770,13 +789,12 @@ def single_mlo_info(request,node_id):
         annual_revenue_shares = []
         test_branch_gross_income  =  aacd.get("test_branch_gross_income",None)
         ahf_amount                =  aacd.get("ahf_amount",1)
-        AD9                       =  math.ceil(float(test_branch_gross_income)/float(ahf_amount) * 100)
-        split                     = Branch.objects.filter().first().commission
+        AD9                       =   math.ceil(float(test_branch_gross_income)/float(ahf_amount) * 100)
+        split                     =   Branch.objects.filter().first().commission
         gci                       =   (comp_plan.Percentage * 100) * loan_break_point.loan_break_point/10000  + comp_plan.Flat_Fee
         index = 0
 
-        for share in all_revenue_shares:
-            annual_revenue_shares.append(share.percentage/100)
+ 
 
         for level,AD12 in zip(levels,annual_revenue_shares):
             level_to_commission[0] =  calculate_commission_for_level_0(starting_node,AD9,split)
@@ -839,12 +857,6 @@ class ChartView(APIView):
             print("e")
 
 
-        print("out going edges = ",current_node.outgoing_edges.all())
-        print("in going edges = ",current_node.incoming_edges.all())
-
-
-
-   
 
         if current_mlo:
             starting_node = Edge.objects.filter(source_node__mlo_agent= current_mlo).first()

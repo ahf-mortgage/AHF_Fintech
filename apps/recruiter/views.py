@@ -551,7 +551,7 @@ def single_loan_detail(request):
     except MLO_AGENT.DoesNotExist as e:
         raise e
     
-    loan = current_mlo.mlo_loans.first()
+    loan = current_mlo.loan
     loans = loan.amount.all()   
     loan_form = LoanAmountFrom()
     if request.method == "POST":

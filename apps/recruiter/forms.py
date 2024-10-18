@@ -24,24 +24,25 @@ class EdgeForm(forms.ModelForm):
         available_nodes = Node.objects.exclude(node_id__in=used_node_ids)
         print("used in available_nodes id ",available_nodes)
         return available_nodes
-
+    
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['source_node'].initial = self.available_nodes()
+
+    source_node = forms.ModelChoiceField(
+                label="Sponsor",
+                queryset=Edge.objects.all(),
+                empty_label="Select a Sponsor",  # Optional: Custom label for the empty option
+                required=True  # Adjust as needed
+    )
         
-
-
     class Meta:
     
         model = Edge
-        fields = "__all__"
-        widgets = {
-            'edge_id':forms.NumberInput(attrs={'maxlength':100,"disabled":"disable"}),
-            'source_node': forms.Select(attrs={'maxlength':100,"disabled":"disable"}),
-            'target_node': forms.Select(attrs={'maxlength':100}),
-        
-        }
+        fields = "source_node",
+     
+     
    
 
 

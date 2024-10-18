@@ -18,8 +18,8 @@ class Command(BaseCommand):
     help = 'Creates loan'
     def handle(self, *args, **options):
 
-        number_loan = 3
-        loans_amounts = [1000000,1000000,10000]
+        number_loan = 1
+        loans_amounts = [1000000,1000000,1000000]
 
         mlo_agents = MLO_AGENT.objects.all()
         mlo_id = 30903425
@@ -27,15 +27,23 @@ class Command(BaseCommand):
 
         today = datetime.datetime.today()
 
+        for l in  Loan.objects.all():
+            l.delete()
 
-        for num,agent in zip(loans_amounts,mlo_agents):
-           amount = LoanAmount.objects.create(loan_amount = num,loan_date = today,repayment_date = today)
-           loan = Loan.objects.create(mlo_agent = agent,bps=2.75,File_reference=f"12{index} Any street, California 97720")#,date_closed = one_year_ago)
-           index += 1
-           self.stdout.write(f'Created mlo: {mlo_agents}')
-           
-        for  amount in LoanAmount.objects.all():
+        for _ in range(number_loan):
+            Loan.objects.create(bps = 2.75,)
+
+
+        for agent in mlo_agents:
             for loan in Loan.objects.all():
-                loan.amount.add(amount)
-                loan.save()
+                agent.loan = loan
+                agent.save()
+            
+
+          
+           
+        # for  amount in LoanAmount.objects.all():
+        #     for loan in Loan.objects.all():
+        #         loan.amount.add(amount)
+        #         loan.save()
                 

@@ -1,0 +1,57 @@
+
+body {
+    background-color: #02589f;
+}
+
+.shadow-lg {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.rounded-lg {
+    border-radius: 20px;
+}
+
+.step-content {
+    display: none;
+    transition: opacity 0.4s, visibility 0.4s;
+}
+
+.step-content.active {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+}
+
+.btn-next,
+.btn-submit {
+    background-color: #02589f;
+    transition: background-color 0.3s ease-in-out;
+    width: 100%;
+    padding: 12px 16px; 
+}
+
+.btn-next:hover,
+.btn-submit:hover {
+    background-color: #98b365;
+}
+
+.progress-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.progress-active {
+    background-color: #98b365;
+    border-color: #98b365;
+}
+
+.progress-completed {
+    background-color: #02589f;
+    border-color: #02589f;
+}

@@ -27,9 +27,7 @@ def visualize_graph(request):
         mlo = MLO_AGENT.objects.filter(user__username = mlo_name).first()
         mlo.delete()
         
-        
-
-
+    
     for edge in edges:
         print(edge.source_node.mlo_agent.user.username,request.user.username)
         data.append({f"{edge.source_node.mlo_agent.user.username}":edge.target_node.mlo_agent.user.username})
@@ -50,7 +48,7 @@ def visualize_graph(request):
 
 
 @login_required
-def loan_detail(request,id):
+def loan_detail(request,id,level):
     print("id ========  ",id)
     try:
         user = User.objects.filter(id = id).first()
@@ -60,7 +58,8 @@ def loan_detail(request,id):
     
     context = {
         "id":id,
-        "user":user
+        "user":user,
+        "level":level
     }
     return render(request, 'screens/table/loan_detail.html',context)
 
@@ -74,7 +73,7 @@ def get_sponsor(request):
         "form":EdgeForm()
     
     }
-    return render(request, 'screens/table/get_sponsor.html',context)
+    return render(request, 'screens/agents/agent_onboarding.html',context)
 
 
 
